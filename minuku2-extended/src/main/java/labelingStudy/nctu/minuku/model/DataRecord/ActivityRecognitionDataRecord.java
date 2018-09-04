@@ -37,8 +37,6 @@ public class ActivityRecognitionDataRecord implements DataRecord {
 
     public ActivityRecognitionDataRecord(DetectedActivity MostProbableActivity, List<DetectedActivity> mProbableActivities){
         this.creationTime = new Date().getTime();
-//        this.taskDayCount = Constants.TaskDayCount;
-//        this.hour = getmillisecondToHour(creationTime);
         this.MostProbableActivity = MostProbableActivity;
         this.mProbableActivities = mProbableActivities;
 
@@ -46,10 +44,16 @@ public class ActivityRecognitionDataRecord implements DataRecord {
 
     public ActivityRecognitionDataRecord(DetectedActivity MostProbableActivity,long Detectedtime){
         this.creationTime = new Date().getTime();
-//        this.taskDayCount = Constants.TaskDayCount;
-//        this.hour = getmillisecondToHour(creationTime);
         this.MostProbableActivity = MostProbableActivity;
         this.Detectedtime = Detectedtime;
+
+    }
+
+    public ActivityRecognitionDataRecord(DetectedActivity mostProbableActivity, List<DetectedActivity> mProbableActivities,long detectedtime){
+        this.creationTime = new Date().getTime();
+        this.MostProbableActivity = mostProbableActivity;
+        this.mProbableActivities = mProbableActivities;
+        this.Detectedtime = detectedtime;
 
     }
 
