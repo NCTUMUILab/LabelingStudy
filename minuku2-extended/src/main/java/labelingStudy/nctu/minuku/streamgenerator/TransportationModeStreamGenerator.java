@@ -221,7 +221,7 @@ public class TransportationModeStreamGenerator extends AndroidStreamGenerator<Tr
 
                 latest_activityRecognitionDataRecord = record;
 
-                latest_activityRecognitionDataRecord.getProbableActivities();
+//                latest_activityRecognitionDataRecord.getProbableActivities();
             }
         }
 
@@ -242,7 +242,9 @@ public class TransportationModeStreamGenerator extends AndroidStreamGenerator<Tr
                 transportationModeDataRecord.getConfirmedActivityString(),
                 ScheduleAndSampleManager.getTimeString(transportationModeDataRecord.getSuspectedTime()),
                 transportationModeDataRecord.getSuspectedStartActivityString(),
-                transportationModeDataRecord.getSuspectedStopActivityString());
+                transportationModeDataRecord.getSuspectedStopActivityString(),
+                latest_activityRecognitionDataRecord.getMostProbableActivity().toString(),
+                latest_activityRecognitionDataRecord.getProbableActivities().toString());
 
         MinukuStreamManager.getInstance().setTransportationModeDataRecord(transportationModeDataRecord, mContext, sharedPrefs);
 
@@ -276,6 +278,14 @@ public class TransportationModeStreamGenerator extends AndroidStreamGenerator<Tr
     @Override
     public void onStreamRegistration() {
 
+        CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_TRANSPORTATION,
+                "transportationCreationTime",
+                "transportationConfirmedActivity",
+                "transportationSuspectedTime",
+                "transportationSuspectedStartActivity",
+                "transportationSuspectedStopActivity",
+                "activityRecognitionMostProbableActivity",
+                "activityRecognitionProbableActivity");
     }
 
     public void setTransportationModeDataRecord(String getConfirmedActvitiyString){
