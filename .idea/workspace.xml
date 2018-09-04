@@ -13,11 +13,389 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d55a8068-8c59-437e-b8c5-0c64ecc773ef" name="Default" comment="">
+<<<<<<< HEAD
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/model/DataRecord/ActivityRecognitionDataRecord.java" afterPath="$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/model/DataRecord/ActivityRecognitionDataRecord.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/streamgenerator/ActivityRecognitionStreamGenerator.java" afterPath="$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/streamgenerator/ActivityRecognitionStreamGenerator.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/opencsv-3.10/opencsv-3.10.iml" afterPath="$PROJECT_DIR$/opencsv-3.10/opencsv-3.10.iml" />
+=======
+<<<<<<< HEAD
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+=======
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/__local_aars____Users_Lawrence_Desktop_program_Android_LabelingStudy_app_libs_javatuples_1_2_jar_unspecified_jar.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/labelingStudy/nctu/minuku_2/Receiver/RestarterBroadcastReceiver.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/layout/splitedmap_dialog.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/layout/splitsession_dialog.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/dao/UserInteractionDataRecordDAO.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/model/DataRecord/UserInteractionDataRecord.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/stream/UserInteractionStream.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/streamgenerator/UserInteractionStreamGenerator.java" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/__local_aars____Users_Lawrence_Desktop_program_Android_MainBgAbsence_app_libs_javatuples_1_2_jar_unspecified_jar.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/MainBgAbsence.iml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/app/src/main/java/labelingStudy/nctu/minuku_2/controller/CustomDialog.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-20-14-07-19-082.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-20-14-07-19-082.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-20-14-08-38-433.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-20-14-08-38-433.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-20-14-09-06-562.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-20-14-09-06-562.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-20-14-09-20-753.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-20-14-09-20-753.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-20-14-09-31-360.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-20-14-09-31-360.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-20-14-10-48-514.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-20-14-10-48-514.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-20-14-10-57-380.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-20-14-10-57-380.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-20-14-11-27-047.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-20-14-11-27-047.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-20-14-11-47-943.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-20-14-11-47-943.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-20-14-12-00-105.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-20-14-12-00-105.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-20-14-12-34-762.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-20-14-12-34-762.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-20-14-12-42-650.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-20-14-12-42-650.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-20-14-13-02-422.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-20-14-13-02-422.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-20-14-13-08-796.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-20-14-13-08-796.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-20-14-14-05-808.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-20-14-14-05-808.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-20-16-33-45-486.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-20-16-33-45-486.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-20-19-11-23-735.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-20-19-11-23-735.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-20-19-18-13-064.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-20-19-18-13-064.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-20-19-22-18-649.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-20-19-22-18-649.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-20-19-25-48-137.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-20-19-25-48-137.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-20-19-37-28-137.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-20-19-37-28-137.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-20-20-47-31-911.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-20-20-47-31-911.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-24-14-34-28-747.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-24-14-34-28-747.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-25-16-21-38-367.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-25-16-21-38-367.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-25-16-26-05-773.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-25-16-26-05-773.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-25-16-41-33-849.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-25-16-41-33-849.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-25-16-43-52-604.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-25-16-43-52-604.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-25-16-45-53-140.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-25-16-45-53-140.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-25-16-48-57-079.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-25-16-48-57-079.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-25-16-59-23-405.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-25-16-59-23-405.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-25-17-07-49-955.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-25-17-07-49-955.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-25-17-14-58-709.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-25-17-14-58-709.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-26-03-07-10-332.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-26-03-07-10-332.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-26-03-08-37-542.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-26-03-08-37-542.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-26-03-16-47-990.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-26-03-16-47-990.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-26-19-50-34-658.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-26-19-50-34-658.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-26-20-00-21-359.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-26-20-00-21-359.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-27-14-40-55-303.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-27-14-40-55-303.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-27-14-42-11-406.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-27-14-42-11-406.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-27-14-46-04-833.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-27-14-46-04-833.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-27-15-09-21-161.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-27-15-09-21-161.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-27-16-48-10-493.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-27-16-48-10-493.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-27-18-37-58-736.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-27-18-37-58-736.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-27-18-46-14-821.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-27-18-46-14-821.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-27-19-02-13-774.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-27-19-02-13-774.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-27-19-15-54-186.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-27-19-15-54-186.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-27-20-55-18-391.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-27-20-55-18-391.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-27-21-04-11-274.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-27-21-04-11-274.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-27-22-10-38-103.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-27-22-10-38-103.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-27-22-11-51-873.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-27-22-11-51-873.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-27-22-17-01-109.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-27-22-17-01-109.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-27-22-17-54-225.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-27-22-17-54-225.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-27-22-19-24-363.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-27-22-19-24-363.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-27-22-22-04-483.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-27-22-22-04-483.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-27-22-27-27-829.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-27-22-27-27-829.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-27-22-30-53-186.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-27-22-30-53-186.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-27-22-31-45-348.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-27-22-31-45-348.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-27-22-32-22-261.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-27-22-32-22-261.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-27-22-33-57-374.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-27-22-33-57-374.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-27-22-34-26-242.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-27-22-34-26-242.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-27-22-34-55-584.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-27-22-34-55-584.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-27-22-41-57-591.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-27-22-41-57-591.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-29-16-55-28-796.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-04-29-16-55-28-796.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-01-14-43-41-687.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-01-14-43-41-687.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-01-14-44-31-663.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-01-14-44-31-663.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-01-14-45-05-287.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-01-14-45-05-287.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-01-14-49-12-466.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-01-14-49-12-466.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-01-14-49-52-303.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-01-14-49-52-303.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-01-14-50-25-521.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-01-14-50-25-521.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-01-14-59-53-877.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-01-14-59-53-877.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-01-15-01-04-761.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-01-15-01-04-761.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-01-15-01-53-028.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-01-15-01-53-028.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-01-15-06-29-983.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-01-15-06-29-983.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-01-15-07-08-298.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-01-15-07-08-298.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-01-15-10-18-386.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-01-15-10-18-386.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-01-15-12-58-704.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-01-15-12-58-704.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-01-15-15-15-862.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-01-15-15-15-862.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-01-15-50-52-857.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-01-15-50-52-857.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-01-16-19-20-595.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-01-16-19-20-595.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-01-16-23-34-579.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-01-16-23-34-579.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-01-16-25-10-530.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-01-16-25-10-530.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-01-16-25-43-472.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-01-16-25-43-472.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-01-16-26-11-118.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-01-16-26-11-118.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-01-16-26-54-859.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-01-16-26-54-859.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-02-16-22-08-559.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-02-16-22-08-559.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-02-16-22-38-857.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-02-16-22-38-857.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-02-16-45-20-360.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-02-16-45-20-360.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-02-16-50-14-759.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-02-16-50-14-759.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-02-16-56-52-147.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-02-16-56-52-147.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-02-21-45-24-227.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-02-21-45-24-227.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-02-21-45-40-413.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-02-21-45-40-413.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-02-21-49-00-791.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-02-21-49-00-791.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-03-10-58-14-959.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-03-10-58-14-959.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-03-10-59-50-955.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-03-10-59-50-955.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-03-11-19-03-561.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-03-11-19-03-561.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-03-11-24-23-386.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-03-11-24-23-386.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-03-11-32-09-368.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-03-11-32-09-368.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-03-16-04-08-695.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-03-16-04-08-695.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-03-16-05-02-681.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-03-16-05-02-681.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-03-16-21-37-540.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-03-16-21-37-540.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-03-16-26-55-072.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-03-16-26-55-072.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-03-17-01-21-444.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-03-17-01-21-444.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-03-19-38-45-763.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-03-19-38-45-763.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-03-20-08-21-170.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-03-20-08-21-170.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-03-20-11-55-482.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-03-20-11-55-482.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-03-20-13-10-287.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-03-20-13-10-287.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-03-20-38-50-987.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-03-20-38-50-987.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-05-23-58-57-172.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-05-23-58-57-172.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-06-16-16-49-202.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-06-16-16-49-202.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-06-16-19-10-942.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-06-16-19-10-942.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-06-16-25-31-564.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-06-16-25-31-564.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-06-16-34-35-605.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-06-16-34-35-605.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-06-16-38-44-563.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-06-16-38-44-563.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-06-16-41-29-602.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-06-16-41-29-602.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-06-16-45-29-838.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-06-16-45-29-838.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-06-16-46-29-171.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-06-16-46-29-171.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-09-01-26-25-620.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-09-01-26-25-620.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-09-01-26-53-871.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-09-01-26-53-871.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-09-02-02-17-580.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-09-02-02-17-580.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-09-02-04-04-925.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-09-02-04-04-925.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-09-10-28-02-168.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-09-10-28-02-168.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-09-10-52-59-456.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-09-10-52-59-456.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-09-10-56-50-579.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-09-10-56-50-579.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-09-11-23-30-484.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-09-11-23-30-484.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-09-11-24-17-351.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-09-11-24-17-351.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-09-11-36-15-334.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-09-11-36-15-334.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-09-11-38-25-617.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-09-11-38-25-617.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-09-11-39-29-440.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-09-11-39-29-440.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-09-11-43-16-634.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-09-11-43-16-634.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-09-11-53-52-667.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-09-11-53-52-667.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-09-12-34-42-373.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-09-12-34-42-373.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-09-12-48-27-160.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-09-12-48-27-160.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-09-12-53-01-041.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-09-12-53-01-041.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-09-13-05-32-932.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-09-13-05-32-932.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-09-14-47-46-710.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-09-14-47-46-710.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-09-14-53-57-182.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-09-14-53-57-182.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-09-14-57-37-731.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-09-14-57-37-731.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-09-15-10-36-602.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-09-15-10-36-602.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-09-15-15-45-820.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-09-15-15-45-820.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-09-15-18-26-506.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-09-15-18-26-506.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-09-15-24-02-776.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-09-15-24-02-776.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-09-15-34-42-876.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-09-15-34-42-876.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-09-15-35-32-507.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-09-15-35-32-507.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-09-15-37-06-590.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-09-15-37-06-590.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-09-20-06-32-321.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/android-profile/profile-2018-05-09-20-06-32-321.rawproto" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/manager/TripManager.java" afterPath="" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/DBHelper/DBHelper.java" afterPath="$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/Data/DBHelper.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/DBHelper/DataHandler.java" afterPath="$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/Data/DataHandler.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/4.1/fileHashes/fileHashes.bin" afterPath="$PROJECT_DIR$/.gradle/4.1/fileHashes/fileHashes.bin" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/4.1/fileHashes/fileHashes.lock" afterPath="$PROJECT_DIR$/.gradle/4.1/fileHashes/fileHashes.lock" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/4.1/fileHashes/resourceHashesCache.bin" afterPath="$PROJECT_DIR$/.gradle/4.1/fileHashes/resourceHashesCache.bin" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/4.1/javaCompile/classAnalysis.bin" afterPath="$PROJECT_DIR$/.gradle/4.1/javaCompile/classAnalysis.bin" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/4.1/javaCompile/jarAnalysis.bin" afterPath="$PROJECT_DIR$/.gradle/4.1/javaCompile/jarAnalysis.bin" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/4.1/javaCompile/javaCompile.lock" afterPath="$PROJECT_DIR$/.gradle/4.1/javaCompile/javaCompile.lock" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/4.1/javaCompile/taskHistory.bin" afterPath="$PROJECT_DIR$/.gradle/4.1/javaCompile/taskHistory.bin" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/4.1/javaCompile/taskJars.bin" afterPath="$PROJECT_DIR$/.gradle/4.1/javaCompile/taskJars.bin" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/4.1/taskHistory/fileSnapshots.bin" afterPath="$PROJECT_DIR$/.gradle/4.1/taskHistory/fileSnapshots.bin" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/4.1/taskHistory/taskHistory.bin" afterPath="$PROJECT_DIR$/.gradle/4.1/taskHistory/taskHistory.bin" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/4.1/taskHistory/taskHistory.lock" afterPath="$PROJECT_DIR$/.gradle/4.1/taskHistory/taskHistory.lock" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/app.iml" afterPath="$PROJECT_DIR$/app/app.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/labelingStudy/nctu/minuku_2/BootCompleteReceiver.java" afterPath="$PROJECT_DIR$/app/src/main/java/labelingStudy/nctu/minuku_2/BootCompleteReceiver.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/labelingStudy/nctu/minuku_2/MainActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/labelingStudy/nctu/minuku_2/MainActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/labelingStudy/nctu/minuku_2/NearbyPlaces/DataParser.java" afterPath="$PROJECT_DIR$/app/src/main/java/labelingStudy/nctu/minuku_2/NearbyPlaces/DataParser.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/labelingStudy/nctu/minuku_2/NearbyPlaces/DownloadURL.java" afterPath="$PROJECT_DIR$/app/src/main/java/labelingStudy/nctu/minuku_2/NearbyPlaces/DownloadURL.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/labelingStudy/nctu/minuku_2/Receiver/WifiReceiver.java" afterPath="$PROJECT_DIR$/app/src/main/java/labelingStudy/nctu/minuku_2/Receiver/WifiReceiver.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/labelingStudy/nctu/minuku_2/controller/CheckPointActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/labelingStudy/nctu/minuku_2/controller/CheckPointActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/labelingStudy/nctu/minuku_2/controller/CounterActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/labelingStudy/nctu/minuku_2/controller/CounterActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/labelingStudy/nctu/minuku_2/controller/Dispatch.java" afterPath="$PROJECT_DIR$/app/src/main/java/labelingStudy/nctu/minuku_2/controller/Dispatch.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/labelingStudy/nctu/minuku_2/controller/PlaceSelection.java" afterPath="$PROJECT_DIR$/app/src/main/java/labelingStudy/nctu/minuku_2/controller/PlaceSelection.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/labelingStudy/nctu/minuku_2/controller/Timeline.java" afterPath="$PROJECT_DIR$/app/src/main/java/labelingStudy/nctu/minuku_2/controller/Timeline.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/labelingStudy/nctu/minuku_2/controller/Timer_move.java" afterPath="$PROJECT_DIR$/app/src/main/java/labelingStudy/nctu/minuku_2/controller/Timer_move.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/labelingStudy/nctu/minuku_2/controller/Timer_site.java" afterPath="$PROJECT_DIR$/app/src/main/java/labelingStudy/nctu/minuku_2/controller/Timer_site.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/labelingStudy/nctu/minuku_2/controller/WelcomeActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/labelingStudy/nctu/minuku_2/controller/WelcomeActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/labelingStudy/nctu/minuku_2/manager/InstanceManager.java" afterPath="$PROJECT_DIR$/app/src/main/java/labelingStudy/nctu/minuku_2/manager/InstanceManager.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/labelingStudy/nctu/minuku_2/manager/QuestionnaireManager.java" afterPath="$PROJECT_DIR$/app/src/main/java/labelingStudy/nctu/minuku_2/manager/QuestionnaireManager.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/labelingStudy/nctu/minuku_2/question/QuestionConfig.java" afterPath="$PROJECT_DIR$/app/src/main/java/labelingStudy/nctu/minuku_2/question/QuestionConfig.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/labelingStudy/nctu/minuku_2/service/BackgroundService.java" afterPath="$PROJECT_DIR$/app/src/main/java/labelingStudy/nctu/minuku_2/service/BackgroundService.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/labelingStudy/nctu/minuku_2/view/customview/MoodEntryView.java" afterPath="$PROJECT_DIR$/app/src/main/java/labelingStudy/nctu/minuku_2/view/customview/MoodEntryView.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_card_view.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_card_view.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/custom_dialog.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/custom_dialog.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/timer_move.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/timer_move.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/timer_site.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/timer_site.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/menu/menu_deviceid.xml" afterPath="$PROJECT_DIR$/app/src/main/res/menu/menu_deviceid.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/menu/menu_main.xml" afterPath="$PROJECT_DIR$/app/src/main/res/menu/menu_main.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterPath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/minuku2-extended/minuku2-extended.iml" afterPath="$PROJECT_DIR$/minuku2-extended/minuku2-extended.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/Utilities/CSVHelper.java" afterPath="$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/Utilities/CSVHelper.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/config/Constants.java" afterPath="$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/config/Constants.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/dao/AccessibilityDataRecordDAO.java" afterPath="$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/dao/AccessibilityDataRecordDAO.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/dao/ActivityRecognitionDataRecordDAO.java" afterPath="$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/dao/ActivityRecognitionDataRecordDAO.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/dao/AppUsageDataRecordDAO.java" afterPath="$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/dao/AppUsageDataRecordDAO.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/dao/BatteryDataRecordDAO.java" afterPath="$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/dao/BatteryDataRecordDAO.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/dao/ConnectivityDataRecordDAO.java" afterPath="$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/dao/ConnectivityDataRecordDAO.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/dao/LocationDataRecordDAO.java" afterPath="$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/dao/LocationDataRecordDAO.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/dao/RingerDataRecordDAO.java" afterPath="$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/dao/RingerDataRecordDAO.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/dao/SensorDataRecordDAO.java" afterPath="$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/dao/SensorDataRecordDAO.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/dao/TelephonyDataRecordDAO.java" afterPath="$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/dao/TelephonyDataRecordDAO.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/dao/TransportationModeDAO.java" afterPath="$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/dao/TransportationModeDAO.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/manager/DBManager.java" afterPath="$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/manager/DBManager.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/manager/MinukuStreamManager.java" afterPath="$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/manager/MinukuStreamManager.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/manager/SessionManager.java" afterPath="$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/manager/SessionManager.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/model/DataRecord/TransportationModeDataRecord.java" afterPath="$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/model/DataRecord/TransportationModeDataRecord.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/model/Session.java" afterPath="$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/model/Session.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/streamgenerator/AccessibilityStreamGenerator.java" afterPath="$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/streamgenerator/AccessibilityStreamGenerator.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/streamgenerator/AppUsageStreamGenerator.java" afterPath="$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/streamgenerator/AppUsageStreamGenerator.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/streamgenerator/BatteryStreamGenerator.java" afterPath="$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/streamgenerator/BatteryStreamGenerator.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/streamgenerator/LocationStreamGenerator.java" afterPath="$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/streamgenerator/LocationStreamGenerator.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/streamgenerator/RingerStreamGenerator.java" afterPath="$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/streamgenerator/RingerStreamGenerator.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/streamgenerator/SensorStreamGenerator.java" afterPath="$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/streamgenerator/SensorStreamGenerator.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/streamgenerator/TransportationModeStreamGenerator.java" afterPath="$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/streamgenerator/TransportationModeStreamGenerator.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/minuku2-extended/src/main/res/values/strings.xml" afterPath="$PROJECT_DIR$/minuku2-extended/src/main/res/values/strings.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/minukucore/minukucore.iml" afterPath="$PROJECT_DIR$/minukucore/minukucore.iml" />
+>>>>>>> b4fd8c2fff0310c226f9f0167f6d4d9b4dfe1479
+>>>>>>> 4a34292d1088ffd99fa037b2399df1c6aa87c24b
     </list>
     <ignored path="temp_Labeling-master (2).iws" />
     <ignored path=".idea/workspace.xml" />
@@ -62,6 +440,14 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+<<<<<<< HEAD
+      <file leaf-file-name="BackgroundService.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/labelingStudy/nctu/minuku_2/service/BackgroundService.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1011">
+              <caret line="91" column="37" lean-forward="false" selection-start-line="91" selection-start-column="37" selection-end-line="91" selection-end-column="37" />
+              <folding />
+=======
       <file leaf-file-name="BackgroundService.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/labelingStudy/nctu/minuku_2/service/BackgroundService.java">
           <provider selected="true" editor-type-id="text-editor">
@@ -84,6 +470,7 @@
                 <element signature="e#4271#5371#0" expanded="true" />
                 <element signature="e#5370#5371#0" expanded="true" />
               </folding>
+>>>>>>> b4fd8c2fff0310c226f9f0167f6d4d9b4dfe1479
             </state>
           </provider>
         </entry>
@@ -91,8 +478,23 @@
       <file leaf-file-name="ActivityRecognitionStreamGenerator.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/streamgenerator/ActivityRecognitionStreamGenerator.java">
           <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
             <state relative-caret-position="251">
               <caret line="161" column="50" lean-forward="false" selection-start-line="161" selection-start-column="50" selection-end-line="161" selection-end-column="50" />
+=======
+            <state relative-caret-position="30">
+              <caret line="39" column="34" lean-forward="false" selection-start-line="39" selection-start-column="34" selection-end-line="39" selection-end-column="34" />
+<<<<<<< HEAD
+              <folding>
+                <marker date="1535625133084" expanded="true" signature="2920:3769" ph="{...}" />
+                <marker date="1535625133084" expanded="false" signature="3821:3832" ph=" { " />
+                <marker date="1535625133084" expanded="false" signature="3841:3847" ph=" }" />
+                <marker date="1535625133084" expanded="true" signature="3902:3910" ph="{...}" />
+                <marker date="1535625133084" expanded="true" signature="4001:4116" ph="{...}" />
+                <marker date="1535625133084" expanded="true" signature="4171:4220" ph="{...}" />
+              </folding>
+=======
+>>>>>>> 4a34292d1088ffd99fa037b2399df1c6aa87c24b
               <folding />
             </state>
           </provider>
@@ -104,10 +506,21 @@
             <state relative-caret-position="166">
               <caret line="39" column="35" lean-forward="false" selection-start-line="39" selection-start-column="35" selection-end-line="39" selection-end-column="35" />
               <folding />
+>>>>>>> b4fd8c2fff0310c226f9f0167f6d4d9b4dfe1479
             </state>
           </provider>
         </entry>
       </file>
+<<<<<<< HEAD
+      <file leaf-file-name="AppUsageStreamGenerator.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/streamgenerator/AppUsageStreamGenerator.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="549">
+              <caret line="462" column="0" lean-forward="false" selection-start-line="462" selection-start-column="0" selection-end-line="462" selection-end-column="0" />
+              <folding>
+                <element signature="e#5718#5719#0" expanded="false" />
+                <element signature="e#5748#5749#0" expanded="false" />
+=======
       <file leaf-file-name="MinukuStreamManager.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/manager/MinukuStreamManager.java">
           <provider selected="true" editor-type-id="text-editor">
@@ -115,17 +528,46 @@
               <caret line="342" column="52" lean-forward="false" selection-start-line="342" selection-start-column="52" selection-end-line="342" selection-end-column="52" />
               <folding>
                 <element signature="imports" expanded="true" />
+>>>>>>> b4fd8c2fff0310c226f9f0167f6d4d9b4dfe1479
               </folding>
             </state>
           </provider>
         </entry>
       </file>
+<<<<<<< HEAD
+      <file leaf-file-name="MinukuStreamManager.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/manager/MinukuStreamManager.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="293">
+              <caret line="219" column="5" lean-forward="false" selection-start-line="219" selection-start-column="5" selection-end-line="219" selection-end-column="5" />
+              <folding>
+                <marker date="1535625133068" expanded="true" signature="8936:8943" ph="{...}" />
+                <marker date="1535625133068" expanded="true" signature="9018:9070" ph="{...}" />
+                <marker date="1535625133068" expanded="true" signature="9148:9209" ph="{...}" />
+                <marker date="1535625133068" expanded="false" signature="9264:9274" ph=" { " />
+                <marker date="1535625133068" expanded="false" signature="9300:9306" ph=" }" />
+              </folding>
+=======
       <file leaf-file-name="InstanceManager.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/labelingStudy/nctu/minuku_2/manager/InstanceManager.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="1380">
               <caret line="162" column="24" lean-forward="false" selection-start-line="162" selection-start-column="24" selection-end-line="162" selection-end-column="24" />
               <folding />
+>>>>>>> b4fd8c2fff0310c226f9f0167f6d4d9b4dfe1479
+            </state>
+          </provider>
+        </entry>
+      </file>
+<<<<<<< HEAD
+      <file leaf-file-name="InstanceManager.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/labelingStudy/nctu/minuku_2/manager/InstanceManager.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1706">
+              <caret line="216" column="24" lean-forward="false" selection-start-line="216" selection-start-column="24" selection-end-line="216" selection-end-column="24" />
+              <folding>
+                <marker date="1535625132795" expanded="true" signature="15490:15497" ph="{...}" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -133,8 +575,15 @@
       <file leaf-file-name="TransportationModeStreamGenerator.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/streamgenerator/TransportationModeStreamGenerator.java">
           <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="420">
+              <caret line="178" column="0" lean-forward="false" selection-start-line="178" selection-start-column="0" selection-end-line="178" selection-end-column="0" />
+=======
+      <file leaf-file-name="TransportationModeStreamGenerator.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/streamgenerator/TransportationModeStreamGenerator.java">
+          <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="2850">
               <caret line="226" column="0" lean-forward="false" selection-start-line="226" selection-start-column="0" selection-end-line="226" selection-end-column="0" />
+>>>>>>> b4fd8c2fff0310c226f9f0167f6d4d9b4dfe1479
               <folding />
             </state>
           </provider>
@@ -918,6 +1367,7 @@
                 <option name="description" value="Generates Gradle wrapper files." />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
                 <option name="name" value="wrapper" />
+<<<<<<< HEAD
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
@@ -999,9 +1449,133 @@
                 <option name="description" value="Assembles and tests this project and all projects that depend on it." />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
                 <option name="name" value="buildDependents" />
+=======
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
+                <option name="name" value="generateDebugAndroidTestResValues" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Caches generated Crashlytics symbol files for upload." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
+                <option name="name" value="crashlyticsCacheSymbolsDebug" />
+>>>>>>> b4fd8c2fff0310c226f9f0167f6d4d9b4dfe1479
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Displays the Android dependencies of the project." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
+<<<<<<< HEAD
+                <option name="name" value="transformDexArchiveWithDexMergerForDebugAndroidTest" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
+                <option name="name" value="mergeDebugJniLibFolders" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
+                <option name="name" value="mergeReleaseAssets" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
+                <option name="name" value="createFullJarRelease" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
+                <option name="name" value="generateReleaseBuildConfig" />
+=======
+                <option name="name" value="androidDependencies" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
+                <option name="name" value="compileDebugUnitTestSources" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
+                <option name="name" value="transformDexArchiveWithExternalLibsDexMergerForDebugAndroidTest" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
+                <option name="name" value="generateDebugSources" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
+                <option name="name" value="processDebugJavaRes" />
+>>>>>>> b4fd8c2fff0310c226f9f0167f6d4d9b4dfe1479
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Generates Crashlytics symbol files for NDK projects." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
+<<<<<<< HEAD
+                <option name="name" value="crashlyticsGenerateSymbolsRelease" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
+                <option name="name" value="platformAttrExtractor" />
+=======
+                <option name="name" value="compileReleaseJavaWithJavac" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
+                <option name="name" value="compileDebugNdk" />
+>>>>>>> b4fd8c2fff0310c226f9f0167f6d4d9b4dfe1479
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Uploads an APK to Crashlytics for distribution." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
+                <option name="name" value="crashlyticsUploadDistributionDebug" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
+                <option name="name" value="javaPreCompileDebug" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Installs and runs instrumentation tests for all flavors on connected devices." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
+                <option name="name" value="connectedAndroidTest" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
+<<<<<<< HEAD
+                <option name="name" value="clean" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Assembles and tests this project." />
+=======
+                <option name="name" value="transformClassesWithDexForRelease" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
+                <option name="name" value="transformResourcesWithMergeJavaResForRelease" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
+                <option name="name" value="compileReleaseSources" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
+                <option name="name" value="compileReleaseUnitTestJavaWithJavac" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+>>>>>>> b4fd8c2fff0310c226f9f0167f6d4d9b4dfe1479
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
+                <option name="name" value="compileDebugShaders" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+<<<<<<< HEAD
+=======
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
+                <option name="name" value="transformResourcesWithMergeJavaResForDebug" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Assembles and tests this project and all projects that depend on it." />
+>>>>>>> b4fd8c2fff0310c226f9f0167f6d4d9b4dfe1479
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
+                <option name="name" value="buildDependents" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
+<<<<<<< HEAD
+=======
                 <option name="name" value="transformDexArchiveWithDexMergerForDebugAndroidTest" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
@@ -1057,6 +1631,7 @@
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
+>>>>>>> b4fd8c2fff0310c226f9f0167f6d4d9b4dfe1479
                 <option name="name" value="compileDebugAndroidTestRenderscript" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
@@ -1759,10 +2334,26 @@
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="description" value="Uploads cached Crashlytics symbol files to Crashlytics." />
+<<<<<<< HEAD
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
                 <option name="name" value="crashlyticsUploadSymbolsDebug" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
+=======
+>>>>>>> b4fd8c2fff0310c226f9f0167f6d4d9b4dfe1479
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="crashlyticsUploadSymbolsDebug" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+<<<<<<< HEAD
+                <option name="description" value="Uploads an APK to Crashlytics for distribution." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
+                <option name="name" value="crashlyticsUploadDistributionRelease" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Assembles and tests this project." />
+=======
+>>>>>>> b4fd8c2fff0310c226f9f0167f6d4d9b4dfe1479
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/app" />
                 <option name="name" value="generateDebugBuildConfig" />
               </ExternalTaskPojo>
@@ -3813,7 +4404,10 @@
         <option value="$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/dao/userInteractionDataRecordDAO.java" />
         <option value="$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/streamgenerator/RingerStreamGenerator.java" />
         <option value="$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/config/Constants.java" />
+<<<<<<< HEAD
+=======
         <option value="$PROJECT_DIR$/app/src/main/java/labelingStudy/nctu/minuku_2/service/BackgroundService.java" />
+>>>>>>> b4fd8c2fff0310c226f9f0167f6d4d9b4dfe1479
         <option value="$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/streamgenerator/TransportationModeStreamGenerator.java" />
         <option value="$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/manager/SessionManager.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/labelingStudy/nctu/minuku_2/controller/CounterActivity.java" />
@@ -3830,8 +4424,15 @@
         <option value="$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/manager/MinukuStreamManager.java" />
         <option value="$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/streamgenerator/SensorStreamGenerator.java" />
         <option value="$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/streamgenerator/AppUsageStreamGenerator.java" />
+<<<<<<< HEAD
         <option value="$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/streamgenerator/ActivityRecognitionStreamGenerator.java" />
         <option value="$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/model/DataRecord/ActivityRecognitionDataRecord.java" />
+=======
+<<<<<<< HEAD
+        <option value="$PROJECT_DIR$/app/src/main/java/labelingStudy/nctu/minuku_2/service/BackgroundService.java" />
+=======
+>>>>>>> b4fd8c2fff0310c226f9f0167f6d4d9b4dfe1479
+>>>>>>> 4a34292d1088ffd99fa037b2399df1c6aa87c24b
       </list>
     </option>
   </component>
@@ -3978,6 +4579,8 @@
           <PATH>
             <PATH_ELEMENT>
               <option name="myItemId" value="LabelingStudy" />
+<<<<<<< HEAD
+=======
               <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -4072,9 +4675,65 @@
           <PATH>
             <PATH_ELEMENT>
               <option name="myItemId" value="LabelingStudy" />
+>>>>>>> b4fd8c2fff0310c226f9f0167f6d4d9b4dfe1479
               <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+<<<<<<< HEAD
+=======
+              <option name="myItemId" value="minuku2-extended" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidSourceTypeNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="minuku" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="model" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="DataRecord" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="manifests" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidManifestsGroupNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="LabelingStudy" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="res" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidResFolderNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="minuku" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="manager" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="LabelingStudy" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+>>>>>>> 4a34292d1088ffd99fa037b2399df1c6aa87c24b
               <option name="myItemId" value="app" />
               <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidModuleNode" />
             </PATH_ELEMENT>
@@ -4083,17 +4742,64 @@
               <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidSourceTypeNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+<<<<<<< HEAD
               <option name="myItemId" value="minuku_2" />
               <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidPsiDirectoryNode" />
+=======
+              <option name="myItemId" value="values" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidResFolderTypeNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="Receiver" />
+              <option name="myItemId" value="dao" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
               <option name="myItemId" value="LabelingStudy" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+>>>>>>> 4a34292d1088ffd99fa037b2399df1c6aa87c24b
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Receiver" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+<<<<<<< HEAD
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidSourceTypeNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="minuku" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="config" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+=======
+>>>>>>> b4fd8c2fff0310c226f9f0167f6d4d9b4dfe1479
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="LabelingStudy" />
+<<<<<<< HEAD
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="minuku2-extended" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="manifests" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidManifestsGroupNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="LabelingStudy" />
+=======
+>>>>>>> b4fd8c2fff0310c226f9f0167f6d4d9b4dfe1479
               <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -4127,12 +4833,17 @@
               <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidSourceTypeNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+<<<<<<< HEAD
+              <option name="myItemId" value="values" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidResFolderTypeNode" />
+=======
               <option name="myItemId" value="minuku_2" />
               <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidPsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="model" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+>>>>>>> b4fd8c2fff0310c226f9f0167f6d4d9b4dfe1479
             </PATH_ELEMENT>
           </PATH>
           <PATH>
@@ -4208,8 +4919,72 @@
         <subPane>
           <PATH>
             <PATH_ELEMENT>
+<<<<<<< HEAD
               <option name="myItemId" value="MainBgAbsence" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+=======
+              <option name="myItemId" value="LabelingStudy" />
+<<<<<<< HEAD
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidSourceTypeNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="minuku_2" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="NearbyPlaces" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="LabelingStudy" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidSourceTypeNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="minuku_2" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="manager" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="LabelingStudy" />
+=======
+>>>>>>> b4fd8c2fff0310c226f9f0167f6d4d9b4dfe1479
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidSourceTypeNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="minuku_2" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidPsiDirectoryNode" />
+>>>>>>> 4a34292d1088ffd99fa037b2399df1c6aa87c24b
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="MainBgAbsence" />
@@ -4345,7 +5120,15 @@
       <option name="ACTIVITY_CLASS" value="" />
       <method>
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
+<<<<<<< HEAD
         <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1536051667865" />
+=======
+<<<<<<< HEAD
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1535625159322" />
+=======
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1535624939651" />
+>>>>>>> b4fd8c2fff0310c226f9f0167f6d4d9b4dfe1479
+>>>>>>> 4a34292d1088ffd99fa037b2399df1c6aa87c24b
       </method>
     </configuration>
     <configuration default="true" type="AndroidTestRunConfigurationType" factoryName="Android Instrumented Tests">
@@ -4393,7 +5176,15 @@
       </Profilers>
       <method>
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
+<<<<<<< HEAD
         <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1536051667865" />
+=======
+<<<<<<< HEAD
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1535625159322" />
+=======
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1535624939651" />
+>>>>>>> b4fd8c2fff0310c226f9f0167f6d4d9b4dfe1479
+>>>>>>> 4a34292d1088ffd99fa037b2399df1c6aa87c24b
       </method>
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
@@ -4555,7 +5346,15 @@
       <option name="ACTIVITY_CLASS" value="" />
       <method>
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
+<<<<<<< HEAD
         <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1536051667866" />
+=======
+<<<<<<< HEAD
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1535625159324" />
+=======
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1535624939652" />
+>>>>>>> b4fd8c2fff0310c226f9f0167f6d4d9b4dfe1479
+>>>>>>> 4a34292d1088ffd99fa037b2399df1c6aa87c24b
       </method>
     </configuration>
     <list size="1">
@@ -4702,6 +5501,15 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="150">
           <caret line="20" column="46" lean-forward="false" selection-start-line="20" selection-start-column="46" selection-end-line="20" selection-end-column="46" />
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+          <folding>
+            <element signature="e#578#579#0" expanded="true" />
+            <element signature="e#628#629#0" expanded="true" />
+          </folding>
+>>>>>>> 4a34292d1088ffd99fa037b2399df1c6aa87c24b
         </state>
       </provider>
     </entry>
@@ -4709,14 +5517,22 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-966">
           <caret line="45" column="13" lean-forward="false" selection-start-line="45" selection-start-column="13" selection-end-line="45" selection-end-column="13" />
+>>>>>>> b4fd8c2fff0310c226f9f0167f6d4d9b4dfe1479
           <folding />
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
+    <entry file="file://$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/manager/MinukuSituationManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-966">
+          <caret line="45" column="13" lean-forward="false" selection-start-line="45" selection-start-column="13" selection-end-line="45" selection-end-column="13" />
+=======
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/timer_move.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="255">
           <caret line="17" column="0" lean-forward="true" selection-start-line="16" selection-start-column="34" selection-end-line="17" selection-end-column="0" />
+>>>>>>> b4fd8c2fff0310c226f9f0167f6d4d9b4dfe1479
           <folding />
         </state>
       </provider>
@@ -4724,43 +5540,112 @@
         <state />
       </provider>
     </entry>
+<<<<<<< HEAD
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/timer_move.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="17" column="0" lean-forward="true" selection-start-line="16" selection-start-column="34" selection-end-line="17" selection-end-column="0" />
+=======
     <entry file="file://$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/manager/MinukuNotificationManager.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="97">
           <caret line="39" column="25" lean-forward="false" selection-start-line="39" selection-start-column="25" selection-end-line="39" selection-end-column="25" />
+>>>>>>> b4fd8c2fff0310c226f9f0167f6d4d9b4dfe1479
           <folding />
         </state>
       </provider>
+      <provider editor-type-id="android-designer2">
+        <state />
+      </provider>
     </entry>
+<<<<<<< HEAD
+    <entry file="file://$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/manager/MinukuNotificationManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="97">
+          <caret line="39" column="25" lean-forward="false" selection-start-line="39" selection-start-column="25" selection-end-line="39" selection-end-column="25" />
+=======
     <entry file="file://$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/Utilities/ScheduleAndSampleManager.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="243">
           <caret line="53" column="23" lean-forward="false" selection-start-line="53" selection-start-column="23" selection-end-line="53" selection-end-column="23" />
+<<<<<<< HEAD
+=======
+>>>>>>> b4fd8c2fff0310c226f9f0167f6d4d9b4dfe1479
+          <folding />
+>>>>>>> 4a34292d1088ffd99fa037b2399df1c6aa87c24b
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
+    <entry file="file://$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/Utilities/ScheduleAndSampleManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="243">
+          <caret line="53" column="23" lean-forward="false" selection-start-line="53" selection-start-column="23" selection-end-line="53" selection-end-column="23" />
+=======
     <entry file="file://$USER_HOME$/Library/Android/sdk/sources/android-26/android/widget/ImageView.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-113">
           <caret line="982" column="17" lean-forward="false" selection-start-line="982" selection-start-column="17" selection-end-line="982" selection-end-column="17" />
+<<<<<<< HEAD
+=======
+>>>>>>> b4fd8c2fff0310c226f9f0167f6d4d9b4dfe1479
+          <folding />
+>>>>>>> 4a34292d1088ffd99fa037b2399df1c6aa87c24b
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
+    <entry file="file://$USER_HOME$/Library/Android/sdk/sources/android-26/android/widget/ImageView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-113">
+          <caret line="982" column="17" lean-forward="false" selection-start-line="982" selection-start-column="17" selection-end-line="982" selection-end-column="17" />
+=======
     <entry file="file://$PROJECT_DIR$/app/src/main/java/labelingStudy/nctu/minuku_2/Receiver/WifiReceiver.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="148">
           <caret line="157" column="40" lean-forward="false" selection-start-line="157" selection-start-column="40" selection-end-line="157" selection-end-column="40" />
+>>>>>>> b4fd8c2fff0310c226f9f0167f6d4d9b4dfe1479
           <folding />
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/labelingStudy/nctu/minuku_2/Receiver/WifiReceiver.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="148">
+          <caret line="157" column="40" lean-forward="false" selection-start-line="157" selection-start-column="40" selection-end-line="157" selection-end-column="40" />
+=======
     <entry file="file://$PROJECT_DIR$/app/src/main/java/labelingStudy/nctu/minuku_2/controller/Timer_site.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="135">
           <caret line="31" column="13" lean-forward="false" selection-start-line="31" selection-start-column="13" selection-end-line="31" selection-end-column="13" />
+<<<<<<< HEAD
+=======
+>>>>>>> b4fd8c2fff0310c226f9f0167f6d4d9b4dfe1479
+          <folding />
+>>>>>>> 4a34292d1088ffd99fa037b2399df1c6aa87c24b
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/labelingStudy/nctu/minuku_2/controller/timer_site.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="31" column="13" lean-forward="false" selection-start-line="31" selection-start-column="13" selection-end-line="31" selection-end-column="13" />
+=======
+    <entry file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml">
+      <provider editor-type-id="android-manifest">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="460">
+          <caret line="128" column="50" lean-forward="false" selection-start-line="128" selection-start-column="38" selection-end-line="128" selection-end-column="50" />
+>>>>>>> b4fd8c2fff0310c226f9f0167f6d4d9b4dfe1479
+          <folding />
+        </state>
+      </provider>
+    </entry>
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml">
       <provider editor-type-id="android-manifest">
         <state />
@@ -4776,6 +5661,11 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="315">
           <caret line="21" column="57" lean-forward="false" selection-start-line="21" selection-start-column="57" selection-end-line="21" selection-end-column="57" />
+=======
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/labelingStudy/nctu/minuku_2/Receiver/RestarterBroadcastReceiver.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="315">
+          <caret line="21" column="57" lean-forward="false" selection-start-line="21" selection-start-column="57" selection-end-line="21" selection-end-column="57" />
           <folding>
             <element signature="imports" expanded="false" />
           </folding>
@@ -4786,72 +5676,153 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="240">
           <caret line="19" column="49" lean-forward="false" selection-start-line="19" selection-start-column="8" selection-end-line="19" selection-end-column="49" />
+>>>>>>> b4fd8c2fff0310c226f9f0167f6d4d9b4dfe1479
           <folding />
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
+    <entry file="file://$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/model/DataRecord/AccessibilityDataRecord.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="19" column="49" lean-forward="false" selection-start-line="19" selection-start-column="8" selection-end-line="19" selection-end-column="49" />
+=======
     <entry file="file://$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/streamgenerator/TelephonyStreamGenerator.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="47" column="38" lean-forward="true" selection-start-line="47" selection-start-column="38" selection-end-line="47" selection-end-column="38" />
+>>>>>>> b4fd8c2fff0310c226f9f0167f6d4d9b4dfe1479
           <folding />
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
+    <entry file="file://$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/streamgenerator/TelephonyStreamGenerator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="47" column="38" lean-forward="true" selection-start-line="47" selection-start-column="38" selection-end-line="47" selection-end-column="38" />
+=======
     <entry file="file://$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/dao/AccessibilityDataRecordDAO.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="300">
           <caret line="35" column="49" lean-forward="true" selection-start-line="35" selection-start-column="49" selection-end-line="35" selection-end-column="49" />
+<<<<<<< HEAD
+=======
+>>>>>>> b4fd8c2fff0310c226f9f0167f6d4d9b4dfe1479
+          <folding />
+>>>>>>> 4a34292d1088ffd99fa037b2399df1c6aa87c24b
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
+    <entry file="file://$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/dao/AccessibilityDataRecordDAO.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="35" column="49" lean-forward="true" selection-start-line="35" selection-start-column="49" selection-end-line="35" selection-end-column="49" />
+=======
     <entry file="file://$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/streamgenerator/ConnectivityStreamGenerator.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-102">
           <caret line="154" column="38" lean-forward="false" selection-start-line="154" selection-start-column="38" selection-end-line="154" selection-end-column="38" />
+>>>>>>> b4fd8c2fff0310c226f9f0167f6d4d9b4dfe1479
           <folding />
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
+    <entry file="file://$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/streamgenerator/ConnectivityStreamGenerator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-102">
+          <caret line="154" column="38" lean-forward="false" selection-start-line="154" selection-start-column="38" selection-end-line="154" selection-end-column="38" />
+=======
     <entry file="file://$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/streamgenerator/RingerStreamGenerator.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1558">
           <caret line="161" column="27" lean-forward="false" selection-start-line="161" selection-start-column="27" selection-end-line="161" selection-end-column="27" />
+<<<<<<< HEAD
+=======
+>>>>>>> b4fd8c2fff0310c226f9f0167f6d4d9b4dfe1479
+          <folding />
+>>>>>>> 4a34292d1088ffd99fa037b2399df1c6aa87c24b
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
+    <entry file="file://$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/streamgenerator/RingerStreamGenerator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1558">
+          <caret line="161" column="27" lean-forward="false" selection-start-line="161" selection-start-column="27" selection-end-line="161" selection-end-column="27" />
+=======
     <entry file="file://$PROJECT_DIR$/app/src/main/java/labelingStudy/nctu/minuku_2/controller/Timer_move.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="256">
           <caret line="182" column="69" lean-forward="false" selection-start-line="182" selection-start-column="69" selection-end-line="182" selection-end-column="69" />
+>>>>>>> b4fd8c2fff0310c226f9f0167f6d4d9b4dfe1479
           <folding />
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/labelingStudy/nctu/minuku_2/controller/timer_move.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="256">
+          <caret line="182" column="69" lean-forward="false" selection-start-line="182" selection-start-column="69" selection-end-line="182" selection-end-column="69" />
+=======
     <entry file="file://$USER_HOME$/Library/Android/sdk/sources/android-26/java/util/concurrent/ScheduledExecutorService.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="226">
           <caret line="93" column="17" lean-forward="false" selection-start-line="93" selection-start-column="17" selection-end-line="93" selection-end-column="17" />
+>>>>>>> b4fd8c2fff0310c226f9f0167f6d4d9b4dfe1479
           <folding />
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
+    <entry file="file://$USER_HOME$/Library/Android/sdk/sources/android-26/java/util/concurrent/ScheduledExecutorService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="226">
+          <caret line="93" column="17" lean-forward="false" selection-start-line="93" selection-start-column="17" selection-end-line="93" selection-end-column="17" />
+=======
     <entry file="file://$USER_HOME$/Library/Android/sdk/sources/android-26/java/util/concurrent/Future.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="226">
           <caret line="119" column="12" lean-forward="false" selection-start-line="119" selection-start-column="12" selection-end-line="119" selection-end-column="12" />
+>>>>>>> b4fd8c2fff0310c226f9f0167f6d4d9b4dfe1479
           <folding />
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
+    <entry file="file://$USER_HOME$/Library/Android/sdk/sources/android-26/java/util/concurrent/Future.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="226">
+          <caret line="119" column="12" lean-forward="false" selection-start-line="119" selection-start-column="12" selection-end-line="119" selection-end-column="12" />
+=======
     <entry file="file://$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/config/Constants.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="498">
           <caret line="242" column="52" lean-forward="false" selection-start-line="242" selection-start-column="28" selection-end-line="242" selection-end-column="52" />
+>>>>>>> b4fd8c2fff0310c226f9f0167f6d4d9b4dfe1479
           <folding />
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
+    <entry file="file://$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/config/Constants.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="498">
+          <caret line="242" column="52" lean-forward="false" selection-start-line="242" selection-start-column="28" selection-end-line="242" selection-end-column="52" />
+=======
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/labelingStudy/nctu/minuku_2/BootCompleteReceiver.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="500">
+          <caret line="47" column="54" lean-forward="false" selection-start-line="47" selection-start-column="54" selection-end-line="47" selection-end-column="54" />
+>>>>>>> b4fd8c2fff0310c226f9f0167f6d4d9b4dfe1479
+          <folding />
+        </state>
+      </provider>
+    </entry>
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/app/src/main/java/labelingStudy/nctu/minuku_2/BootCompleteReceiver.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="500">
@@ -4860,6 +5831,11 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/labelingStudy/nctu/minuku_2/controller/Timeline.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="318">
+          <caret line="641" column="38" lean-forward="false" selection-start-line="641" selection-start-column="38" selection-end-line="641" selection-end-column="38" />
+=======
     <entry file="file://$PROJECT_DIR$/app/src/main/java/labelingStudy/nctu/minuku_2/controller/Timeline.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="318">
@@ -4877,44 +5853,120 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="226">
           <caret line="137" column="56" lean-forward="false" selection-start-line="137" selection-start-column="56" selection-end-line="137" selection-end-column="56" />
+>>>>>>> b4fd8c2fff0310c226f9f0167f6d4d9b4dfe1479
           <folding />
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/labelingStudy/nctu/minuku_2/controller/CheckPointActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="226">
+          <caret line="137" column="56" lean-forward="false" selection-start-line="137" selection-start-column="56" selection-end-line="137" selection-end-column="56" />
+=======
     <entry file="file://$PROJECT_DIR$/app/src/main/res/values/strings.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="196">
           <caret line="24" column="35" lean-forward="false" selection-start-line="24" selection-start-column="35" selection-end-line="24" selection-end-column="35" />
+>>>>>>> b4fd8c2fff0310c226f9f0167f6d4d9b4dfe1479
           <folding />
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/values/strings.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="196">
+          <caret line="24" column="35" lean-forward="false" selection-start-line="24" selection-start-column="35" selection-end-line="24" selection-end-column="35" />
+=======
     <entry file="file://$PROJECT_DIR$/minuku2-extended/src/main/res/values/strings.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="390">
           <caret line="26" column="35" lean-forward="false" selection-start-line="26" selection-start-column="35" selection-end-line="26" selection-end-column="35" />
+>>>>>>> b4fd8c2fff0310c226f9f0167f6d4d9b4dfe1479
           <folding />
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+    <entry file="file://$PROJECT_DIR$/minuku2-extended/src/main/res/values/strings.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="390">
+          <caret line="26" column="35" lean-forward="false" selection-start-line="26" selection-start-column="35" selection-end-line="26" selection-end-column="35" />
+=======
+    <entry file="file://$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/streamgenerator/TransportationModeStreamGenerator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="615">
+          <caret line="226" column="0" lean-forward="false" selection-start-line="226" selection-start-column="0" selection-end-line="226" selection-end-column="0" />
+>>>>>>> b4fd8c2fff0310c226f9f0167f6d4d9b4dfe1479
+          <folding />
+        </state>
+      </provider>
+    </entry>
+<<<<<<< HEAD
+    <entry file="file://$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/streamgenerator/TransportationModeStreamGenerator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="420">
+          <caret line="178" column="0" lean-forward="false" selection-start-line="178" selection-start-column="0" selection-end-line="178" selection-end-column="0" />
+=======
     <entry file="file://$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/manager/SessionManager.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="226">
           <caret line="335" column="26" lean-forward="false" selection-start-line="335" selection-start-column="26" selection-end-line="335" selection-end-column="26" />
+>>>>>>> b4fd8c2fff0310c226f9f0167f6d4d9b4dfe1479
           <folding />
         </state>
       </provider>
     </entry>
+>>>>>>> 4a34292d1088ffd99fa037b2399df1c6aa87c24b
+    <entry file="file://$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/manager/SessionManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
+        <state relative-caret-position="226">
+          <caret line="335" column="26" lean-forward="false" selection-start-line="335" selection-start-column="26" selection-end-line="335" selection-end-column="26" />
+=======
+        <state relative-caret-position="249">
+          <caret line="174" column="13" lean-forward="true" selection-start-line="174" selection-start-column="13" selection-end-line="174" selection-end-column="13" />
+>>>>>>> b4fd8c2fff0310c226f9f0167f6d4d9b4dfe1479
+          <folding />
+        </state>
+      </provider>
+    </entry>
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/service/MobileAccessibilityService.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="249">
           <caret line="174" column="13" lean-forward="true" selection-start-line="174" selection-start-column="13" selection-end-line="174" selection-end-column="13" />
+=======
+    <entry file="file://$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/streamgenerator/ActivityRecognitionStreamGenerator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="362">
+          <caret line="163" column="35" lean-forward="false" selection-start-line="163" selection-start-column="35" selection-end-line="163" selection-end-column="35" />
+>>>>>>> b4fd8c2fff0310c226f9f0167f6d4d9b4dfe1479
           <folding />
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+    <entry file="file://$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/streamgenerator/ActivityRecognitionStreamGenerator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="362">
+          <caret line="163" column="35" lean-forward="false" selection-start-line="163" selection-start-column="35" selection-end-line="163" selection-end-column="35" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+>>>>>>> 4a34292d1088ffd99fa037b2399df1c6aa87c24b
     <entry file="file://$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/Data/DBHelper.java">
       <provider selected="true" editor-type-id="text-editor">
+=======
+    <entry file="file://$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/Data/DBHelper.java">
+      <provider selected="true" editor-type-id="text-editor">
+>>>>>>> b4fd8c2fff0310c226f9f0167f6d4d9b4dfe1479
         <state relative-caret-position="308">
           <caret line="435" column="40" lean-forward="false" selection-start-line="435" selection-start-column="40" selection-end-line="435" selection-end-column="40" />
           <folding />
@@ -4939,6 +5991,26 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="150">
           <caret line="25" column="19" lean-forward="false" selection-start-line="25" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
+<<<<<<< HEAD
+=======
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/labelingStudy/nctu/minuku_2/manager/InstanceManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
+        <state relative-caret-position="1706">
+          <caret line="216" column="24" lean-forward="false" selection-start-line="216" selection-start-column="24" selection-end-line="216" selection-end-column="24" />
+          <folding>
+            <marker date="1535625132795" expanded="true" signature="15490:15497" ph="{...}" />
+          </folding>
+=======
+        <state relative-caret-position="176">
+          <caret line="162" column="24" lean-forward="false" selection-start-line="162" selection-start-column="24" selection-end-line="162" selection-end-column="24" />
+          <folding />
+>>>>>>> b4fd8c2fff0310c226f9f0167f6d4d9b4dfe1479
+>>>>>>> 4a34292d1088ffd99fa037b2399df1c6aa87c24b
         </state>
       </provider>
     </entry>
@@ -4971,6 +6043,27 @@
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
+=======
+    <entry file="file://$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/manager/MinukuStreamManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="293">
+<<<<<<< HEAD
+          <caret line="219" column="5" lean-forward="false" selection-start-line="219" selection-start-column="5" selection-end-line="219" selection-end-column="5" />
+=======
+          <caret line="342" column="52" lean-forward="false" selection-start-line="342" selection-start-column="52" selection-end-line="342" selection-end-column="52" />
+>>>>>>> b4fd8c2fff0310c226f9f0167f6d4d9b4dfe1479
+          <folding>
+            <marker date="1535625133068" expanded="true" signature="8936:8943" ph="{...}" />
+            <marker date="1535625133068" expanded="true" signature="9018:9070" ph="{...}" />
+            <marker date="1535625133068" expanded="true" signature="9148:9209" ph="{...}" />
+            <marker date="1535625133068" expanded="false" signature="9264:9274" ph=" { " />
+            <marker date="1535625133068" expanded="false" signature="9300:9306" ph=" }" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+>>>>>>> 4a34292d1088ffd99fa037b2399df1c6aa87c24b
     <entry file="file://$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/model/DataRecord/UserInteractionDataRecord.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="35">
@@ -4983,10 +6076,8 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="195">
           <caret line="20" column="32" lean-forward="false" selection-start-line="20" selection-start-column="32" selection-end-line="20" selection-end-column="32" />
-          <folding>
-            <element signature="e#605#606#0" expanded="false" />
-            <element signature="e#645#646#0" expanded="false" />
-          </folding>
+<<<<<<< HEAD
+          <folding />
         </state>
       </provider>
     </entry>
@@ -5005,17 +6096,76 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-277">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+=======
+          <folding>
+            <element signature="e#605#606#0" expanded="false" />
+            <element signature="e#645#646#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/Utilities/CSVHelper.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="26" column="44" lean-forward="false" selection-start-line="26" selection-start-column="44" selection-end-line="26" selection-end-column="44" />
+>>>>>>> b4fd8c2fff0310c226f9f0167f6d4d9b4dfe1479
           <folding />
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/dao/AppUsageDataRecordDAO.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-186">
           <caret line="22" column="13" lean-forward="false" selection-start-line="22" selection-start-column="13" selection-end-line="22" selection-end-column="13" />
+=======
+    <entry file="file://$PROJECT_DIR$/minuku2-extended/src/main/AndroidManifest.xml">
+      <provider editor-type-id="android-manifest">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-277">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+>>>>>>> b4fd8c2fff0310c226f9f0167f6d4d9b4dfe1479
+          <folding />
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
+    <entry file="file://$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/model/DataRecord/AppUsageDataRecord.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-617">
+          <caret line="33" column="38" lean-forward="false" selection-start-line="33" selection-start-column="38" selection-end-line="33" selection-end-column="38" />
+=======
+    <entry file="file://$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/dao/AppUsageDataRecordDAO.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-186">
+          <caret line="22" column="13" lean-forward="false" selection-start-line="22" selection-start-column="13" selection-end-line="22" selection-end-column="13" />
+<<<<<<< HEAD
+=======
+>>>>>>> b4fd8c2fff0310c226f9f0167f6d4d9b4dfe1479
+          <folding />
+>>>>>>> 4a34292d1088ffd99fa037b2399df1c6aa87c24b
+        </state>
+      </provider>
+    </entry>
+<<<<<<< HEAD
+    <entry file="file://$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/streamgenerator/AppUsageStreamGenerator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="549">
+          <caret line="462" column="0" lean-forward="false" selection-start-line="462" selection-start-column="0" selection-end-line="462" selection-end-column="0" />
+          <folding>
+            <element signature="e#5718#5719#0" expanded="false" />
+            <element signature="e#5748#5749#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/streamgenerator/BatteryStreamGenerator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-148">
+          <caret line="115" column="30" lean-forward="false" selection-start-line="115" selection-start-column="30" selection-end-line="115" selection-end-column="30" />
+=======
     <entry file="file://$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/model/DataRecord/AppUsageDataRecord.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-617">
@@ -5024,6 +6174,39 @@
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
+=======
+    <entry file="file://$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/streamgenerator/AppUsageStreamGenerator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="549">
+          <caret line="426" column="0" lean-forward="false" selection-start-line="426" selection-start-column="0" selection-end-line="426" selection-end-column="0" />
+>>>>>>> b4fd8c2fff0310c226f9f0167f6d4d9b4dfe1479
+          <folding />
+        </state>
+      </provider>
+    </entry>
+<<<<<<< HEAD
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/labelingStudy/nctu/minuku_2/controller/CounterActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="321">
+          <caret line="447" column="14" lean-forward="false" selection-start-line="447" selection-start-column="14" selection-end-line="447" selection-end-column="14" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/streamgenerator/AccessibilityStreamGenerator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="30">
+          <caret line="39" column="34" lean-forward="false" selection-start-line="39" selection-start-column="34" selection-end-line="39" selection-end-column="34" />
+          <folding>
+            <marker date="1535625133084" expanded="true" signature="2920:3769" ph="{...}" />
+            <marker date="1535625133084" expanded="false" signature="3821:3832" ph=" { " />
+            <marker date="1535625133084" expanded="false" signature="3841:3847" ph=" }" />
+            <marker date="1535625133084" expanded="true" signature="3902:3910" ph="{...}" />
+            <marker date="1535625133084" expanded="true" signature="4001:4116" ph="{...}" />
+            <marker date="1535625133084" expanded="true" signature="4171:4220" ph="{...}" />
+=======
+>>>>>>> 4a34292d1088ffd99fa037b2399df1c6aa87c24b
     <entry file="file://$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/streamgenerator/BatteryStreamGenerator.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-148">
@@ -5037,10 +6220,12 @@
           <caret line="447" column="14" lean-forward="false" selection-start-line="447" selection-start-column="14" selection-end-line="447" selection-end-column="14" />
           <folding>
             <element signature="imports" expanded="false" />
+>>>>>>> b4fd8c2fff0310c226f9f0167f6d4d9b4dfe1479
           </folding>
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/app/src/main/java/labelingStudy/nctu/minuku_2/service/BackgroundService.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -5075,14 +6260,24 @@
         </state>
       </provider>
     </entry>
+=======
+<<<<<<< HEAD
+    <entry file="file://$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/streamgenerator/UserInteractionStreamGenerator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-284">
+          <caret line="63" column="47" lean-forward="false" selection-start-line="63" selection-start-column="47" selection-end-line="63" selection-end-column="47" />
+=======
+>>>>>>> 4a34292d1088ffd99fa037b2399df1c6aa87c24b
     <entry file="file://$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/streamgenerator/AccessibilityStreamGenerator.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="30">
           <caret line="39" column="34" lean-forward="false" selection-start-line="39" selection-start-column="34" selection-end-line="39" selection-end-column="34" />
+>>>>>>> b4fd8c2fff0310c226f9f0167f6d4d9b4dfe1479
           <folding />
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/streamgenerator/AppUsageStreamGenerator.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="549">
@@ -5091,6 +6286,15 @@
         </state>
       </provider>
     </entry>
+=======
+<<<<<<< HEAD
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/labelingStudy/nctu/minuku_2/service/BackgroundService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1011">
+          <caret line="91" column="37" lean-forward="false" selection-start-line="91" selection-start-column="37" selection-end-line="91" selection-end-column="37" />
+          <folding />
+=======
+>>>>>>> 4a34292d1088ffd99fa037b2399df1c6aa87c24b
     <entry file="file://$PROJECT_DIR$/minuku2-extended/src/main/java/labelingStudy/nctu/minuku/streamgenerator/UserInteractionStreamGenerator.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="379">
@@ -5102,6 +6306,7 @@
             <element signature="e#4271#5371#0" expanded="true" />
             <element signature="e#5370#5371#0" expanded="true" />
           </folding>
+>>>>>>> b4fd8c2fff0310c226f9f0167f6d4d9b4dfe1479
         </state>
       </provider>
     </entry>
