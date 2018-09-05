@@ -220,8 +220,6 @@ public class TransportationModeStreamGenerator extends AndroidStreamGenerator<Tr
             if(record.getMostProbableActivity().getConfidence()!=999){ //conf == 999 means it didn't receive anything from AR
 
                 latest_activityRecognitionDataRecord = record;
-
-//                latest_activityRecognitionDataRecord.getProbableActivities();
             }
         }
 
@@ -267,7 +265,7 @@ public class TransportationModeStreamGenerator extends AndroidStreamGenerator<Tr
 
     @Override
     public long getUpdateFrequency() {
-        return 1; //TODO check its efficiency.
+        return 1;
     }
 
     @Override
