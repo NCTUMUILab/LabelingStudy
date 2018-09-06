@@ -935,7 +935,7 @@ public class TransportationModeStreamGenerator extends AndroidStreamGenerator<Tr
 
                 //if probable activities contain the target activity, we count! (not simply see the most probable one)
 
-                if (detectedActivities.get(activityIndex).getType()==activityType
+                /*if (detectedActivities.get(activityIndex).getType()==activityType
                     //only consider the first two labels
                     //also, we only care about the label which is much confidence to
                     //prevent the low confidence ones would affect the result
@@ -948,8 +948,27 @@ public class TransportationModeStreamGenerator extends AndroidStreamGenerator<Tr
                 //only consider the first two labels
                 if(activityIndex > 1){
                     break;
+                }*/
+
+                if(activityIndex == 0){
+
+                    if (detectedActivities.get(activityIndex).getType()==activityType){
+                        count +=1;
+                    }
+                }else if(activityIndex == 1){
+
+                    if (detectedActivities.get(activityIndex).getType()==activityType &&
+                            detectedActivities.get(activityIndex).getConfidence() > 35){
+                        count +=1;
+                    }
+                }else{
+
+                    break;
                 }
+
             }
+
+
 
         }
 
