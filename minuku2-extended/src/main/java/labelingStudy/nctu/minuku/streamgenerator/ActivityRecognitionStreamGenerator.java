@@ -320,7 +320,6 @@ public class ActivityRecognitionStreamGenerator extends AndroidStreamGenerator<A
         this.activityRecognitionDataRecord = activityRecognitionDataRecord;
 
         updateStream();
-
     }
 
     /**

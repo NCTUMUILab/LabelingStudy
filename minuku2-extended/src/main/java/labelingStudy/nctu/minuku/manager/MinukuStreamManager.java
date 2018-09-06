@@ -377,6 +377,9 @@ public class MinukuStreamManager implements StreamManager {
                             //we first need to check whether the previous is a transportation
                         } else {
 
+                            //TODO if the previous one is static, check the second previous one is the same and the times are closed
+
+
                             //insert into the session table;
                             int sessionId = (int) sessionCount + 1;
                             Session session = new Session(sessionId);

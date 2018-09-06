@@ -209,6 +209,7 @@ public class TransportationModeStreamGenerator extends AndroidStreamGenerator<Tr
             if (record!=null) {
 
                 //getting latest Transportation based on the incoming record
+
                 examineTransportation(record);
 
                 //Log.d(TAG, "[test replay] test trip: after examine transportation the current activity is  is " + getConfirmedActvitiyString() + " the status is " + getCurrentState());
@@ -346,7 +347,7 @@ public class TransportationModeStreamGenerator extends AndroidStreamGenerator<Tr
         else if (getCurrentState()==STATE_SUSPECTING_START) {
 
             //
-            if (probableActivities.get(0).getType() == getSuspectedStopActivityType() &&
+            if (probableActivities.get(0).getType() == getSuspectedStartActivityType() &&
                     probableActivities.get(0).getConfidence() >= CANCEL_SUSPECT_Threshold) {
 
                 //back to static, cancel the suspection
@@ -499,7 +500,7 @@ public class TransportationModeStreamGenerator extends AndroidStreamGenerator<Tr
              */
 
             //or directly enter suspecting activity: if the current record is other type of transportation mode
-            if (probableActivities.get(0).getType() != getSuspectedStopActivityType() &&
+            if (probableActivities.get(0).getType()!=getSuspectedStopActivityType() &&
                     probableActivities.get(0).getType()!=DetectedActivity.TILTING &&
                     probableActivities.get(0).getType()!=DetectedActivity.STILL &&
                     probableActivities.get(0).getType()!=DetectedActivity.UNKNOWN &&
@@ -555,7 +556,6 @@ public class TransportationModeStreamGenerator extends AndroidStreamGenerator<Tr
                             setSuspectTime(detectionTime);
 
                             CSVHelper.TransportationState_StoreToCSV(new Date().getTime(), "STATE_SUSPECTING_START", getConfirmedActvitiyString());
-
                         }
                     }
                 }

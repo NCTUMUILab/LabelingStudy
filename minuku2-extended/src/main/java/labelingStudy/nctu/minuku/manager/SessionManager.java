@@ -316,7 +316,7 @@ public class SessionManager {
         return session;
     }
 
-    public static Session getSession (String id) {
+    public static Session getSession(String id) {
 
         int sessionId = Integer.parseInt(id);
         ArrayList<String> res =  DBHelper.querySession(sessionId);
