@@ -449,10 +449,8 @@ public class TransportationModeStreamGenerator extends AndroidStreamGenerator<Tr
                 return getConfirmedActivityType();
             }
 
-
             //the incoming label is not the confirmed transportation mode with a high confidence, so we need to check labels in a window time
             else {
-
 
                 if (isTimeToConfirm) {
                     long startTime =detectionTime -
@@ -948,7 +946,7 @@ public class TransportationModeStreamGenerator extends AndroidStreamGenerator<Tr
                 }
 
                 //only consider the first two labels
-                if(activityIndex >= 1){
+                if(activityIndex > 1){
                     break;
                 }
             }
