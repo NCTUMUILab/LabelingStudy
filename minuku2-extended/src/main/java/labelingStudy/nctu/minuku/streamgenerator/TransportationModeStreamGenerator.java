@@ -346,8 +346,8 @@ public class TransportationModeStreamGenerator extends AndroidStreamGenerator<Tr
         }
         else if (getCurrentState()==STATE_SUSPECTING_START) {
 
-            //
             if (probableActivities.get(0).getType() == getSuspectedStartActivityType() &&
+                    probableActivities.get(0).getType() != DetectedActivity.STILL &&
                     probableActivities.get(0).getConfidence() >= CANCEL_SUSPECT_Threshold) {
 
                 //back to static, cancel the suspection
@@ -436,6 +436,7 @@ public class TransportationModeStreamGenerator extends AndroidStreamGenerator<Tr
 
             //if we see the original transportation label with a high confidence level, we cancel the suspect stop
             if (probableActivities.get(0).getType() == getSuspectedStopActivityType() &&
+                    probableActivities.get(0).getType() != DetectedActivity.STILL &&
                     probableActivities.get(0).getConfidence() >= CANCEL_SUSPECT_Threshold) {
 
                 //back to static, cancel the suspection
