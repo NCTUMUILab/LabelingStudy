@@ -32,8 +32,8 @@ public class RingerStreamGenerator extends AndroidStreamGenerator<RingerDataReco
 
     //audio and ringer
     public static final String RINGER_MODE_NORMAL = "Normal";
-    public static final String RINGER_MODE_VIBRATE = "Silent";
-    public static final String RINGER_MODE_SILENT = "Vibrate";
+    public static final String RINGER_MODE_VIBRATE = "Vibrate";
+    public static final String RINGER_MODE_SILENT = "Silent";
 
     public static final String MODE_CURRENT = "Current";
     public static final String MODE_INVALID = "Invalid";
