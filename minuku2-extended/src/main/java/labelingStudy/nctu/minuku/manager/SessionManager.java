@@ -3,7 +3,6 @@ package labelingStudy.nctu.minuku.manager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,7 +18,6 @@ import labelingStudy.nctu.minuku.config.Constants;
 import labelingStudy.nctu.minuku.model.Annotation;
 import labelingStudy.nctu.minuku.model.AnnotationSet;
 import labelingStudy.nctu.minuku.model.DataRecord.LocationDataRecord;
-import labelingStudy.nctu.minuku.model.DataRecord.TransportationModeDataRecord;
 import labelingStudy.nctu.minuku.model.Session;
 import labelingStudy.nctu.minuku.streamgenerator.TransportationModeStreamGenerator;
 

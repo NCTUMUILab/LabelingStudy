@@ -209,6 +209,7 @@ public class TransportationModeStreamGenerator extends AndroidStreamGenerator<Tr
             if (record!=null) {
 
                 //getting latest Transportation based on the incoming record
+
                 examineTransportation(record);
 
                 //Log.d(TAG, "[test replay] test trip: after examine transportation the current activity is  is " + getConfirmedActvitiyString() + " the status is " + getCurrentState());
@@ -220,8 +221,6 @@ public class TransportationModeStreamGenerator extends AndroidStreamGenerator<Tr
             if(record.getMostProbableActivity().getConfidence()!=999){ //conf == 999 means it didn't receive anything from AR
 
                 latest_activityRecognitionDataRecord = record;
-
-//                latest_activityRecognitionDataRecord.getProbableActivities();
             }
         }
 
@@ -267,7 +266,7 @@ public class TransportationModeStreamGenerator extends AndroidStreamGenerator<Tr
 
     @Override
     public long getUpdateFrequency() {
-        return 1; //TODO check its efficiency.
+        return 1;
     }
 
     @Override
@@ -347,8 +346,8 @@ public class TransportationModeStreamGenerator extends AndroidStreamGenerator<Tr
         }
         else if (getCurrentState()==STATE_SUSPECTING_START) {
 
-            //
-            if (probableActivities.get(0).getType() == getSuspectedStopActivityType() &&
+            if (probableActivities.get(0).getType() == getSuspectedStartActivityType() &&
+                    probableActivities.get(0).getType() != DetectedActivity.STILL &&
                     probableActivities.get(0).getConfidence() >= CANCEL_SUSPECT_Threshold) {
 
                 //back to static, cancel the suspection
@@ -437,6 +436,7 @@ public class TransportationModeStreamGenerator extends AndroidStreamGenerator<Tr
 
             //if we see the original transportation label with a high confidence level, we cancel the suspect stop
             if (probableActivities.get(0).getType() == getSuspectedStopActivityType() &&
+                    probableActivities.get(0).getType() != DetectedActivity.STILL &&
                     probableActivities.get(0).getConfidence() >= CANCEL_SUSPECT_Threshold) {
 
                 //back to static, cancel the suspection
@@ -449,10 +449,8 @@ public class TransportationModeStreamGenerator extends AndroidStreamGenerator<Tr
                 return getConfirmedActivityType();
             }
 
-
             //the incoming label is not the confirmed transportation mode with a high confidence, so we need to check labels in a window time
             else {
-
 
                 if (isTimeToConfirm) {
                     long startTime =detectionTime -
@@ -501,7 +499,7 @@ public class TransportationModeStreamGenerator extends AndroidStreamGenerator<Tr
              */
 
             //or directly enter suspecting activity: if the current record is other type of transportation mode
-            if (probableActivities.get(0).getType() != getSuspectedStopActivityType() &&
+            if (probableActivities.get(0).getType()!=getSuspectedStopActivityType() &&
                     probableActivities.get(0).getType()!=DetectedActivity.TILTING &&
                     probableActivities.get(0).getType()!=DetectedActivity.STILL &&
                     probableActivities.get(0).getType()!=DetectedActivity.UNKNOWN &&
@@ -557,7 +555,6 @@ public class TransportationModeStreamGenerator extends AndroidStreamGenerator<Tr
                             setSuspectTime(detectionTime);
 
                             CSVHelper.TransportationState_StoreToCSV(new Date().getTime(), "STATE_SUSPECTING_START", getConfirmedActvitiyString());
-
                         }
                     }
                 }
@@ -938,7 +935,7 @@ public class TransportationModeStreamGenerator extends AndroidStreamGenerator<Tr
 
                 //if probable activities contain the target activity, we count! (not simply see the most probable one)
 
-                if (detectedActivities.get(activityIndex).getType()==activityType
+                /*if (detectedActivities.get(activityIndex).getType()==activityType
                     //only consider the first two labels
                     //also, we only care about the label which is much confidence to
                     //prevent the low confidence ones would affect the result
@@ -949,9 +946,26 @@ public class TransportationModeStreamGenerator extends AndroidStreamGenerator<Tr
                 }
 
                 //only consider the first two labels
-                if(activityIndex >= 1){
+                if(activityIndex > 1){
+                    break;
+                }*/
+
+                if(activityIndex == 0){
+
+                    if (detectedActivities.get(activityIndex).getType()==activityType){
+                        count +=1;
+                    }
+                }else if(activityIndex == 1){
+
+                    if (detectedActivities.get(activityIndex).getType()==activityType &&
+                            detectedActivities.get(activityIndex).getConfidence() > 35){
+                        count +=1;
+                    }
+                }else{
+
                     break;
                 }
+
             }
 
         }

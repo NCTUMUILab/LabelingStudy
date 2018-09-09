@@ -123,8 +123,10 @@ public class BackgroundService extends Service {
 
         mNotificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
 
-        createSurveyNotificationChannel();
-        createNotificationChannel();
+//        createSurveyNotificationChannel();
+//        createNotificationChannel();
+        createNotificationChannel(Constants.ONGOING_CHANNEL_NAME, Constants.ONGOING_CHANNEL_ID, NotificationManager.IMPORTANCE_LOW);
+        createNotificationChannel(Constants.SURVEY_CHANNEL_NAME, Constants.SURVEY_CHANNEL_ID, NotificationManager.IMPORTANCE_HIGH);
 
         //make the WifiReceiver start sending availSite to the server.
         registerReceiver(mWifiReceiver, intentFilter);
@@ -400,7 +402,7 @@ public class BackgroundService extends Service {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
-    private void createNotificationChannel() {
+    /*private void createNotificationChannel() {
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is new and not in the support library
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -412,9 +414,23 @@ public class BackgroundService extends Service {
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
         }
+    }*/
+
+    private void createNotificationChannel(String channelName, String channelID, int channelImportance) {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = channelName;
+            int importance = channelImportance;
+            NotificationChannel channel = new NotificationChannel(channelID, name, importance);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
     }
 
-    private void createSurveyNotificationChannel() {
+    /*private void createSurveyNotificationChannel() {
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is new and not in the support library
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -426,7 +442,7 @@ public class BackgroundService extends Service {
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
         }
-    }
+    }*/
 
     BroadcastReceiver CheckRunnableReceiver = new BroadcastReceiver() {
 

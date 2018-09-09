@@ -322,6 +322,7 @@ public class Timeline extends AppCompatActivity {
                 mList.setVisibility(View.VISIBLE);
 
                 //TODO if there have some new availSite, start from the top (reset)
+                //TODO not working
                 int currentposition = sharedPrefs.getInt("currentposition", 0);
                 mList.scrollToPosition(currentposition);
 
@@ -625,15 +626,15 @@ public class Timeline extends AppCompatActivity {
                                 }else {
 
                                     name = getSiteNameFromNet(lat, lng);
+                                    //TODO store(update) them into the session table at the first time they see this record at the first time
 
-//                                    transportationDuration = textShortenIfTooLong(name);
                                     transportationDuration = name;
                                 }
                             }else {
 
                                 name = getSiteNameFromNet(lat, lng);
+                                //TODO store(update) them into the session table at the first time they see this record at the first time
 
-//                                transportationDuration = textShortenIfTooLong(name);
                                 transportationDuration = name;
                             }
 
@@ -1639,13 +1640,13 @@ public class Timeline extends AppCompatActivity {
         @Override
         protected String doInBackground(String... params) {
 
-            String result = null;
             String url = params[0];
 
-            result = getJSON(url);
+            String result = getJSON(url);
 
             return result;
         }
+
         // onPostExecute displays the results of the AsyncTask.
         @Override
         protected void onPostExecute(String result) {

@@ -44,7 +44,7 @@ public class AccessibilityStreamGenerator extends AndroidStreamGenerator<Accessi
 
         mobileAccessibilityService = new MobileAccessibilityService(this);
 
-        pack = text = type = extra = "";
+        pack = text = type = extra = "NA";
 
         this.register();
     }
@@ -100,7 +100,7 @@ public class AccessibilityStreamGenerator extends AndroidStreamGenerator<Accessi
             return false;
         }
 
-        pack = text = type = extra = "";
+//        pack = text = type = extra = "NA";
 
         return false;
     }
