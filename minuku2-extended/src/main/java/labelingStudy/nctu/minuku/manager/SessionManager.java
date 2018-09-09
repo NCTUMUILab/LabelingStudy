@@ -3,6 +3,7 @@ package labelingStudy.nctu.minuku.manager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -12,12 +13,15 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import labelingStudy.nctu.minuku.Data.DBHelper;
+import labelingStudy.nctu.minuku.Utilities.CSVHelper;
 import labelingStudy.nctu.minuku.Utilities.ScheduleAndSampleManager;
 import labelingStudy.nctu.minuku.config.Constants;
 import labelingStudy.nctu.minuku.model.Annotation;
 import labelingStudy.nctu.minuku.model.AnnotationSet;
 import labelingStudy.nctu.minuku.model.DataRecord.LocationDataRecord;
+import labelingStudy.nctu.minuku.model.DataRecord.TransportationModeDataRecord;
 import labelingStudy.nctu.minuku.model.Session;
+import labelingStudy.nctu.minuku.streamgenerator.TransportationModeStreamGenerator;
 
 /**
  * Created by Lawrence on 2018/3/13.
@@ -133,6 +137,10 @@ public class SessionManager {
         return false;
     }
 
+    /**
+     * In current structure, there would only be one ongoingSession in the list, while the ongoingSession could be considered as the current recording session
+     * @return
+     */
     public static ArrayList<Integer> getOngoingSessionIdList() {
         return mOngoingSessionIdList;
     }
@@ -352,11 +360,11 @@ public class SessionManager {
         return session;
     }
 
-    public static Session getLast2Session() {
+    public static Session getSecondLastSession() {
 
         Session session = null;
 
-        ArrayList<String> sessions = DBHelper.queryLast2Sessions();
+        ArrayList<String> sessions = DBHelper.querySecondLastSessions();
         if(sessions.size() >= 2) { //sessions.size() != 0
 
             String sessionStr = sessions.get(1);
@@ -372,7 +380,25 @@ public class SessionManager {
         return session;
     }
 
+    public static Session getThirdLastSession() {
 
+        Session session = null;
+
+        ArrayList<String> sessions = DBHelper.queryThirdLastSessions();
+        if(sessions.size() >= 3) { //sessions.size() != 0
+
+            String sessionStr = sessions.get(2);
+            Log.d(TAG, "test show trip lastsession " + sessionStr);
+            session = convertStringToSession(sessionStr);
+//        Log.d(TAG, " test show trip  testgetdata id " + session.getId() + " startTime " + session.getStartTime() + " end time " + session.getEndTime() + " annotation " + session.getAnnotationsSet().toJSONObject().toString());
+            Log.d(TAG, " test show trip  testgetdata id " + session.getId() + " startTime " + ScheduleAndSampleManager.getTimeString(session.getStartTime()) + " end time " + ScheduleAndSampleManager.getTimeString(session.getEndTime()) + " annotation " + session.getAnnotationsSet().toJSONObject().toString());
+        }else{
+
+            session = new Session(1);
+        }
+
+        return session;
+    }
 
     public static long getLastRecordTimeinSession(int sessionId) {
 
@@ -455,75 +481,90 @@ public class SessionManager {
 
     }
 
-    public static boolean examineSessionCombinationByActivityAndTime(Session secondLastSession, String activity, long time){
+    /**
+     * Combine sessions if
+     * newSession and lastSecond are same
+     * or
+     * newSession and lastSecond are same while last is static
+     */
+    public static boolean examineSessionCombinationByActivityAndTime(String newSessionActivityType, long newSessionStartTime){
 
         boolean combine = false;
 
+        Log.d(TAG, "EXAMINE : " + newSessionActivityType);
+        if (newSessionActivityType == TransportationModeStreamGenerator.TRANSPORTATION_MODE_NAME_NO_TRANSPORTATION) {
+            return false;
+        }
+        Session lastSession = getLastSession();
+        Session secondLastSession = getSecondLastSession();
         //get annotaitons that has the transportation mode tag
-        ArrayList<Annotation> annotations = secondLastSession.getAnnotationsSet().getAnnotationByContent(activity);
-
 
         //check if the last session has endtime. It is possible that it ends unexpectedly
 
-
-
         //if the previous session does not have any annotation of which transportation is of the same tag, we should not combine
-        if (annotations.size() == 0) {
-            Log.d(TAG, "[test combine] addSessionFlag = true  the last session is not the same activity");
+        Log.d(TAG, "[test combine] addSessionFlag = true  the last session is not the same activity");
+        String staticActivity = "static";
+        if (lastSession.getAnnotationsSet().getAnnotationByContent(staticActivity).size() == 0) {
             combine = false;
-        }
-
-        // the current activity is the same TM with the previous session mode, we check its time difference
-        else {
-            Log.d(TAG, "[test combine] we found the last session with the same activity");
-            //check its interval to see if it's within 5 minutes
-
-            Log.d(TAG, "[test combine] the previous session ends at " +  secondLastSession.getEndTime() + " and the current activity starts at " + time  +
-                    " the difference is " + (time - secondLastSession.getEndTime()) / Constants.MILLISECONDS_PER_MINUTE + " minutes");
-
-            //if the current session is too close from the previous one in terms of time, we should combine
-            if (time - secondLastSession.getEndTime() <= SessionManager.SESSION_MIN_INTERVAL_THRESHOLD_TRANSPORTATION) {
-
-                Log.d(TAG, "[test combine] the current activity is too close from the previous trip, continue the last session! the difference is "
-                        + (time - secondLastSession.getEndTime()) / Constants.MILLISECONDS_PER_MINUTE + " minutes");
-
-                combine = true;
-
-                //TODO delete the last session?
-
-                Session lastSession = SessionManager.getLastSession();
-
-                DBHelper.deleteSession(lastSession.getId());
-            }
-            //the session is far from the previous one, it should be a new session. we should not combine
-            else {
-                Log.d(TAG, "[test combine] addSessionFlag = true the current truip is far from the previous trip");
+        } else {
+            if (secondLastSession.getAnnotationsSet().getAnnotationByContent(newSessionActivityType).size() == 0) {
                 combine = false;
+            } else {
+                // TODO: identify if the threshold should double since this is the case that merging three sessions
+                int twiceIntervalThreshHoldFactor = 1;
+                // the current activity is the same TM with the previous session mode, we check its time difference
+                Log.d(TAG, "[test combine] we found the third last session with the same activity");
+                //check its interval to see if it's within 5 minutes
+
+                Log.d(TAG, "[test combine] the third last session ends at " +  secondLastSession.getEndTime() + " and the current activity starts at " + newSessionStartTime  +
+                        " the difference is " + (newSessionStartTime - secondLastSession.getEndTime()) / Constants.MILLISECONDS_PER_MINUTE + " minutes");
+
+                //if the current session is too close from the previous one in terms of time, we should combine
+                if (newSessionStartTime - secondLastSession.getEndTime() <=
+                        (SessionManager.SESSION_MIN_INTERVAL_THRESHOLD_TRANSPORTATION * twiceIntervalThreshHoldFactor)) {
+
+                    Log.d(TAG, "[test combine] the current activity is too close from the previous trip, continue the last session! the difference is "
+                            + (newSessionStartTime - secondLastSession.getEndTime()) / Constants.MILLISECONDS_PER_MINUTE + " minutes");
+
+                    combine = true;
+
+                    //TODO delete the last session?
+//                    DBHelper.deleteSession(lastSession.getId());
+                } else {
+                    //the session is far from the previous one, it should be a new session. we should not combine
+                    Log.d(TAG, "[test combine] addSessionFlag = true the current truip is far from the previous trip");
+                    combine = false;
+                }
             }
         }
 
-
+        // new start, last start, threshold
+        CSVHelper.storeToCSV(CSVHelper.CSV_EXAMINE_COMBINE_SESSION,
+                ScheduleAndSampleManager.getTimeString(newSessionStartTime, new SimpleDateFormat(Constants.DATE_FORMAT_HOUR_MIN_SECOND)),
+                ScheduleAndSampleManager.getTimeString(secondLastSession.getStartTime(), new SimpleDateFormat(Constants.DATE_FORMAT_HOUR_MIN_SECOND)),
+                String.valueOf((newSessionStartTime - secondLastSession.getEndTime())),
+                newSessionActivityType,
+                (secondLastSession.getAnnotationsSet().getAnnotationByContent(newSessionActivityType).size() == 0) ? "Same" : "Different",
+                (lastSession.getAnnotationsSet().getAnnotationByContent(staticActivity).size() == 0)  ? "Static" : "NonStatic",
+                String.valueOf(combine));
         //debug...
-        String lastSessionStr = DBHelper.queryLastSession().get(0);
-        Log.d(TAG, "test combine: the previous acitivty is movnig,after combine it the last session is: " +  lastSessionStr );
+//        String lastSessionStr = DBHelper.queryLastSession().get(0);
+//        Log.d(TAG, "test combine: the previous acitivty is movnig,after combine it the last session is: " +  lastSessionStr );
         return combine;
-
-
-
     }
 
 
     /**
-     *
-     * @param session
+     *Combine secondLast  session and new session
      */
     public static void continue2ndLastSession(Session session) {
 
-        //remove the ongoing session
-        getOngoingSessionIdList().add(session.getId());
-
+        //reset ongoingSession to last session
+//        getOngoingSessionIdList().add(getLastSession().getId());
+        getOngoingSessionIdList().add(getSecondLastSession().getId());
         //update session with end time and long enough flag.
-        updateCurSessionEndInfoTo(session.getId(),0,true);
+        updateCurSessionEndInfoTo(getSecondLastSession().getId(),0,true);
+        //TODO: set lastSession which is static
 
     }
 
@@ -707,7 +748,21 @@ public class SessionManager {
 
         Log.d(TAG, "[toAnnorationSet] the annotationSet has  " + annotationSet.getAnnotations().size() + " annotations ");
         return annotationSet;
-
     }
-    
+
+    public static Session combineSession(Session s1, Session s2) {
+        Session sessionPrevious;
+        Session sessionLater;
+
+        if (s1.getEndTime() < s2.getEndTime()) {
+            sessionPrevious = s1;
+            sessionLater = s2;
+        } else {
+            sessionPrevious = s2;
+            sessionLater = s1;
+        }
+        //TODO: merge two sessions, may note the order
+
+        return sessionPrevious;
+    }
 }
