@@ -31,7 +31,7 @@ public class CSVHelper {
     public static final String CSV_CHECK_TRANSPORTATION = "CheckTransportationMode.csv";
     public static final String CSV_RUNNABLE_CHECK = "Runnable_check.csv";
     public static final String CSV_WIFI_RECEIVER_CHECK = "Wifi_Receiver_check.csv";
-
+    public static final String CSV_EXAMINE_COMBINE_SESSION = "ExamineCombineSession.csv";
     public static void storeToCSV(String fileName, String... texts){
 
         try{

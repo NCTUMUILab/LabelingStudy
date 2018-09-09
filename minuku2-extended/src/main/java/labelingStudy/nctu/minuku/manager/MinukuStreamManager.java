@@ -421,11 +421,16 @@ public class MinukuStreamManager implements StreamManager {
                             String beforeSendESM = "Preparing to send ESM";
                             CSVHelper.storeToCSV(CSVHelper.CSV_ESM, beforeSendESM);
 
-                            SessionManager.startNewSession(session);
+                            if (SessionManager.examineSessionCombinationByActivityAndTime(transportationModeDataRecord.getConfirmedActivityString(), session.getStartTime()) == true) {
+                                //Should combine
+                                SessionManager.continue2ndLastSession(session);
+                            } else {
+                                SessionManager.startNewSession(session);
+                            }
 
                             CSVHelper.storeToCSV(CSVHelper.CSV_ESM, " after startNewSession ");
 
-                            sharedPrefs.edit().putInt("ongoingSessionid", session.getId()).apply();
+                            sharedPrefs.edit().putInt("ongoingSessionid", SessionManager.getOngoingSessionIdList().get(0)).apply();
                         }
 
                         if (currentWork.equals("ESM")) {
