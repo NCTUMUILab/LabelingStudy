@@ -1150,7 +1150,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     }
 
-    public static ArrayList<String> queryLast2Sessions() {
+    public static ArrayList<String> querySecondLastSessions() {
 
         ArrayList<String> rows = new ArrayList<String>();
 
@@ -1179,10 +1179,39 @@ public class DBHelper extends SQLiteOpenHelper {
         }catch (Exception e){
 
         }
-
-
         return rows;
+    }
 
+    public static ArrayList<String> queryThirdLastSessions() {
+
+        ArrayList<String> rows = new ArrayList<String>();
+
+        try{
+
+            SQLiteDatabase db = DBManager.getInstance().openDatabase();
+            String sql = "SELECT *"  +" FROM " + SESSION_TABLE_NAME  +
+                    " order by " + COL_ID + " DESC LIMIT 3";
+
+            //execute the query
+            Cursor cursor = db.rawQuery(sql, null);
+            int columnCount = cursor.getColumnCount();
+            while(cursor.moveToNext()){
+                String curRow = "";
+                for (int i=0; i<columnCount; i++){
+                    curRow += cursor.getString(i)+ Constants.DELIMITER;
+                }
+                Log.d(TAG, "[test combine queryLastRecord] get result row " +curRow);
+
+                rows.add(curRow);
+            }
+            cursor.close();
+
+            DBManager.getInstance().closeDatabase();
+
+        }catch (Exception e){
+
+        }
+        return rows;
     }
 
     public static ArrayList<String> queryRecordsBetweenTimes(String table_name, long startTime, long endTime) {
