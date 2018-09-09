@@ -968,8 +968,6 @@ public class TransportationModeStreamGenerator extends AndroidStreamGenerator<Tr
 
             }
 
-
-
         }
 
         float percentage = (float)count/windowData.size();

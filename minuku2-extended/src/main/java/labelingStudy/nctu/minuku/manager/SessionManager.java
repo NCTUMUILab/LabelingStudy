@@ -372,8 +372,6 @@ public class SessionManager {
         return session;
     }
 
-
-
     public static long getLastRecordTimeinSession(int sessionId) {
 
         ArrayList<String> resultBySession = null;
@@ -506,12 +504,10 @@ public class SessionManager {
         //debug...
         String lastSessionStr = DBHelper.queryLastSession().get(0);
         Log.d(TAG, "test combine: the previous acitivty is movnig,after combine it the last session is: " +  lastSessionStr );
+
         return combine;
 
-
-
     }
-
 
     /**
      *
@@ -519,6 +515,7 @@ public class SessionManager {
      */
     public static void continue2ndLastSession(Session session) {
 
+        //TODO Marvin, add getLastSession id instead of current one but why?
         //remove the ongoing session
         getOngoingSessionIdList().add(session.getId());
 
