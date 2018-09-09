@@ -493,6 +493,9 @@ public class SessionManager {
 
         Log.d(TAG, "EXAMINE : " + newSessionActivityType);
         if (newSessionActivityType == TransportationModeStreamGenerator.TRANSPORTATION_MODE_NAME_NO_TRANSPORTATION) {
+            CSVHelper.storeToCSV(CSVHelper.CSV_EXAMINE_COMBINE_SESSION,
+                    newSessionActivityType,
+                    String.valueOf(combine));
             return false;
         }
         Session lastSession = getLastSession();
