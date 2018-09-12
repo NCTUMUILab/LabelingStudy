@@ -165,6 +165,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String COL_SESSION_USERPRESSORNOT_FLAG = "userPressOrNot";
     public static final String COL_SESSION_SENTORNOT_FLAG = "sentOrNot";
     public static final String COL_SESSION_TYPE = "type";
+    public static final String COL_SESSION_HIDEDORNOT_FLAG = "hidedOrNot";
     public static final String COL_SESSION_ID = "session_id";
     public static final String COL_SESSION_CREATED_TIME = "session_created_time";
     public static final String COL_SESSION_ANNOTATION_SET = "session_annotation_set";
@@ -177,6 +178,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final int COL_INDEX_SESSION_USERPRESSORNOT_FLAG = 6;
     public static final int COL_INDEX_SESSION_SENTORNOT_FLAG = 7;
     public static final int COL_INDEX_SESSION_TYPE = 8;
+    public static final int COL_INDEX_SESSION_HIDEDORNOT = 9;
 
     //Annotate
     public static final String StartTime_col = "StartTime";
@@ -535,7 +537,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 COL_SESSION_MODIFIED_FLAG + " INTEGER, " +
                 COL_SESSION_USERPRESSORNOT_FLAG + " INTEGER, " +
                 COL_SESSION_SENTORNOT_FLAG + " INTEGER, " +
-                COL_SESSION_TYPE + " TEXT "+
+                COL_SESSION_TYPE + " TEXT, "+
+                COL_SESSION_HIDEDORNOT_FLAG + " INTEGER "+
                 ");" ;
 
         db.execSQL(cmd);
@@ -655,6 +658,7 @@ public class DBHelper extends SQLiteOpenHelper {
             values.put(COL_SESSION_MODIFIED_FLAG, sessionIsModified);
             values.put(COL_SESSION_SENTORNOT_FLAG, sessionIsSent);
             values.put(COL_SESSION_TYPE, session.getType());
+            values.put(COL_SESSION_HIDEDORNOT_FLAG, session.isHide());
 
             //get row number after the insertion
             Log.d(TAG, "[test combine] insert session: " + values.toString());
@@ -1122,6 +1126,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
             SQLiteDatabase db = DBManager.getInstance().openDatabase();
             String sql = "SELECT *"  +" FROM " + SESSION_TABLE_NAME  +
+                    " WHERE "+ DBHelper.COL_SESSION_HIDEDORNOT_FLAG + " <> " + Constants.SESSION_IS_HIDED_FLAG +
                     " order by " + COL_ID + " DESC LIMIT 1";
 
             //execute the query
@@ -1137,7 +1142,6 @@ public class DBHelper extends SQLiteOpenHelper {
                 rows.add(curRow);
             }
             cursor.close();
-
 
             DBManager.getInstance().closeDatabase();
 
@@ -1157,7 +1161,8 @@ public class DBHelper extends SQLiteOpenHelper {
         try{
 
             SQLiteDatabase db = DBManager.getInstance().openDatabase();
-            String sql = "SELECT *"  +" FROM " + SESSION_TABLE_NAME  +
+            String sql = "SELECT *"  +" FROM " + SESSION_TABLE_NAME +
+                    " WHERE "+ DBHelper.COL_SESSION_HIDEDORNOT_FLAG + " <> " + Constants.SESSION_IS_HIDED_FLAG +
                     " order by " + COL_ID + " DESC LIMIT 2";
 
             //execute the query
@@ -1542,6 +1547,27 @@ public class DBHelper extends SQLiteOpenHelper {
             ContentValues values = new ContentValues();
 
             values.put(COL_SESSION_SENTORNOT_FLAG, toBeSent);
+
+            db.update(SESSION_TABLE_NAME, values, where, null);
+
+            DBManager.getInstance().closeDatabase();
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+    }
+
+    //endTime is for preventing the overload conflict with the above function (toBeSent's one)
+    public static void updateSessionTable(int sessionId, long endTime, int hidedOrNot){
+
+        String where = COL_ID + " = " +  sessionId;
+
+        try{
+            SQLiteDatabase db = DBManager.getInstance().openDatabase();
+            ContentValues values = new ContentValues();
+
+            values.put(COL_SESSION_HIDEDORNOT_FLAG, hidedOrNot);
 
             db.update(SESSION_TABLE_NAME, values, where, null);
 

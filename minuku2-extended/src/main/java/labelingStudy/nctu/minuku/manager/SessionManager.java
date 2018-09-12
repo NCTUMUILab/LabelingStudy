@@ -295,6 +295,11 @@ public class SessionManager {
             session.setType(separated[DBHelper.COL_INDEX_SESSION_TYPE]);
         }
 
+        if (!separated[DBHelper.COL_INDEX_SESSION_HIDEDORNOT].equals("null") && !separated[DBHelper.COL_INDEX_SESSION_HIDEDORNOT].equals("")) {
+
+            session.setHidedOrNot(Integer.valueOf(separated[DBHelper.COL_INDEX_SESSION_HIDEDORNOT]));
+        }
+
         //set end time
         session.setEndTime(endTime);
 
@@ -315,7 +320,7 @@ public class SessionManager {
         //set annotationset if there is one
         if (annotateionSetJSONArray!=null){
 
-            AnnotationSet annotationSet =  toAnnorationSet(annotateionSetJSONArray);
+            AnnotationSet annotationSet = toAnnorationSet(annotateionSetJSONArray);
             session.setAnnotationSet(annotationSet);
         }
 
@@ -363,32 +368,11 @@ public class SessionManager {
         Session session = null;
 
         ArrayList<String> sessions = DBHelper.querySecondLastSessions();
-        if(sessions.size() >= 2) { //sessions.size() != 0
+        if(sessions.size() >= 2) {
 
             String sessionStr = sessions.get(1);
             Log.d(TAG, "test show trip lastsession " + sessionStr);
             session = convertStringToSession(sessionStr);
-//        Log.d(TAG, " test show trip  testgetdata id " + session.getId() + " startTime " + session.getStartTime() + " end time " + session.getEndTime() + " annotation " + session.getAnnotationsSet().toJSONObject().toString());
-            Log.d(TAG, " test show trip  testgetdata id " + session.getId() + " startTime " + ScheduleAndSampleManager.getTimeString(session.getStartTime()) + " end time " + ScheduleAndSampleManager.getTimeString(session.getEndTime()) + " annotation " + session.getAnnotationsSet().toJSONObject().toString());
-        }else{
-
-            session = new Session(1);
-        }
-
-        return session;
-    }
-
-    public static Session getThirdLastSession() {
-
-        Session session = null;
-
-        ArrayList<String> sessions = DBHelper.queryThirdLastSessions();
-        if(sessions.size() >= 3) { //sessions.size() != 0
-
-            String sessionStr = sessions.get(2);
-            Log.d(TAG, "test show trip lastsession " + sessionStr);
-            session = convertStringToSession(sessionStr);
-//        Log.d(TAG, " test show trip  testgetdata id " + session.getId() + " startTime " + session.getStartTime() + " end time " + session.getEndTime() + " annotation " + session.getAnnotationsSet().toJSONObject().toString());
             Log.d(TAG, " test show trip  testgetdata id " + session.getId() + " startTime " + ScheduleAndSampleManager.getTimeString(session.getStartTime()) + " end time " + ScheduleAndSampleManager.getTimeString(session.getEndTime()) + " annotation " + session.getAnnotationsSet().toJSONObject().toString());
         }else{
 
@@ -464,6 +448,12 @@ public class SessionManager {
         DBHelper.updateSessionTable(sessionId, endTime, userPressOrNot, modifiedOrNot);
     }
 
+    public static void updateCurSession(int sessionId, int hidedOrNot){
+
+        //endtime is for preventing overload the function with toSentOrNot
+        DBHelper.updateSessionTable(sessionId, 0, hidedOrNot);
+    }
+
     /**
      *
      * @param session
@@ -512,7 +502,7 @@ public class SessionManager {
                 combine = false;
             } else {
                 // TODO: identify if the threshold should double since this is the case that merging three sessions
-                int twiceIntervalThreshHoldFactor = 1;
+                int twiceIntervalThreshHoldFactor = 4;
                 // the current activity is the same TM with the previous session mode, we check its time difference
                 Log.d(TAG, "[test combine] we found the third last session with the same activity");
                 //check its interval to see if it's within 5 minutes
@@ -528,9 +518,6 @@ public class SessionManager {
                             + (newSessionStartTime - secondLastSession.getEndTime()) / Constants.MILLISECONDS_PER_MINUTE + " minutes");
 
                     combine = true;
-
-                    //TODO delete the last session?
-//                    DBHelper.deleteSession(lastSession.getId());
                 } else {
                     //the session is far from the previous one, it should be a new session. we should not combine
                     Log.d(TAG, "[test combine] addSessionFlag = true the current truip is far from the previous trip");
@@ -565,7 +552,9 @@ public class SessionManager {
         getOngoingSessionIdList().add(getSecondLastSession().getId());
         //update session with end time and long enough flag.
         updateCurSessionEndInfoTo(getSecondLastSession().getId(),0,true);
-        //TODO: set lastSession which is static
+
+        //TODO set the lastSession which is static to be the flag representing do not show it
+        updateCurSession(getLastSession().getId(), Constants.SESSION_IS_HIDED_FLAG);
 
     }
 

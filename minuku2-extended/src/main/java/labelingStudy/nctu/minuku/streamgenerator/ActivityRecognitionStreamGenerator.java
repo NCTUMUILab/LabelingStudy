@@ -3,6 +3,7 @@ package labelingStudy.nctu.minuku.streamgenerator;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -21,11 +22,14 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
 
+import labelingStudy.nctu.minuku.Utilities.CSVHelper;
+import labelingStudy.nctu.minuku.Utilities.ScheduleAndSampleManager;
 import labelingStudy.nctu.minuku.config.Constants;
 import labelingStudy.nctu.minuku.dao.ActivityRecognitionDataRecordDAO;
 import labelingStudy.nctu.minuku.manager.MinukuDAOManager;
 import labelingStudy.nctu.minuku.manager.MinukuStreamManager;
 import labelingStudy.nctu.minuku.model.DataRecord.ActivityRecognitionDataRecord;
+import labelingStudy.nctu.minuku.model.DataRecord.TransportationModeDataRecord;
 import labelingStudy.nctu.minuku.service.ActivityRecognitionService;
 import labelingStudy.nctu.minuku.stream.ActivityRecognitionStream;
 import labelingStudy.nctu.minukucore.dao.DAOException;
@@ -85,6 +89,8 @@ public class ActivityRecognitionStreamGenerator extends AndroidStreamGenerator<A
 
     private static ActivityRecognitionStreamGenerator instance;
 
+    private SharedPreferences sharedPrefs;
+
     public ActivityRecognitionStreamGenerator(Context applicationContext) { //,Context mContext
         super(applicationContext);
         //this.mContext = mMainServiceContext;
@@ -93,6 +99,8 @@ public class ActivityRecognitionStreamGenerator extends AndroidStreamGenerator<A
         this.mDAO = MinukuDAOManager.getInstance().getDaoFor(ActivityRecognitionDataRecord.class);
 
         mLocalRecordPool = new ArrayList<ActivityRecognitionDataRecord>();
+
+        sharedPrefs = mContext.getSharedPreferences(Constants.sharedPrefString, mContext.MODE_PRIVATE);
 
         ActivityRecognitionStreamGenerator.instance = this;
 
@@ -319,7 +327,30 @@ public class ActivityRecognitionStreamGenerator extends AndroidStreamGenerator<A
 
         this.activityRecognitionDataRecord = activityRecognitionDataRecord;
 
-        updateStream();
+        //TODO: now update the value to the TransportationMode every 5 seconds
+        try {
+
+            TransportationModeStreamGenerator transportationModeStreamGenerator
+                    = (TransportationModeStreamGenerator) MinukuStreamManager.getInstance().getStreamGeneratorFor(TransportationModeDataRecord.class);
+
+            transportationModeStreamGenerator.examineTransportation(activityRecognitionDataRecord);
+
+            sharedPrefs.edit().putInt("CurrentState", TransportationModeStreamGenerator.mCurrentState).apply();
+            sharedPrefs.edit().putInt("ConfirmedActivityType", TransportationModeStreamGenerator.mConfirmedActivityType).apply();
+
+            CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_TRANSPORTATION,
+                    ScheduleAndSampleManager.getCurrentTimeString(),
+                    TransportationModeStreamGenerator.getConfirmedActivityString(),
+                    ScheduleAndSampleManager.getTimeString(TransportationModeStreamGenerator.getSuspectTime()),
+                    getActivityNameFromType(TransportationModeStreamGenerator.getSuspectedStartActivityType()),
+                    getActivityNameFromType(TransportationModeStreamGenerator.getSuspectedStopActivityType()),
+                    activityRecognitionDataRecord.getMostProbableActivity().toString(),
+                    activityRecognitionDataRecord.getProbableActivities().toString());
+        }catch (StreamNotFoundException e){
+            e.printStackTrace();
+        }
+
+//        updateStream();
     }
 
     /**

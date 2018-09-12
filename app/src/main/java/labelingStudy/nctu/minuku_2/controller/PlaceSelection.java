@@ -42,7 +42,7 @@ import javax.net.ssl.HttpsURLConnection;
 import labelingStudy.nctu.minuku.Data.DBHelper;
 import labelingStudy.nctu.minuku.config.Constants;
 import labelingStudy.nctu.minuku.manager.MinukuStreamManager;
-import labelingStudy.nctu.minuku_2.NearbyPlaces.GetUrl;
+import labelingStudy.nctu.minuku.NearbyPlaces.GetUrl;
 import labelingStudy.nctu.minuku_2.R;
 
 public class PlaceSelection extends FragmentActivity implements OnMapReadyCallback {
@@ -441,6 +441,7 @@ public class PlaceSelection extends FragmentActivity implements OnMapReadyCallba
             Log.d(TAG, " dataSize : "+ Timer_site.availSite.size());
         }else{
 
+            //TODO change the Timeline to TimelineAdapter(after the TimelineAdapterBackup is work)
             Timeline.selectedSiteName = sitename;
             Timeline.DchoosingSite.setText(Timeline.selectedSiteName);
         }

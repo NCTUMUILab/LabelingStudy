@@ -35,7 +35,7 @@ public class Constants {
 
     public static String currentWork;
 
-    public static int siteRange = 50;
+    public static int siteRange = 25;
 
     public static final String ACTION_CONNECTIVITY_CHANGE = "CONNECTIVITY_CHANGE";
 
@@ -117,6 +117,9 @@ public class Constants {
     public static final String ANNOTATION_Label_SPECIALEVENT = "SpecialEvent";
     public static final String ANNOTATION_Label_SITENAME = "Sitename";
 
+
+    public static final int SESSION_NEVER_GET_HIDED_FLAG = 0;
+    public static final int SESSION_IS_HIDED_FLAG = 1;
 
     // Firebase config
     public static final String FIREBASE_URL = BuildConfig.UNIQUE_FIREBASE_ROOT_URL;

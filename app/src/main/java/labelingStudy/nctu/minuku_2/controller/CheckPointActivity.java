@@ -186,6 +186,7 @@ public class CheckPointActivity extends AppCompatActivity {
         sessionEmptyActivity.setModified(false);
         sessionEmptyActivity.setIsSent(Constants.SESSION_SHOULDNT_BEEN_SENT_FLAG);
         sessionEmptyActivity.setType(Constants.SESSION_TYPE_DETECTED_BY_USER);
+        sessionEmptyActivity.setHidedOrNot(Constants.SESSION_NEVER_GET_HIDED_FLAG);
 
         SessionManager.addEmptyOngoingSessionid(sessionId);
         SessionManager.getOngoingSessionIdList().add(sessionId);
