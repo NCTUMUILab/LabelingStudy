@@ -22,7 +22,7 @@
 
 <resources>
     <!--  current_task: PART ESM CAR  -->
-    <string name="current_task">ESM</string>
+    <string name="current_task">PART</string>
 
     <string name="no_activity">未知</string>
 

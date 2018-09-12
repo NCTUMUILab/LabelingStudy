@@ -1,7 +1,5 @@
 package labelingStudy.nctu.minuku.model;
 
-import android.util.Log;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -28,7 +26,7 @@ public class Session {
     protected AnnotationSet mAnnotationSet;
     private boolean mUserPressOrNot;
     private boolean mIsModified;
-    private boolean hidedOrNot;
+    private int hidedOrNot;
     private int mIsSent;
     private String type;
 
@@ -96,11 +94,11 @@ public class Session {
         mIsModified = isModified;
     }
 
-    public boolean isHide(){
+    public int isHide(){
         return hidedOrNot;
     }
 
-    public void setHidedOrNot(boolean hidedOrNot){
+    public void setHidedOrNot(int hidedOrNot){
         this.hidedOrNot = hidedOrNot;
     }
 

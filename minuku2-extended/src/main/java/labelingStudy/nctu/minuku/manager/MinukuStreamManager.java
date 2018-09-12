@@ -34,6 +34,7 @@ import android.util.Log;
 
 import org.greenrobot.eventbus.Subscribe;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -412,10 +413,14 @@ public class MinukuStreamManager implements StreamManager {
                             annotation.setContent(transportationModeDataRecord.getConfirmedActivityString());
                             annotation.addTag(Constants.ANNOTATION_TAG_DETECTED_TRANSPORTATION_ACTIVITY);
                             session.addAnnotation(annotation);
+
+                            //TODO if transportationMode is static add site by getUrl
+
                             session.setUserPressOrNot(false);
                             session.setModified(false);
                             session.setIsSent(Constants.SESSION_SHOULDNT_BEEN_SENT_FLAG);
                             session.setType(Constants.SESSION_TYPE_DETECTED_BY_SYSTEM);
+                            session.setHidedOrNot(Constants.SESSION_NEVER_GET_HIDED_FLAG);
 
                             CSVHelper.storeToCSV(CSVHelper.CSV_ESM, " insert the session is with annotation : "+session.getAnnotationsSet().toJSONObject().toString());
 
@@ -425,6 +430,7 @@ public class MinukuStreamManager implements StreamManager {
                             CSVHelper.storeToCSV(CSVHelper.CSV_ESM, beforeSendESM);
 
                             if (SessionManager.examineSessionCombinationByActivityAndTime(transportationModeDataRecord.getConfirmedActivityString(), session.getStartTime()) == true) {
+
                                 //Should combine
                                 SessionManager.continue2ndLastSession(session);
                             } else {
@@ -436,10 +442,15 @@ public class MinukuStreamManager implements StreamManager {
                             sharedPrefs.edit().putInt("ongoingSessionid", SessionManager.getOngoingSessionIdList().get(0)).apply();
                         }
 
+                        final Session sessionJustStart = SessionManager.getLastSession();
+
                         if (currentWork.equals("ESM")) {
 
-                            //after starting a trip(session), send a notification to the user
-                            sendNotification(context);
+                            Log.d(TAG, "[test triggering] show session StartTime : "+sessionJustStart.getStartTime());
+                            Log.d(TAG, "[test triggering] show session StartTime String : "+ScheduleAndSampleManager.getTimeString(sessionJustStart.getStartTime()));
+
+                            //TODO add the session's startTime to remind them
+                            sendNotification(context, sessionJustStart.getStartTime());
 
                             String afterSendESM = "After sending ESM";
                             CSVHelper.storeToCSV(CSVHelper.CSV_ESM, afterSendESM);
@@ -471,7 +482,8 @@ public class MinukuStreamManager implements StreamManager {
                                         //if the user hasn't pressed the current trip(Session); after ending a trip(session), send a notification to the user
                                         if (!ongoingSession.isUserPress()) {
 
-                                            sendNotification(context);
+                                            //TODO add the session's startTime to remind them
+                                            sendNotification(context, sessionJustStart.getStartTime());
 
                                             String afterSendCAR = "After sending CAR";
                                             CSVHelper.storeToCSV(CSVHelper.CSV_CAR, afterSendCAR);
@@ -508,12 +520,13 @@ public class MinukuStreamManager implements StreamManager {
         }
     }
 
-    private void sendNotification(Context context){
+    private void sendNotification(Context context, long startTime){
 
         NotificationManager mNotificationManager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        String notificationText = "您有新的移動紀錄";
+        SimpleDateFormat sdf_ampm_hhmm = new SimpleDateFormat(Constants.DATE_FORMAT_AMPM_HOUR_MIN);
+        String notificationText = "您有新的移動紀錄"+"\r\n"+"始於 "+ScheduleAndSampleManager.getTimeString(startTime, sdf_ampm_hhmm);
         Notification notification = getNotification(notificationText, context);
 
         mNotificationManager.notify(MinukuNotificationManager.reminderNotificationID, notification);

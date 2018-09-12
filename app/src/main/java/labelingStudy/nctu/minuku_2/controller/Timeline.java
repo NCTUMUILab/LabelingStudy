@@ -79,7 +79,7 @@ import labelingStudy.nctu.minuku.model.Annotation;
 import labelingStudy.nctu.minuku.model.AnnotationSet;
 import labelingStudy.nctu.minuku.model.Session;
 import labelingStudy.nctu.minuku.streamgenerator.TransportationModeStreamGenerator;
-import labelingStudy.nctu.minuku_2.NearbyPlaces.GetUrl;
+import labelingStudy.nctu.minuku.NearbyPlaces.GetUrl;
 import labelingStudy.nctu.minuku_2.R;
 
 
@@ -110,6 +110,8 @@ public class Timeline extends AppCompatActivity {
     private String timelineOrder;
 
     private String dateToQuery;
+
+    private TimelineAdapterBackup timelineAdapterBackup;
 
     public Timeline(){}
     public Timeline(Context mContext){
@@ -318,6 +320,9 @@ public class Timeline extends AppCompatActivity {
             if(mSessions.size() > 0){
 
                 TimelineAdapter timelineAdapter = new TimelineAdapter(mSessions);
+
+//                timelineAdapterBackup = TimelineAdapterBackup.getInstance(mSessions, this, timelineOrder);
+
                 RecyclerView mList = (RecyclerView) findViewById(R.id.list_view);
                 mList.setVisibility(View.VISIBLE);
 
@@ -331,6 +336,8 @@ public class Timeline extends AppCompatActivity {
                 layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
                 mList.setLayoutManager(layoutManager);
                 mList.setAdapter(timelineAdapter);
+//                mList.setAdapter(timelineAdapterBackup);
+
             }else{
 
                 //set Empty view
@@ -382,11 +389,12 @@ public class Timeline extends AppCompatActivity {
         }
     }
 
-    public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHolder> {
+        public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHolder> {
 
         private List<Session> mSessions;
         public String detectedSiteName = "";
 
+        public TimelineAdapter instance;
         //split
         private LatLng splittingLatlng = new LatLng(-999, -999);
         private long splittingTime = -9999;
@@ -401,7 +409,7 @@ public class Timeline extends AppCompatActivity {
             public LinearLayout cardbackground;
             public android.support.v7.widget.CardView cardView;
             public ImageView traffic;
-            public View car_line, car_line_down;
+            public View car_line, car_line_down, parentView;
             public ViewHolder(View v) {
                 super(v);
 
@@ -415,12 +423,24 @@ public class Timeline extends AppCompatActivity {
                 cardbackground = (LinearLayout) v.findViewById(R.id.cardbackground);
                 car_line = (View) v.findViewById(R.id.CAR_line);
                 car_line_down = (View) v.findViewById(R.id.CAR_line_down);
+                parentView = v;
             }
         }
 
         public TimelineAdapter(List<Session> sessions){
 
             mSessions = sessions;
+        }
+
+        public TimelineAdapter getInstance(List<Session> sessions) {
+            if(instance == null) {
+                try {
+                    instance = new TimelineAdapter(sessions);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            return instance;
         }
 
         @Override
@@ -494,7 +514,15 @@ public class Timeline extends AppCompatActivity {
             Log.d(TAG, "[test triggering] timeline session id : "+ session.getId());
             Log.d(TAG, "[test triggering] timeline session isUserPress ? "+session.isUserPress());
             Log.d(TAG, "[test triggering] timeline session isModified ? "+session.isModified());
+            Log.d(TAG, "[test triggering] timeline session isHide ? "+(session.isHide()==Constants.SESSION_IS_HIDED_FLAG));
 
+            if(session.isHide() == Constants.SESSION_IS_HIDED_FLAG){
+
+                holder.parentView.setVisibility(View.GONE);
+                //it will still keep the layout even set to be gone
+                holder.parentView.setLayoutParams(new RecyclerView.LayoutParams(0, 0));
+                return;
+            }
 
             //check the annotation first, show the modification from the user
             AnnotationSet annotationSet = session.getAnnotationsSet();
@@ -697,7 +725,6 @@ public class Timeline extends AppCompatActivity {
                 sd.setStroke(10, strokeColor);
                 holder.cardView.setBackground(sd);
             }
-            //TODO deprecated
 
             String currentWork = getResources().getString(labelingStudy.nctu.minuku.R.string.current_task);
 
