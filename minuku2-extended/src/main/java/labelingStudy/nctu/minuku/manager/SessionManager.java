@@ -502,7 +502,7 @@ public class SessionManager {
                 combine = false;
             } else {
                 // TODO: identify if the threshold should double since this is the case that merging three sessions
-                int twiceIntervalThreshHoldFactor = 4;
+                int twiceIntervalThreshHoldFactor = 1;
                 // the current activity is the same TM with the previous session mode, we check its time difference
                 Log.d(TAG, "[test combine] we found the third last session with the same activity");
                 //check its interval to see if it's within 5 minutes
