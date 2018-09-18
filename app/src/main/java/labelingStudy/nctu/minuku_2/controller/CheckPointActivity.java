@@ -48,9 +48,15 @@ public class CheckPointActivity extends AppCompatActivity {
 
         sharedPrefs = getSharedPreferences(Constants.sharedPrefString, MODE_PRIVATE);
 
+        popupPermissionSettingAtFirstTime();
+    }
+
+    private void popupPermissionSettingAtFirstTime(){
+
         firstTimeOrNot = sharedPrefs.getBoolean("firstTimeOrNot", true);
 
         if(firstTimeOrNot) {
+
             startpermission();
             firstTimeOrNot = false;
             sharedPrefs.edit().putBoolean("firstTimeOrNot", firstTimeOrNot).apply();
@@ -107,13 +113,6 @@ public class CheckPointActivity extends AppCompatActivity {
         checkpoint.setOnClickListener(checkpointing);
     }
 
-    public void initCheckPoint(View v) {
-
-        checkpoint = (Button) v.findViewById(R.id.check);
-
-        checkpoint.setOnClickListener(checkpointing);
-    }
-
     private Button.OnClickListener checkpointing = new Button.OnClickListener() {
 
         public void onClick(View v) {
@@ -124,7 +123,7 @@ public class CheckPointActivity extends AppCompatActivity {
 
                 Session lastSession = SessionManager.getLastSession();
 
-                if( SessionManager.sessionIsWaiting ){
+                if(SessionManager.sessionIsWaiting){
 
                     lastSession.setUserPressOrNot(true);
 
@@ -139,7 +138,7 @@ public class CheckPointActivity extends AppCompatActivity {
 
                 if(emptySessionOn){
 
-                    Toast.makeText(CheckPointActivity.this, "當前活動已經Checkpoint過了", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CheckPointActivity.this, getResources().getString(R.string.reminder_already_checkpointed), Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -163,7 +162,7 @@ public class CheckPointActivity extends AppCompatActivity {
 //                Toast.makeText(CheckPointActivity.this, "尚未有進行中的活動", Toast.LENGTH_SHORT).show();
             }
 
-            Toast.makeText(CheckPointActivity.this, "成功Checkpoint！", Toast.LENGTH_SHORT).show();
+            Toast.makeText(CheckPointActivity.this, getResources().getString(R.string.reminder_checkpoint_successfully), Toast.LENGTH_SHORT).show();
 
         }
     };

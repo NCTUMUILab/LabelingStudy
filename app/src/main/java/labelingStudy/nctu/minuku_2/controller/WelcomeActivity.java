@@ -48,16 +48,15 @@ public class WelcomeActivity extends AppCompatActivity {
         watchMyTimeline = (Button) findViewById(R.id.watchMyTimeline);
         watchMyTimeline.setOnClickListener(watchingMyTimeline);
 
-//        startService(new Intent(getBaseContext(), BackgroundService.class));
-
         current_task = getResources().getString(R.string.current_task);
-        if(current_task.equals("ESM")) {
+        Constants.currentWork = current_task;
 
-            //conceal the button
+        if(current_task.equals(getResources().getString(R.string.task_ESM))) {
+
             chooseMyMobility.setVisibility(View.GONE);
-        }else if(current_task.equals("CAR")){
+        }else if(current_task.equals(getResources().getString(R.string.task_CAR))){
 
-            chooseMyMobility.setText("切換移動方式");
+            chooseMyMobility.setText(R.string.homepage_switch_activity_button);
         }
 
 //        EventBus.getDefault().register(this);
@@ -70,8 +69,6 @@ public class WelcomeActivity extends AppCompatActivity {
         }else{
             startServiceWork();
         }
-
-        Constants.currentWork = getResources().getString(R.string.current_task);
 
         Intent intent = new Intent(getApplicationContext(), Timeline.class);
         MinukuNotificationManager.setIntentToTimeline(intent);
@@ -126,12 +123,11 @@ public class WelcomeActivity extends AppCompatActivity {
 
             String current_task = getResources().getString(R.string.current_task);
 
-
-            if(current_task.equals("PART")) {
+            if(current_task.equals(getResources().getString(R.string.task_PART))) {
 
                 Intent intent = new Intent(WelcomeActivity.this, Timer_move.class);
                 startActivity(intent);
-            }else if(current_task.equals("CAR")){
+            }else if(current_task.equals(getResources().getString(R.string.task_CAR))){
 
                 Intent intent = new Intent(WelcomeActivity.this, CheckPointActivity.class);
                 startActivity(intent);
@@ -144,9 +140,7 @@ public class WelcomeActivity extends AppCompatActivity {
         public void onClick(View v) {
 
             Intent intent = new Intent(WelcomeActivity.this, Timeline.class);
-
             startActivity(intent);
-
         }
     };
 
@@ -199,6 +193,10 @@ public class WelcomeActivity extends AppCompatActivity {
         if (!listPermissionsNeeded.isEmpty()) {
             Log.d(TAG, "!listPermissionsNeeded.isEmpty() : "+!listPermissionsNeeded.isEmpty() );
 
+            //TODO after request permissions, pop-up the three setting
+            //TODO set to before the requestPermissions in code is to make sure that the pop-up could show after the request
+            popupPermissionSettingAtFirstTime();
+
             ActivityCompat.requestPermissions(this, listPermissionsNeeded.toArray(new String[listPermissionsNeeded.size()]),REQUEST_ID_MULTIPLE_PERMISSIONS);
         }else{
             startServiceWork();
@@ -211,6 +209,11 @@ public class WelcomeActivity extends AppCompatActivity {
         Log.d(TAG, "startServiceWork");
 
         getDeviceid();
+
+        popupPermissionSettingAtFirstTime();
+    }
+
+    private void popupPermissionSettingAtFirstTime(){
 
         firstTimeOrNot = sharedPrefs.getBoolean("firstTimeOrNot", true);
 
@@ -233,9 +236,6 @@ public class WelcomeActivity extends AppCompatActivity {
             Constants.DEVICE_ID = mngr.getDeviceId();
 
             sharedPrefs.edit().putString("DEVICE_ID",  mngr.getDeviceId()).apply();
-
-            Log.d(TAG,"DEVICE_ID "+Constants.DEVICE_ID+" : "+mngr.getDeviceId());
-
         }
     }
 }

@@ -15,7 +15,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -25,7 +24,6 @@ import android.widget.TextView;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Timer;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -50,9 +48,6 @@ public class CounterActivity extends AppCompatActivity {
 
     final private String TAG = "CounterActivity";
 
-    private Context mContext;
-    private LayoutInflater mInflater;
-
     private String siteName;
     public static TextView counter;
     public static String stoptime, starttime;
@@ -63,8 +58,6 @@ public class CounterActivity extends AppCompatActivity {
     public static ImageView traffic;
 
     private String trafficType;
-
-    Timer timer;
 
     public static Button changedMovement;
 
@@ -79,16 +72,6 @@ public class CounterActivity extends AppCompatActivity {
     private final String NotASite = "NotASite";
 
     NotificationManager mNotificationManager;
-
-    public CounterActivity(){}
-
-    public CounterActivity(Context mContext){
-        this.mContext = mContext;
-    }
-
-    public CounterActivity(LayoutInflater mInflater){
-        this.mInflater = mInflater;
-    }
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -361,6 +344,7 @@ public class CounterActivity extends AppCompatActivity {
                 Constants.MILLISECONDS_PER_SECOND,
                 TimeUnit.MILLISECONDS);
 
+        //TODO deprecated
         /*timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask(){
             @Override
@@ -382,6 +366,7 @@ public class CounterActivity extends AppCompatActivity {
             mScheduledFuture.cancel(false);
         }
 
+        //TODO deprecated
         /*if(timer!=null) {
 
             timer.cancel();
@@ -583,11 +568,11 @@ public class CounterActivity extends AppCompatActivity {
         switch (activity){
 
             case "walk":
-                return "走路";
+                return getResources().getString(R.string.walk_activity_type_in_chinese);
             case "bike":
-                return "自行車";
+                return getResources().getString(R.string.bike_activity_type_in_chinese);
             case "car":
-                return "汽車";
+                return getResources().getString(R.string.car_activity_type_in_chinese);
         }
 
         return siteName;

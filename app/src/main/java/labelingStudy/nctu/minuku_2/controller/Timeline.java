@@ -740,7 +740,7 @@ public class Timeline extends AppCompatActivity {
                     final Button showMapButton = (Button) layout.findViewById(R.id.showMap);
                     final Button startTimeButton = (Button) layout.findViewById(R.id.startTime);
                     final Button endTimeButton = (Button) layout.findViewById(R.id.endTime);
-                    final String[] activity = {"請選擇交通模式", "走路", "自行車", "汽車", "定點", "此移動不存在", "與上一個相同"};
+                    final String[] activity = {"請選擇交通模式", "走路", "自行車", "汽車", "定點", "此移動不存在", "與前一個相同"};
                     final ArrayAdapter<String> activityList = new ArrayAdapter<>(mContext,
                             android.R.layout.simple_spinner_dropdown_item,
                             activity);
@@ -1033,7 +1033,7 @@ public class Timeline extends AppCompatActivity {
 
                     builder.setView(layout)
                             .setPositiveButton(R.string.ok, null)
-                            .setNegativeButton("Cancel", null);
+                            .setNegativeButton(R.string.cancel, null);
 
                     final AlertDialog mAlertDialog = builder.create();
                     mAlertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
@@ -1090,7 +1090,7 @@ public class Timeline extends AppCompatActivity {
 
                                         //now, we keep the same trip which is claimed by users with different Ids,
                                         //because it is _id, but we show them by checking their labels
-                                        /*if(Dspinner.getSelectedItem().equals("與上一個相同")){
+                                        /*if(Dspinner.getSelectedItem().equals("與前一個相同")){
 
                                         }*/
 
@@ -1562,8 +1562,8 @@ public class Timeline extends AppCompatActivity {
                 return TransportationModeStreamGenerator.TRANSPORTATION_MODE_NAME_NO_TRANSPORTATION;
             case "此移動不存在":
                 return "此移動不存在";
-            case "與上一個相同":
-                return "與上一個相同";
+            case "與前一個相同":
+                return "與前一個相同";
             default:
                 return "Unknown";
         }
@@ -1617,7 +1617,7 @@ public class Timeline extends AppCompatActivity {
                 return R.drawable.bike;
             case TransportationModeStreamGenerator.TRANSPORTATION_MODE_NAME_IN_VEHICLE:
                 return R.drawable.car;
-            case "與上一個相同":
+            case "與前一個相同":
                 return R.drawable.transparent;
             case TransportationModeStreamGenerator.TRANSPORTATION_MODE_HASNT_DETECTED_FLAG:
                 return R.drawable.question_mark;

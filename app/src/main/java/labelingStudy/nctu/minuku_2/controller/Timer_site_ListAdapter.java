@@ -29,9 +29,7 @@ public class Timer_site_ListAdapter extends ArrayAdapter<String> {
         super(context, resource, dataRecords);
 
         this.mContext = context;
-
         this.dataRecords = dataRecords;
-
     }
 
     @Override
@@ -45,18 +43,23 @@ public class Timer_site_ListAdapter extends ArrayAdapter<String> {
         TextView textView = (TextView) view.findViewById(R.id.ListText);
 
         if(position==0){
+
             textView.setText(dataRecords.get(position));
             textView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.customize_button));
         }else if(position % 4 == 1){
+
             textView.setText(dataRecords.get(position));
             textView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.instabug_annotation_color_yellow));
         }else if(position % 4 == 2){
+
             textView.setText(dataRecords.get(position));
             textView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.reject_button));
         }else if(position % 4 == 3){
+
             textView.setText(dataRecords.get(position));
             textView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.step_pager_previous_tab_color));
         }else if(position % 4 == 0){
+
             textView.setText(dataRecords.get(position));
 //            textView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.instabug_annotation_color_yellow));
         }

@@ -105,7 +105,7 @@ public class WifiReceiver extends BroadcastReceiver {
         TimeZone tz = TimeZone.getDefault();
         Calendar cal = Calendar.getInstance(tz);
         int mYear = cal.get(Calendar.YEAR);
-        int mMonth = cal.get(Calendar.MONTH)+1;
+        int mMonth = cal.get(Calendar.MONTH);
         int mDay = cal.get(Calendar.DAY_OF_MONTH);
         int mHour = cal.get(Calendar.HOUR_OF_DAY);
 
@@ -124,6 +124,8 @@ public class WifiReceiver extends BroadcastReceiver {
         currentCondition = context.getResources().getString(labelingStudy.nctu.minuku.R.string.current_task);
 
         Log.d(TAG, "year : "+ year+" month : "+ month+" day : "+ day+" hour : "+ hour+" min : "+ min);
+
+        setDataStartEndTime();
 
         if (Constants.ACTION_CONNECTIVITY_CHANGE.equals(intent.getAction())) {
 
@@ -327,29 +329,39 @@ public class WifiReceiver extends BroadcastReceiver {
 
     private void setDataStartEndTime(){
 
-        long lastSentStarttime = sharedPrefs.getLong("lastSentStarttime", 0);
+        Log.d(TAG, "setDataStartEndTime");
 
-        if (lastSentStarttime == 0) {
+        long lastSentStarttime = sharedPrefs.getLong("lastSentStarttime", Constants.INVALID_TIME_VALUE);
 
-            //if it doesn't reponse the setting with initialize ones
+        if (lastSentStarttime == Constants.INVALID_TIME_VALUE) {
+
+            //if it doesn't response the setting with initialize ones
             //initialize
-            long startstartTime = getSpecialTimeInMillis(makingDataFormat(year, month, day, hour, min));
-//                        long startstartTime = ScheduleAndSampleManager.getCurrentTimeInMillis();
+
+            Calendar designatedStartTime = Calendar.getInstance();
+            designatedStartTime.set(year, month, day, hour, min);
+
+//            long startstartTime = getSpecialTimeInMillis(makingDataFormat(year, month, day, hour, min));
+            long startstartTime = designatedStartTime.getTimeInMillis();
             startTime = sharedPrefs.getLong("StartTime", startstartTime); //default
             Log.d(TAG, "StartTimeString : " + ScheduleAndSampleManager.getTimeString(startTime));
 
-            long startendTime = getSpecialTimeInMillis(makingDataFormat(year, month, day, hour + 1, min));
-//                        long startendTime = startstartTime + Constants.MILLISECONDS_PER_HOUR;
+            sharedPrefs.edit().putLong("StartTime", startTime).apply();
+
+//            long startendTime = getSpecialTimeInMillis(makingDataFormat(year, month, day, hour + 1, min));
+            long startendTime = startstartTime + Constants.MILLISECONDS_PER_HOUR;
             endTime = sharedPrefs.getLong("EndTime", startendTime);
             Log.d(TAG, "EndTimeString : " + ScheduleAndSampleManager.getTimeString(endTime));
+
+            sharedPrefs.edit().putLong("EndTime", endTime).apply();
+
         } else {
 
             //if it do reponse the setting with initialize ones
             startTime = Long.valueOf(lastSentStarttime);
             Log.d(TAG, "StartTimeString : " + ScheduleAndSampleManager.getTimeString(startTime));
 
-            long nextinterval = Constants.MILLISECONDS_PER_HOUR; //1 hr
-            endTime = Long.valueOf(lastSentStarttime) + nextinterval;
+            endTime = Long.valueOf(lastSentStarttime) + Constants.MILLISECONDS_PER_HOUR;
             Log.d(TAG, "EndTimeString : " + ScheduleAndSampleManager.getTimeString(endTime));
         }
     }

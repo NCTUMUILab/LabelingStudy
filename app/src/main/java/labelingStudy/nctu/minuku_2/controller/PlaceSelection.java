@@ -56,9 +56,8 @@ public class PlaceSelection extends FragmentActivity implements OnMapReadyCallba
     private static double lng = 0;
     public static String markerTitle = "";
     public static LatLng markerLocation;
-    public static int MarkerCount = 0;
 
-    private String yourSite = "您的位置";
+    private String yourPlace;
 
     private Marker customizedMarker, currentLocationMarker;
     private ArrayList<Marker> customizedMarkers = new ArrayList<>();
@@ -73,18 +72,9 @@ public class PlaceSelection extends FragmentActivity implements OnMapReadyCallba
 
         sharedPrefs = getSharedPreferences(Constants.sharedPrefString, Context.MODE_PRIVATE);
 
+        yourPlace = getResources().getString(R.string.placeselection_yourplace);
+
         bundle = getIntent().getExtras();
-    }
-
-    public PlaceSelection(){
-        fromTimeLineFlag = true;
-    }
-
-    public PlaceSelection(double lat, double lng){
-
-        fromTimeLineFlag = true;
-        this.lat = lat;
-        this.lng = lng;
     }
 
     @Override
@@ -124,7 +114,6 @@ public class PlaceSelection extends FragmentActivity implements OnMapReadyCallba
         }catch (NullPointerException e){
 
             fromTimeLineFlag = false;
-            Log.d(TAG, "no bundle be sent");
         }
 
         initPlaceSelection();
@@ -185,7 +174,7 @@ public class PlaceSelection extends FragmentActivity implements OnMapReadyCallba
                     @Override
                     public void onMapClick(LatLng latLng) {
 
-                        AddPlace.setText("新增地點");
+                        AddPlace.setText(getResources().getString(R.string.placeselection_newsite));
 
                         if (customizedMarker != null) {
                             customizedMarker.remove();
@@ -278,7 +267,7 @@ public class PlaceSelection extends FragmentActivity implements OnMapReadyCallba
 
                 LatLng currentLatLng = new LatLng(lat, lng);
 
-                currentLocationMarker = map.addMarker(new MarkerOptions().position(currentLatLng).title(yourSite));
+                currentLocationMarker = map.addMarker(new MarkerOptions().position(currentLatLng).title(yourPlace));
 
                 currentLocationMarker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
 
@@ -312,7 +301,7 @@ public class PlaceSelection extends FragmentActivity implements OnMapReadyCallba
                     triggerAlertDialog(marker);
                 }
 
-                AddPlace.setText("確認");
+                AddPlace.setText(getResources().getString(R.string.confirm_in_chinese));
             }
 
             return false;
@@ -349,7 +338,7 @@ public class PlaceSelection extends FragmentActivity implements OnMapReadyCallba
                         sitename = sitename.trim();
                         if(sitename.equals("")){
 
-                            Toast.makeText(PlaceSelection.this, "請輸入地點", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(PlaceSelection.this, getResources().getString(R.string.reminder_enter_site), Toast.LENGTH_SHORT).show();
                             return;
                         }
 
@@ -362,7 +351,7 @@ public class PlaceSelection extends FragmentActivity implements OnMapReadyCallba
 
                         addToConvenientSiteTable();
 
-                        Toast.makeText(PlaceSelection.this, "成功新增地點", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(PlaceSelection.this, getResources().getString(R.string.reminder_enter_site_successfully), Toast.LENGTH_SHORT).show();
                         dialogInterface.dismiss();
 
                         //After enter the name, jump to the previous page directly.
@@ -381,11 +370,11 @@ public class PlaceSelection extends FragmentActivity implements OnMapReadyCallba
 
             final View v = LayoutInflater.from(PlaceSelection.this).inflate(R.layout.addplace, null);
 
-            if(AddPlace.getText().equals("新增地點")){
+            if(AddPlace.getText().equals(getResources().getString(R.string.placeselection_newsite))){
 
                 triggerAlertDialog(currentLocationMarker);
 
-            }else if(AddPlace.getText().equals("確認")){
+            }else if(AddPlace.getText().equals(getResources().getString(R.string.confirm_in_chinese))){
 
                 addToConvenientSiteTable();
             }
@@ -410,7 +399,6 @@ public class PlaceSelection extends FragmentActivity implements OnMapReadyCallba
             Log.d(TAG, " dataSize : "+ Timer_site.availSite.size());
         }else{
 
-            //TODO change the Timeline to TimelineAdapter(after the TimelineAdapterBackup is work)
             Timeline.selectedSiteName = sitename;
             Timeline.DchoosingSite.setText(Timeline.selectedSiteName);
         }
