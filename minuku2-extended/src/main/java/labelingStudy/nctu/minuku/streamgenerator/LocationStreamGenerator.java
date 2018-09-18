@@ -318,7 +318,7 @@ public class LocationStreamGenerator extends AndroidStreamGenerator<LocationData
 
     @Override
     public long getUpdateFrequency() {
-        return 1; // 1 = 1 minutes
+        return 1;
     }
 
     @Override

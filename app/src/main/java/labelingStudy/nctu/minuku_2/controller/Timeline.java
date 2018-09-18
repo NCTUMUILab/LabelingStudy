@@ -52,15 +52,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -68,10 +62,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-import javax.net.ssl.HttpsURLConnection;
-
 import labelingStudy.nctu.minuku.Data.DBHelper;
 import labelingStudy.nctu.minuku.Data.DataHandler;
+import labelingStudy.nctu.minuku.NearbyPlaces.GetUrl;
 import labelingStudy.nctu.minuku.Utilities.ScheduleAndSampleManager;
 import labelingStudy.nctu.minuku.config.Constants;
 import labelingStudy.nctu.minuku.manager.SessionManager;
@@ -79,7 +72,6 @@ import labelingStudy.nctu.minuku.model.Annotation;
 import labelingStudy.nctu.minuku.model.AnnotationSet;
 import labelingStudy.nctu.minuku.model.Session;
 import labelingStudy.nctu.minuku.streamgenerator.TransportationModeStreamGenerator;
-import labelingStudy.nctu.minuku.NearbyPlaces.GetUrl;
 import labelingStudy.nctu.minuku_2.R;
 
 
@@ -389,7 +381,7 @@ public class Timeline extends AppCompatActivity {
         }
     }
 
-        public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHolder> {
+    public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHolder> {
 
         private List<Session> mSessions;
         public String detectedSiteName = "";
@@ -653,14 +645,14 @@ public class Timeline extends AppCompatActivity {
                                     transportationDuration = closestSite;
                                 }else {
 
-                                    name = getSiteNameFromNet(lat, lng);
+                                    name = GetUrl.getSiteNameFromNet(lat, lng);
                                     //TODO store(update) them into the session table at the first time they see this record at the first time
 
                                     transportationDuration = name;
                                 }
                             }else {
 
-                                name = getSiteNameFromNet(lat, lng);
+                                name = GetUrl.getSiteNameFromNet(lat, lng);
                                 //TODO store(update) them into the session table at the first time they see this record at the first time
 
                                 transportationDuration = name;
@@ -673,12 +665,6 @@ public class Timeline extends AppCompatActivity {
                             int icon = getIconToShowTransportation(transportation);
                             holder.traffic.setImageResource(icon);
 
-                        }catch (InterruptedException e){
-                            Log.e(TAG, "InterruptedException", e);
-                        }catch (ExecutionException e){
-                            Log.e(TAG, "ExecutionException", e);
-                        }catch (JSONException e){
-                            Log.e(TAG, "JSONException", e);
                         }catch (IndexOutOfBoundsException e){
 
                         }
@@ -1166,6 +1152,9 @@ public class Timeline extends AppCompatActivity {
 
 //                                        notifyDataSetChanged();
 
+                                        //TODO check the mechanism
+                                        notifyItemChanged(position);
+
                                         sharedPrefs.edit().putInt("currentposition", position).apply();
 
                                         DchoosingSite.setVisibility(View.INVISIBLE); // set back to default
@@ -1496,28 +1485,6 @@ public class Timeline extends AppCompatActivity {
             return false;
         }
 
-        public String getSiteNameFromNet(double lat, double lng) throws InterruptedException, ExecutionException, JSONException{
-
-            String jsonInString, name;
-
-            String url = GetUrl.getUrl(lat, lng);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-                jsonInString = new HttpAsyncGetSiteTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
-                        url
-                ).get();
-            else
-                jsonInString = new HttpAsyncGetSiteTask().execute(
-                        url
-                ).get();
-
-            JSONObject jsonObject = new JSONObject(jsonInString);
-            JSONArray results = jsonObject.getJSONArray("results");
-            //default now we choose the second index from the json.(first index is ken(縣名) name.)
-            name = results.getJSONObject(1).getString("name");
-
-            return name;
-        }
-
         @Override
         public int getItemCount() {
             return mSessions.size();
@@ -1660,65 +1627,6 @@ public class Timeline extends AppCompatActivity {
                 return R.drawable.if_94_171453;
         }
 
-    }
-
-    private class HttpAsyncGetSiteTask extends AsyncTask<String, Void, String> {
-
-        @Override
-        protected String doInBackground(String... params) {
-
-            String url = params[0];
-
-            String result = getJSON(url);
-
-            return result;
-        }
-
-        // onPostExecute displays the results of the AsyncTask.
-        @Override
-        protected void onPostExecute(String result) {
-
-        }
-
-    }
-
-    public String getJSON(String url) {
-
-        HttpsURLConnection con = null;
-        String json = "";
-
-        try {
-            URL u = new URL(url);
-            con = (HttpsURLConnection) u.openConnection();
-
-            con.connect();
-
-            BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
-            StringBuilder sb = new StringBuilder();
-            String line;
-            while ((line = br.readLine()) != null) {
-                sb.append(line + "\n");
-            }
-
-            json = sb.toString();
-            br.close();
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-
-            if (con != null) {
-
-                try {
-
-                    con.disconnect();
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-            }
-        }
-        return json;
     }
 
     /**

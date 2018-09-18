@@ -162,7 +162,6 @@ public class CounterActivity extends AppCompatActivity {
                 //prevent the situation that the app stop recording accidentally so that the ongoing id is gone
                 try {
 
-                    //TODO we need to store the ongoing session id before shutdown
                     int ongoingId = SessionManager.getOngoingSessionIdList().get(0);
                     Session ongoingSession = SessionManager.getSession(ongoingId);
 
@@ -283,7 +282,6 @@ public class CounterActivity extends AppCompatActivity {
                 changedMovement.setTextColor(ContextCompat.getColor(this, R.color.colorAccentDark));
                 play_stop.setBackgroundColor(ContextCompat.getColor(this, R.color.white));
                 break;
-
         }
 
     }
@@ -421,6 +419,7 @@ public class CounterActivity extends AppCompatActivity {
             session.addAnnotation(annotation);
             session.setIsSent(Constants.SESSION_SHOULDNT_BEEN_SENT_FLAG);
             session.setType(Constants.SESSION_TYPE_DETECTED_BY_USER);
+            session.setHidedOrNot(Constants.SESSION_NEVER_GET_HIDED_FLAG);
 
             //if there is a sitename, add into the session
             if(transportation.equals(TransportationModeStreamGenerator.TRANSPORTATION_MODE_NAME_NO_TRANSPORTATION)){

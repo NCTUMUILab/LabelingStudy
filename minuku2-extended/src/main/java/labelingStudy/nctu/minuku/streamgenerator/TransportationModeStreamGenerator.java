@@ -237,15 +237,14 @@ public class TransportationModeStreamGenerator extends AndroidStreamGenerator<Tr
 
         CSVHelper.storeToCSV(CSVHelper.CSV_ESM, "Transportation, update stream");
 
-        //TODO deprecated
-//        CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_TRANSPORTATION,
-//                ScheduleAndSampleManager.getTimeString(transportationModeDataRecord.getCreationTime()),
-//                transportationModeDataRecord.getConfirmedActivityString(),
-//                ScheduleAndSampleManager.getTimeString(transportationModeDataRecord.getSuspectedTime()),
-//                transportationModeDataRecord.getSuspectedStartActivityString(),
-//                transportationModeDataRecord.getSuspectedStopActivityString(),
-//                latest_activityRecognitionDataRecord.getMostProbableActivity().toString(),
-//                latest_activityRecognitionDataRecord.getProbableActivities().toString());
+        CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_TRANSPORTATION,
+                ScheduleAndSampleManager.getTimeString(transportationModeDataRecord.getCreationTime()),
+                transportationModeDataRecord.getConfirmedActivityString(),
+                ScheduleAndSampleManager.getTimeString(transportationModeDataRecord.getSuspectedTime()),
+                transportationModeDataRecord.getSuspectedStartActivityString(),
+                transportationModeDataRecord.getSuspectedStopActivityString(),
+                latest_activityRecognitionDataRecord.getMostProbableActivity().toString(),
+                latest_activityRecognitionDataRecord.getProbableActivities().toString());
 
         MinukuStreamManager.getInstance().setTransportationModeDataRecord(transportationModeDataRecord, mContext, sharedPrefs);
 

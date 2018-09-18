@@ -43,7 +43,6 @@ import java.util.concurrent.Future;
 
 import labelingStudy.nctu.minuku.Data.DBHelper;
 import labelingStudy.nctu.minuku.config.Constants;
-import labelingStudy.nctu.minuku.config.UserPreferences;
 import labelingStudy.nctu.minuku.logger.Log;
 import labelingStudy.nctu.minuku.manager.DBManager;
 import labelingStudy.nctu.minuku.model.DataRecord.LocationDataRecord;
@@ -58,7 +57,6 @@ import labelingStudy.nctu.minukucore.user.User;
 public class LocationDataRecordDAO implements DAO<LocationDataRecord> {
 
     private String TAG = "LocationDataRecordDAO";
-    private String myUserEmail;
     private DBHelper dBHelper;
     private UUID uuID;
 
@@ -77,7 +75,6 @@ public class LocationDataRecordDAO implements DAO<LocationDataRecord> {
         sKeepalive = KEEPALIVE_MINUTE * Constants.MILLISECONDS_PER_MINUTE;
 //        tripManager = new TripManager();
         LocationToTrip = new ArrayList<LocationDataRecord>();
-        myUserEmail = UserPreferences.getInstance().getPreference(Constants.KEY_ENCODED_EMAIL);
     }
 
     public LocationDataRecordDAO(Context applicationContext){

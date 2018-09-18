@@ -29,20 +29,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
 
-import javax.net.ssl.HttpsURLConnection;
-
 import labelingStudy.nctu.minuku.Data.DBHelper;
+import labelingStudy.nctu.minuku.NearbyPlaces.GetUrl;
+import labelingStudy.nctu.minuku.Utilities.Utils;
 import labelingStudy.nctu.minuku.config.Constants;
 import labelingStudy.nctu.minuku.manager.MinukuStreamManager;
-import labelingStudy.nctu.minuku.NearbyPlaces.GetUrl;
 import labelingStudy.nctu.minuku_2.R;
 
 public class PlaceSelection extends FragmentActivity implements OnMapReadyCallback {
@@ -56,7 +50,7 @@ public class PlaceSelection extends FragmentActivity implements OnMapReadyCallba
     private ArrayList<String> MarkerLng = new ArrayList<String>();
 
     private Button AddPlace;
-    private static String json = "";
+    private String siteNetJson = "";
 
     private static double lat = 0;
     private static double lng = 0;
@@ -239,12 +233,13 @@ public class PlaceSelection extends FragmentActivity implements OnMapReadyCallba
                         String latitude = "";
                         String longitude = "";
 
-                        getJSON(GetUrl.getUrl(finalLat, finalLng));
+                        siteNetJson = Utils.getJSON(GetUrl.getUrl(finalLat, finalLng));
+
                         JSONObject jsonObject = null;
 
                         try {
 
-                            jsonObject = new JSONObject(json);
+                            jsonObject = new JSONObject(siteNetJson);
                             JSONArray results = jsonObject.getJSONArray("results");
                             for (int i = 0; i < results.length(); i++) {
 
@@ -294,41 +289,6 @@ public class PlaceSelection extends FragmentActivity implements OnMapReadyCallba
             }
         });
 
-    }
-
-    public String getJSON(String url) {
-
-        HttpsURLConnection con = null;
-
-        try {
-            URL u = new URL(url);
-            con = (HttpsURLConnection) u.openConnection();
-
-            con.connect();
-
-            BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
-            StringBuilder sb = new StringBuilder();
-            String line;
-            while ((line = br.readLine()) != null) {
-                sb.append(line + "\n");
-            }
-            json = sb.toString();
-            br.close();
-
-        } catch (MalformedURLException ex) {
-            ex.printStackTrace();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        } finally {
-            if (con != null) {
-                try {
-                    con.disconnect();
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-            }
-        }
-           return json;
     }
 
     private GoogleMap.OnMarkerClickListener onMarkerClicked = new GoogleMap.OnMarkerClickListener() {
@@ -383,6 +343,15 @@ public class PlaceSelection extends FragmentActivity implements OnMapReadyCallba
                         EditText sitenameInEditText = (EditText) layout.findViewById(R.id.sitename_edittext);
 
                         String sitename = sitenameInEditText.getText().toString();
+
+                        //TODO if sitename is null or empty, don't insert it;
+                        //TODO: make sure that the input is not null
+                        sitename = sitename.trim();
+                        if(sitename.equals("")){
+
+                            Toast.makeText(PlaceSelection.this, "請輸入地點", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
 
                         marker.setTitle(sitename);
 

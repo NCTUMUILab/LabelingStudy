@@ -43,6 +43,7 @@ import java.util.Map;
 
 import labelingStudy.nctu.minuku.Data.DBHelper;
 import labelingStudy.nctu.minuku.Data.DataHandler;
+import labelingStudy.nctu.minuku.NearbyPlaces.GetUrl;
 import labelingStudy.nctu.minuku.R;
 import labelingStudy.nctu.minuku.Utilities.CSVHelper;
 import labelingStudy.nctu.minuku.Utilities.ScheduleAndSampleManager;
@@ -96,10 +97,10 @@ public class MinukuStreamManager implements StreamManager {
     private static MinukuStreamManager instance;
 
     private MinukuStreamManager() throws Exception {
+
         mStreamMap = new HashMap<>();
         mStreamTypeStreamMap = new HashMap<>();
         mRegisteredStreamGenerators = new HashMap<>();
-
 
     }
 
@@ -378,9 +379,6 @@ public class MinukuStreamManager implements StreamManager {
                             //we first need to check whether the previous is a transportation
                         } else {
 
-                            //TODO if the previous one is static, check the second previous one is the same and the times are closed
-
-
                             //insert into the session table;
                             int sessionId = (int) sessionCount + 1;
                             Session session = new Session(sessionId);
@@ -409,12 +407,29 @@ public class MinukuStreamManager implements StreamManager {
 
                             CSVHelper.storeToCSV(CSVHelper.CSV_ESM, " Session StartTime : "+ScheduleAndSampleManager.getTimeString(session.getStartTime()));
 
-                            Annotation annotation = new Annotation();
-                            annotation.setContent(transportationModeDataRecord.getConfirmedActivityString());
-                            annotation.addTag(Constants.ANNOTATION_TAG_DETECTED_TRANSPORTATION_ACTIVITY);
-                            session.addAnnotation(annotation);
+                            Annotation annotationForTransportation = new Annotation();
+                            annotationForTransportation.setContent(transportationModeDataRecord.getConfirmedActivityString());
+                            annotationForTransportation.addTag(Constants.ANNOTATION_TAG_DETECTED_TRANSPORTATION_ACTIVITY);
+                            session.addAnnotation(annotationForTransportation);
 
                             //TODO if transportationMode is static add site by getUrl
+                            Annotation annotationForSite = new Annotation();
+                            //add site by getUrl
+                            //get the latest location for searching site
+                            ArrayList<String> locations = DBHelper.queryLastRecord(DBHelper.location_table);
+                            if(locations.size() > 0){
+
+                                double lat = Double.parseDouble(locations.get(DBHelper.COL_INDEX_LOC_LATITUDE));
+                                double lng = Double.parseDouble(locations.get(DBHelper.COL_INDEX_LOC_LONGITUDE));
+
+                                //TODO check the AsyncTask is needed
+                                String siteName = GetUrl.getSiteNameFromNet(lat, lng);
+                                annotationForSite.setContent(siteName);
+                                annotationForSite.addTag(Constants.ANNOTATION_TAG_DETECTED_SITENAME);
+                                session.addAnnotation(annotationForSite);
+
+                                Log.d(TAG, "[test triggering] detected siteName");
+                            }
 
                             session.setUserPressOrNot(false);
                             session.setModified(false);

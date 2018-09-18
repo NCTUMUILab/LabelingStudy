@@ -46,7 +46,6 @@ public class UserSubmissionStatsDAO implements DAO<UserSubmissionStats> {
     private static String TAG = "UserSubmissionDAO";
 
     public UserSubmissionStatsDAO() {
-        this.myUserEmail = UserPreferences.getInstance().getPreference(Constants.KEY_ENCODED_EMAIL);
     }
 
     @Override

@@ -169,7 +169,7 @@ public class BackgroundService extends Service {
 
         mScheduledFuture = mScheduledExecutorService.scheduleAtFixedRate(
                 updateStreamManagerRunnable,
-                10,
+                Constants.STREAM_UPDATE_DELAY,
                 Constants.STREAM_UPDATE_FREQUENCY,
                 TimeUnit.SECONDS);
     }

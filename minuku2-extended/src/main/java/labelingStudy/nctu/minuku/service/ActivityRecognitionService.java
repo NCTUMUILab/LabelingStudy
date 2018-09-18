@@ -84,6 +84,7 @@ public class ActivityRecognitionService extends IntentService {
         if(ActivityRecognitionResult.hasResult(intent)) {
 
             try {
+
                 mActivityRecognitionStreamGenerator = (ActivityRecognitionStreamGenerator) MinukuStreamManager.getInstance().getStreamGeneratorFor(ActivityRecognitionDataRecord.class);
             }catch (StreamNotFoundException e){
                 e.printStackTrace();
