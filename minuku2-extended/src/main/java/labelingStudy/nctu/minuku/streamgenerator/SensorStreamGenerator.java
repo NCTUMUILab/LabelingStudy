@@ -212,10 +212,6 @@ public class SensorStreamGenerator extends AndroidStreamGenerator<SensorDataReco
 
     }
 
-    /**handle different json form convertion**/
-
-
-
     /** handle sensor **/
     /**register sensor - Not sure**/
     protected void RegisterAvailableSensors(){

@@ -123,7 +123,7 @@ public class RingerStreamGenerator extends AndroidStreamGenerator<RingerDataReco
     @Override
     public long getUpdateFrequency() {
         return 1;
-    } //call updateStream everyminute
+    }
 
     @Override
     public void sendStateChangeEvent() {

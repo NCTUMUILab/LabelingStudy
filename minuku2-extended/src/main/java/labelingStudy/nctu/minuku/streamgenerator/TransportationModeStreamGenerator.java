@@ -235,17 +235,6 @@ public class TransportationModeStreamGenerator extends AndroidStreamGenerator<Tr
         mStream.add(transportationModeDataRecord);
         Log.d(TAG, "TransportationMode to be sent to event bus" + transportationModeDataRecord);
 
-        CSVHelper.storeToCSV(CSVHelper.CSV_ESM, "Transportation, update stream");
-
-        CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_TRANSPORTATION,
-                ScheduleAndSampleManager.getTimeString(transportationModeDataRecord.getCreationTime()),
-                transportationModeDataRecord.getConfirmedActivityString(),
-                ScheduleAndSampleManager.getTimeString(transportationModeDataRecord.getSuspectedTime()),
-                transportationModeDataRecord.getSuspectedStartActivityString(),
-                transportationModeDataRecord.getSuspectedStopActivityString(),
-                latest_activityRecognitionDataRecord.getMostProbableActivity().toString(),
-                latest_activityRecognitionDataRecord.getProbableActivities().toString());
-
         MinukuStreamManager.getInstance().setTransportationModeDataRecord(transportationModeDataRecord, mContext, sharedPrefs);
 
         // also post an event.

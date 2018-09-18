@@ -162,7 +162,7 @@ public class BackgroundService extends Service {
 //        FileHelper fileHelper = FileHelper.getInstance(getApplicationContext());
 //        FileHelper.readTestFile();
 
-        return START_REDELIVER_INTENT; //START_STICKY_COMPATIBILITY;
+        return START_REDELIVER_INTENT;
     }
 
     private void updateNotificationAndStreamManagerThread(){

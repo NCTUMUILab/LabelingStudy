@@ -101,7 +101,6 @@ public class MinukuStreamManager implements StreamManager {
         mStreamMap = new HashMap<>();
         mStreamTypeStreamMap = new HashMap<>();
         mRegisteredStreamGenerators = new HashMap<>();
-
     }
 
     public static MinukuStreamManager getInstance() {
@@ -419,8 +418,11 @@ public class MinukuStreamManager implements StreamManager {
                             ArrayList<String> locations = DBHelper.queryLastRecord(DBHelper.location_table);
                             if(locations.size() > 0){
 
-                                double lat = Double.parseDouble(locations.get(DBHelper.COL_INDEX_LOC_LATITUDE));
-                                double lng = Double.parseDouble(locations.get(DBHelper.COL_INDEX_LOC_LONGITUDE));
+                                Log.d(TAG, "locations : "+locations);
+                                String location = locations.get(locations.size() - 1);
+                                String[] locationPieces = location.split(Constants.DELIMITER);
+                                double lat = Double.parseDouble(locationPieces[DBHelper.COL_INDEX_LOC_LATITUDE]);
+                                double lng = Double.parseDouble(locationPieces[DBHelper.COL_INDEX_LOC_LONGITUDE]);
 
                                 //TODO check the AsyncTask is needed
                                 String siteName = GetUrl.getSiteNameFromNet(lat, lng);

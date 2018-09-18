@@ -307,8 +307,6 @@ public class LocationStreamGenerator extends AndroidStreamGenerator<LocationData
         try {
 
             mDAO.add(newlocationDataRecord);
-            //TODO notice it
-//                SessionManager.getInstance().setTrip(newlocationDataRecord);
         } catch (DAOException e) {
             e.printStackTrace();
             return false;
