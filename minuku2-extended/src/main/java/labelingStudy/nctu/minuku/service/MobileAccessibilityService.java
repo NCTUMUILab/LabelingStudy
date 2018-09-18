@@ -22,10 +22,6 @@ public class MobileAccessibilityService extends AccessibilityService {
 
     private static AccessibilityStreamGenerator accessibilityStreamGenerator;
 
-    public MobileAccessibilityService(){
-        super();
-    }
-
     public MobileAccessibilityService(AccessibilityStreamGenerator accessibilityStreamGenerator){
         super();
 
@@ -52,7 +48,7 @@ public class MobileAccessibilityService extends AccessibilityService {
 
     @Override
     public void onAccessibilityEvent(AccessibilityEvent accessibilityEvent) {
-        // TODO Auto-generated method stub
+
         int eventType = accessibilityEvent.getEventType();
         String pack = "";
         String text = "";

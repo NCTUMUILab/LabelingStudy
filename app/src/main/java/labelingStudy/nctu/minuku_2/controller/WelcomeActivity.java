@@ -64,7 +64,7 @@ public class WelcomeActivity extends AppCompatActivity {
         sharedPrefs = getSharedPreferences(Constants.sharedPrefString, MODE_PRIVATE);
 
         int sdk_int = Build.VERSION.SDK_INT;
-        if(sdk_int>=23) {
+        if(sdk_int >= Build.VERSION_CODES.M) {
             checkAndRequestPermissions();
         }else{
             startServiceWork();

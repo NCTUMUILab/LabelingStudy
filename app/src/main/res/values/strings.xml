@@ -33,6 +33,7 @@
     <string name="ok">OK</string>
     <string name="cancel">CANCEL</string>
     <string name="confirm_in_chinese">確認</string>
+    <string name="cancel_in_chinese">取消</string>
 
     <!--activity constants text-->
     <string name="homepage_switch_activity_button">切換移動方式</string>
@@ -45,10 +46,15 @@
     <string name="placeselection_newsite">新增地點</string>
 
     <string name="reminder_check_connection">請確認您有連上網路</string>
+    <string name="reminder_choose_your_site">請選擇地點</string>
     <string name="reminder_enter_site">請輸入地點</string>
     <string name="reminder_enter_site_successfully">成功新增地點</string>
     <string name="reminder_already_checkpointed">當前活動已經Checkpoint過了</string>
     <string name="reminder_checkpoint_successfully">成功Checkpoint!</string>
+    <string name="reminder_havent_got_gps">尚未抓到GPS!</string>
+    <string name="reminder_your_trip_is_split">您的旅程已成功分開</string>
+    <string name="reminder_choose_a_point_to_split">請點擊地圖以選擇中斷點</string>
+    <string name="reminder_thank_for_your_reply">感謝您的填答</string>
 
     <string name="walk_activity_type_in_chinese">走路</string>
     <string name="bike_activity_type_in_chinese">自行車</string>

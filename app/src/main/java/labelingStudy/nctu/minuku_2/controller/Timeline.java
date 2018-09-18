@@ -808,14 +808,14 @@ public class Timeline extends AppCompatActivity {
                                         }catch (IndexOutOfBoundsException e){
 
                                             e.printStackTrace();
-                                            Toast.makeText(mContext, "尚未抓到GPS", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(mContext, getResources().getString(R.string.reminder_havent_got_gps), Toast.LENGTH_SHORT).show();
                                         }
                                     }
                                 });
                             }else{
 
                                 DchoosingSite.setVisibility(View.INVISIBLE);
-                                DchoosingSite.setText("請選擇地點");
+                                DchoosingSite.setText(getResources().getString(R.string.reminder_choose_your_site));
                             }
                         }
 
@@ -834,8 +834,8 @@ public class Timeline extends AppCompatActivity {
                             final View layout = inflater.inflate(R.layout.splitedmap_dialog,null);
 
                             builder.setView(layout)
-                                    .setPositiveButton("確認", null)
-                                    .setNegativeButton("取消", null);
+                                    .setPositiveButton(R.string.confirm_in_chinese, null)
+                                    .setNegativeButton(R.string.cancel_in_chinese, null);
 
                             final AlertDialog mAlertDialog = builder.create();
                             mAlertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
@@ -882,7 +882,7 @@ public class Timeline extends AppCompatActivity {
 
                                                 }
 
-                                                Toast.makeText(Timeline.this, "您的旅程已成功分開", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(Timeline.this, getResources().getString(R.string.reminder_your_trip_is_split), Toast.LENGTH_SHORT).show();
 
                                                 //reset the Timeline
                                                 initTime();
@@ -891,7 +891,7 @@ public class Timeline extends AppCompatActivity {
 
                                             }else {
 
-                                                Toast.makeText(Timeline.this, "請點擊地圖以選擇中斷點", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(Timeline.this, getResources().getString(R.string.reminder_choose_a_point_to_split), Toast.LENGTH_SHORT).show();
                                             }
                                         }
                                     });
@@ -1121,36 +1121,7 @@ public class Timeline extends AppCompatActivity {
 
                                         DataHandler.updateSession(sessionId, startTimeLabel, endTimeLabel, annotationSet, Constants.SESSION_SHOULD_BE_SENT_FLAG);
 
-
-                                        //TODO deprecated
-                                        //preparing the updated availSite to show after the notifyDataSetChanged
-                                        /*try {
-
-                                            mSessions = new ArrayList<>();
-
-                                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-                                                mSessions = new ListSessionAsyncTask(mContext).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR).get();
-                                            else
-                                                mSessions = new ListSessionAsyncTask(mContext).execute().get();
-
-                                            //conceal the red highlight circle
-                                            GradientDrawable sd = new GradientDrawable();
-
-                                            int backgroundColor = mContext.getResources().getColor(R.color.custom);
-                                            sd.setColor(backgroundColor);
-                                            holder.cardView.setBackground(sd);
-
-                                        } catch (InterruptedException e) {
-                                            Log.d(TAG, "InterruptedException");
-//                                            e.printStackTrace();
-                                        } catch (ExecutionException e) {
-                                            Log.d(TAG, "ExecutionException");
-//                                            e.printStackTrace();
-                                        }*/
-
                                         initTime();
-
-//                                        notifyDataSetChanged();
 
                                         //TODO check the mechanism
                                         notifyItemChanged(position);
@@ -1159,7 +1130,7 @@ public class Timeline extends AppCompatActivity {
 
                                         DchoosingSite.setVisibility(View.INVISIBLE); // set back to default
 
-                                        Toast.makeText(mContext, "感謝您的填答", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(mContext, getResources().getString(R.string.reminder_thank_for_your_reply), Toast.LENGTH_SHORT).show();
                                         dialogInterface.dismiss();
                                     }
                                 }
