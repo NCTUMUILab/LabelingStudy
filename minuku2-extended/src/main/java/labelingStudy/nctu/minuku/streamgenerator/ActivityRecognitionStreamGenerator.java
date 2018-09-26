@@ -154,7 +154,6 @@ public class ActivityRecognitionStreamGenerator extends AndroidStreamGenerator<A
                             .build();
 
             mGoogleApiClient.connect();
-
         }
     }
 
@@ -180,7 +179,6 @@ public class ActivityRecognitionStreamGenerator extends AndroidStreamGenerator<A
             try {
 
                 mDAO.add(activityRecognitionDataRecord);
-
             } catch (DAOException e) {
                 e.printStackTrace();
                 return false;
@@ -225,7 +223,6 @@ public class ActivityRecognitionStreamGenerator extends AndroidStreamGenerator<A
                     mGoogleApiClient,
                     ACTIVITY_RECOGNITION_DEFAULT_UPDATE_INTERVAL,//detectionIntervalMillis
                     mActivityRecognitionPendingIntent);   //callbackIntent
-
         }
 
     }
@@ -268,7 +265,6 @@ public class ActivityRecognitionStreamGenerator extends AndroidStreamGenerator<A
         // Assume isRequested.
         if(probableActivities!=null&&mostProbableActivity!=null)
             saveRecordToLocalRecordPool(mostProbableActivity,detectedtime);
-
 
     }
 
@@ -350,7 +346,6 @@ public class ActivityRecognitionStreamGenerator extends AndroidStreamGenerator<A
             e.printStackTrace();
         }
 
-//        updateStream();
     }
 
     /**

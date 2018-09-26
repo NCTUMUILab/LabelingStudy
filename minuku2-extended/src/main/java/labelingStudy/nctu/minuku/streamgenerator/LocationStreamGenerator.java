@@ -307,8 +307,6 @@ public class LocationStreamGenerator extends AndroidStreamGenerator<LocationData
         try {
 
             mDAO.add(newlocationDataRecord);
-            //TODO notice it
-//                SessionManager.getInstance().setTrip(newlocationDataRecord);
         } catch (DAOException e) {
             e.printStackTrace();
             return false;
@@ -318,7 +316,7 @@ public class LocationStreamGenerator extends AndroidStreamGenerator<LocationData
 
     @Override
     public long getUpdateFrequency() {
-        return 1; // 1 = 1 minutes
+        return 1;
     }
 
     @Override

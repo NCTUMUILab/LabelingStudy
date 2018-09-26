@@ -10,7 +10,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.os.Handler;
 import android.util.Log;
 
 import org.javatuples.Decade;
@@ -62,7 +61,6 @@ import labelingStudy.nctu.minuku.manager.SessionManager;
 import labelingStudy.nctu.minuku.model.Annotation;
 import labelingStudy.nctu.minuku.model.AnnotationSet;
 import labelingStudy.nctu.minuku.model.Session;
-import labelingStudy.nctu.minuku.streamgenerator.ConnectivityStreamGenerator;
 import labelingStudy.nctu.minuku_2.Utils;
 
 /**
@@ -73,11 +71,7 @@ public class WifiReceiver extends BroadcastReceiver {
 
     private final String TAG = "WifiReceiver";
 
-    private Handler handler;
-
     private SharedPreferences sharedPrefs;
-
-    private Runnable runnable = null;
 
     private int year,month,day,hour,min;
 
@@ -85,8 +79,6 @@ public class WifiReceiver extends BroadcastReceiver {
     private long nowTime = -9999;
     private long startTime = -9999;
     private long endTime = -9999;
-
-    private long startTripTime = -9999;
 
     private String currentCondition;
 
@@ -101,9 +93,6 @@ public class WifiReceiver extends BroadcastReceiver {
 
     private static final String postIsAliveUrl_insert = "http://18.219.118.106:5000/find_latest_and_insert?collection=isAlive&action=insert&id=";//&action=insert, search
 
-    public static int mainThreadUpdateFrequencyInSeconds = 10;
-    public static long mainThreadUpdateFrequencyInMilliseconds = mainThreadUpdateFrequencyInSeconds * Constants.MILLISECONDS_PER_SECOND;
-
     @Override
     public void onReceive(Context context, Intent intent) {
 
@@ -116,7 +105,7 @@ public class WifiReceiver extends BroadcastReceiver {
         TimeZone tz = TimeZone.getDefault();
         Calendar cal = Calendar.getInstance(tz);
         int mYear = cal.get(Calendar.YEAR);
-        int mMonth = cal.get(Calendar.MONTH)+1;
+        int mMonth = cal.get(Calendar.MONTH);
         int mDay = cal.get(Calendar.DAY_OF_MONTH);
         int mHour = cal.get(Calendar.HOUR_OF_DAY);
 
@@ -136,116 +125,18 @@ public class WifiReceiver extends BroadcastReceiver {
 
         Log.d(TAG, "year : "+ year+" month : "+ month+" day : "+ day+" hour : "+ hour+" min : "+ min);
 
+        setDataStartEndTime();
+
         if (Constants.ACTION_CONNECTIVITY_CHANGE.equals(intent.getAction())) {
 
-            Log.d(TAG, "onReceive, "+intent.getAction().toString());
+            if(activeNetwork != null &&
+                    activeNetwork.getType() == ConnectivityManager.TYPE_WIFI){
 
-            if(ConnectivityStreamGenerator.mIsWifiConnected || ConnectivityStreamGenerator.mIsMobileConnected){
-
-                Log.d(TAG, "IsWifiConnected going to upload availSite");
-
-                String message = intent.getExtras().get("message").toString();
-
-                CSVHelper.storeToCSV(CSVHelper.CSV_WIFI_RECEIVER_CHECK, Constants.ACTION_CONNECTIVITY_CHANGE + " : " + message);
-                CSVHelper.storeToCSV(CSVHelper.CSV_WIFI_RECEIVER_CHECK, "isConnected(mobile or wifi) going to upload availSite");
+                setDataStartEndTime();
 
                 uploadData();
             }
         }
-
-        //TODO might be deprecated
-        /*if (activeNetwork != null) {
-            // connected to the internet
-            if (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI) {
-                // connected to wifi
-                Log.d(TAG,"Wifi activeNetwork");
-
-                if(runnable==null) {
-
-                    //Log.d(TAG, "there is no runnable running yet.");
-
-                    MakingJsonDataMainThread();
-                }
-            } else if (activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE) {
-                //we might no need to use this.
-                // connected to the mobile provider's availSite plan
-                Log.d(TAG, "MOBILE activeNetwork" ) ;
-                if(runnable==null) {
-
-                    //Log.d(TAG, "there is no runnable running yet.");
-
-                    MakingJsonDataMainThread();
-                }
-            }
-        } else {
-            // not connected to the internet
-            Log.d(TAG, "no Network" ) ;
-
-        }*/
-    }
-
-    public String gettingTripLastTime(){
-
-        JSONObject data = new JSONObject();
-
-        String curr =  getDateCurrentTimeZone(new Date().getTime());
-
-        String result = "";
-
-        try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-                result = new HttpAsyncPostJsonTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
-                        postTripUrl_search+Constants.DEVICE_ID,
-                        data.toString(),
-                        "Trip",
-                        curr).get();
-            else
-                result = new HttpAsyncPostJsonTask().execute(
-                        postTripUrl_search+Constants.DEVICE_ID,
-                        data.toString(),
-                        "Trip",
-                        curr).get();
-
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-
-        return result;
-
-    }
-
-    public String gettingDumpLastTime(){
-        //TODO upload to MongoDB
-        JSONObject data = new JSONObject();
-
-        String curr =  getDateCurrentTimeZone(new Date().getTime());
-
-        String result = "";
-
-        try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-                result = new HttpAsyncPostJsonTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
-                        postDumpUrl_search+Constants.DEVICE_ID,
-                        data.toString(),
-                        "Dump",
-                        curr).get();
-            else
-                result = new HttpAsyncPostJsonTask().execute(
-                        postDumpUrl_search+Constants.DEVICE_ID,
-                        data.toString(),
-                        "Dump",
-                        curr).get();
-
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-
-        return result;
-
     }
 
     public void sendingDumpData(){
@@ -314,16 +205,21 @@ public class WifiReceiver extends BroadcastReceiver {
 
                 //update next time range
                 latestUpdatedTime = endTime;
+
                 startTime = latestUpdatedTime;
 
                 long nextinterval = Constants.MILLISECONDS_PER_HOUR;
 
                 endTime = startTime + nextinterval;
 
+                Log.d(TAG, "[show data response] next iteration startTime : " + startTime);
+                Log.d(TAG, "[show data response] next iteration startTimeString : " + ScheduleAndSampleManager.getTimeString(startTime));
+
+                Log.d(TAG, "[show data response] next iteration endTime : " + endTime);
+                Log.d(TAG, "[show data response] next iteration endTimeString : " + ScheduleAndSampleManager.getTimeString(endTime));
+
                 sharedPrefs.edit().putLong("lastSentStarttime", startTime).apply();
-
             }
-
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
@@ -341,139 +237,82 @@ public class WifiReceiver extends BroadcastReceiver {
 
         if(!Constants.DEVICE_ID.equals("NA")) {
 
-            //dump only can be sent when wifi is connected
-            if (ConnectivityStreamGenerator.mIsWifiConnected) {
+            setNowTime();
 
-                //TODO update endtime to get the latest availSite's time from MongoDB
-                //TODO endtime = latest availSite's time + nextinterval
+            Log.d(TAG, "NowTimeString : " + ScheduleAndSampleManager.getTimeString(nowTime));
+            Log.d(TAG, "endTimeString : " + ScheduleAndSampleManager.getTimeString(endTime));
+            Log.d(TAG, "now > end ? " + (nowTime > endTime));
 
-                long lastSentStarttime = sharedPrefs.getLong("lastSentStarttime", 0);
+            while(nowTime > endTime) {
 
-                if (lastSentStarttime == 0) {
+                Log.d(TAG,"before send dump data NowTimeString : " + ScheduleAndSampleManager.getTimeString(nowTime));
 
-                    //if it doesn't reponse the setting with initialize ones
-                    //initialize
-                    long startstartTime = getSpecialTimeInMillis(makingDataFormat(year, month, day, hour, min));
-//                        long startstartTime = ScheduleAndSampleManager.getCurrentTimeInMillis();
-                    startTime = sharedPrefs.getLong("StartTime", startstartTime); //default
-                    Log.d(TAG, "StartTimeString : " + ScheduleAndSampleManager.getTimeString(startTime));
+                Log.d(TAG,"before send dump data EndTimeString : " + ScheduleAndSampleManager.getTimeString(endTime));
 
-                    long startendTime = getSpecialTimeInMillis(makingDataFormat(year, month, day, hour + 1, min));
-//                        long startendTime = startstartTime + Constants.MILLISECONDS_PER_HOUR;
-                    endTime = sharedPrefs.getLong("EndTime", startendTime);
-                    Log.d(TAG, "EndTimeString : " + ScheduleAndSampleManager.getTimeString(endTime));
-                } else {
+                sendingDumpData();
 
-                    //if it do reponse the setting with initialize ones
-                    startTime = Long.valueOf(lastSentStarttime);
-                    Log.d(TAG, "StartTimeString : " + ScheduleAndSampleManager.getTimeString(startTime));
-
-                    long nextinterval = Constants.MILLISECONDS_PER_HOUR; //1 hr
-                    endTime = Long.valueOf(lastSentStarttime) + nextinterval;
-                    Log.d(TAG, "EndTimeString : " + ScheduleAndSampleManager.getTimeString(endTime));
-                }
-
-                nowTime = ScheduleAndSampleManager.getCurrentTimeInMillis() - Constants.MILLISECONDS_PER_DAY;
-                //for testing immediately
-//                        nowTime = ScheduleAndSampleManager.getCurrentTimeInMillis();
-                Log.d(TAG, "NowTimeString : " + ScheduleAndSampleManager.getTimeString(nowTime));
-
-                if (nowTime > endTime && ConnectivityStreamGenerator.mIsWifiConnected == true) {
-
-                    sendingDumpData();
-                }
+                //update nowTime
+                setNowTime();
             }
 
             // Trip, isAlive
-            if (ConnectivityStreamGenerator.mIsWifiConnected || ConnectivityStreamGenerator.mIsMobileConnected) {
+            sendingTripData(nowTime);
 
-                sendingTripData(nowTime);
+            sendingIsAliveData();
 
-                sendingIsAliveData();
-            }
         }
     }
 
-    public void MakingJsonDataMainThread(){
+    private void setDataStartEndTime(){
 
-        handler = new Handler();
+        Log.d(TAG, "setDataStartEndTime");
 
-        runnable = new Runnable() {
+        long lastSentStarttime = sharedPrefs.getLong("lastSentStarttime", Constants.INVALID_TIME_VALUE);
 
-            @Override
-            public void run() {
+        if (lastSentStarttime == Constants.INVALID_TIME_VALUE) {
 
-                Log.d(TAG, "MakingJsonDataMainThread runnable");
+            //if it doesn't response the setting with initialize ones
+            //initialize
+            Calendar designatedStartTime = Calendar.getInstance();
+            designatedStartTime.set(year, month, day, hour, min);
 
-                Constants.DEVICE_ID = sharedPrefs.getString("DEVICE_ID",  Constants.DEVICE_ID);
+            long startstartTime = designatedStartTime.getTimeInMillis();
+            startTime = sharedPrefs.getLong("StartTime", startstartTime); //default
+            Log.d(TAG, "StartTimeString : " + ScheduleAndSampleManager.getTimeString(startTime));
 
-                Log.d(TAG, "DEVICE_ID : "+ Constants.DEVICE_ID);
+            sharedPrefs.edit().putLong("StartTime", startTime).apply();
 
-                if(!Constants.DEVICE_ID.equals("NA")) {
+            long startendTime = startstartTime + Constants.MILLISECONDS_PER_HOUR;
+            endTime = sharedPrefs.getLong("EndTime", startendTime);
+            Log.d(TAG, "EndTimeString : " + ScheduleAndSampleManager.getTimeString(endTime));
 
-                    //dump only can be sent when wifi is connected
-                    if (ConnectivityStreamGenerator.mIsWifiConnected) {
+            sharedPrefs.edit().putLong("EndTime", endTime).apply();
 
-                        //TODO update endtime to get the latest availSite's time from MongoDB
-                        //TODO endtime = latest availSite's time + nextinterval
+        } else {
 
-                        long lastSentStarttime = sharedPrefs.getLong("lastSentStarttime", 0);
+            //if it do reponse the setting with initialize ones
+            startTime = Long.valueOf(lastSentStarttime);
+            Log.d(TAG, "StartTimeString : " + ScheduleAndSampleManager.getTimeString(startTime));
 
-                        if (lastSentStarttime == 0) {
+            endTime = Long.valueOf(lastSentStarttime) + Constants.MILLISECONDS_PER_HOUR;
+            Log.d(TAG, "EndTimeString : " + ScheduleAndSampleManager.getTimeString(endTime));
+        }
+    }
 
-                            //if it doesn't reponse the setting with initialize ones
-                            //initialize
-                            long startstartTime = getSpecialTimeInMillis(makingDataFormat(year, month, day, hour, min));
-//                        long startstartTime = ScheduleAndSampleManager.getCurrentTimeInMillis();
-                            startTime = sharedPrefs.getLong("StartTime", startstartTime); //default
-                            Log.d(TAG, "StartTimeString : " + ScheduleAndSampleManager.getTimeString(startTime));
+    private void setNowTime(){
 
-                            long startendTime = getSpecialTimeInMillis(makingDataFormat(year, month, day, hour + 1, min));
-//                        long startendTime = startstartTime + Constants.MILLISECONDS_PER_HOUR;
-                            endTime = sharedPrefs.getLong("EndTime", startendTime);
-                            Log.d(TAG, "EndTimeString : " + ScheduleAndSampleManager.getTimeString(endTime));
-                        } else {
+//        nowTime = new Date().getTime() - Constants.MILLISECONDS_PER_DAY;
 
-                            //if it do reponse the setting with initialize ones
-                            startTime = Long.valueOf(lastSentStarttime);
-                            Log.d(TAG, "StartTimeString : " + ScheduleAndSampleManager.getTimeString(startTime));
-
-                            long nextinterval = Constants.MILLISECONDS_PER_HOUR; //1 hr
-                            endTime = Long.valueOf(lastSentStarttime) + nextinterval;
-                            Log.d(TAG, "EndTimeString : " + ScheduleAndSampleManager.getTimeString(endTime));
-                        }
-
-                        nowTime = ScheduleAndSampleManager.getCurrentTimeInMillis() - Constants.MILLISECONDS_PER_DAY;
-                        //for testing immediately
-//                        nowTime = ScheduleAndSampleManager.getCurrentTimeInMillis();
-                        Log.d(TAG, "NowTimeString : " + ScheduleAndSampleManager.getTimeString(nowTime));
-
-                        if (nowTime > endTime && ConnectivityStreamGenerator.mIsWifiConnected == true) {
-
-                            sendingDumpData();
-                        }
-                    }
-
-                    // Trip, isAlive
-                    if (ConnectivityStreamGenerator.mIsWifiConnected || ConnectivityStreamGenerator.mIsMobileConnected) {
-
-                        sendingTripData(nowTime);
-
-                        sendingIsAliveData();
-                    }
-                }
-
-                handler.postDelayed(this, mainThreadUpdateFrequencyInMilliseconds);
-            }
-        };
-
-        handler.post(runnable);
-
+        nowTime = new Date().getTime(); //TODO for testing
     }
 
     private void sendingTripData(long time24HrAgo){
 
+        Log.d(TAG, "sendingTripData");
+
         ArrayList<JSONObject> datas = getSessionData(time24HrAgo);
+
+        Log.d(TAG, "tripData size : "+datas.size());
 
         for(int index = 0; index < datas.size(); index++){
 
@@ -576,7 +415,7 @@ public class WifiReceiver extends BroadcastReceiver {
         @Override
         protected String doInBackground(String... params) {
 
-            String result=null;
+            String result = null;
             String url = params[0];
             String data = params[1];
             String dataType = params[2];
@@ -671,12 +510,12 @@ public class WifiReceiver extends BroadcastReceiver {
         } catch (MalformedURLException e) {
             e.printStackTrace();
             Log.d(TAG, "MalformedURLException", e);
-        } /*catch (java.net.SocketTimeoutException e){
+        } catch (java.net.SocketTimeoutException e){
 
             Log.d(TAG, "SocketTimeoutException EE", e);
             conn.disconnect();
 
-        } */catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }finally {
 
@@ -711,7 +550,7 @@ public class WifiReceiver extends BroadcastReceiver {
     }
 
     /***
-     * trust all hsot....
+     * trust all host....
      */
     private void trustAllHosts() {
 
@@ -720,19 +559,16 @@ public class WifiReceiver extends BroadcastReceiver {
             public void checkClientTrusted(
                     X509Certificate[] chain,
                     String authType) throws CertificateException {
-                // Oh, I am easy!
             }
 
             public void checkServerTrusted(
                     X509Certificate[] chain,
                     String authType) throws CertificateException {
-                // Oh, I am easy!
             }
 
             public X509Certificate[] getAcceptedIssuers() {
                 return null;
             }
-
 
         };
 
@@ -758,7 +594,6 @@ public class WifiReceiver extends BroadcastReceiver {
 
         ArrayList<JSONObject> sessionJsons = new ArrayList<>();
 
-//        ArrayList<String> unsentSessions = DBHelper.queryUnSentSessions();
         ArrayList<String> overTimeSessions = DBHelper.querySessions(time24HrAgo);
 
         Log.d(TAG, "unsentSessions size : "+ overTimeSessions.size());
@@ -835,7 +670,15 @@ public class WifiReceiver extends BroadcastReceiver {
 
         Log.d(TAG, "labelsInString : "+labelsInString);
 
-        annotationSetJson.put(Constants.ANNOTATION_TAG_Label, new JSONObject(labelsInString));
+        labelsInString = labelsInString.trim();
+
+        if(!labelsInString.equals("")){
+
+            annotationSetJson.put(Constants.ANNOTATION_TAG_Label, new JSONObject(labelsInString));
+        }else{
+
+            annotationSetJson.put(Constants.ANNOTATION_TAG_Label, labelsInString);
+        }
 
         return annotationSetJson;
     }

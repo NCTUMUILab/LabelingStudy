@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -38,11 +37,10 @@ public class Timer_move extends AppCompatActivity {
     private Button walk, bike, car, site;
 
     private TextView blackTextView;
-    private String blackTextViewDefault = "請選擇您的移動方式";
+
+    private String blackTextViewDefault;
 
     public static String trafficType;
-
-    static String BigFlag = "";
 
     private SharedPreferences sharedPrefs;
 
@@ -56,16 +54,37 @@ public class Timer_move extends AppCompatActivity {
 
         sharedPrefs = getSharedPreferences(Constants.sharedPrefString, MODE_PRIVATE);
 
+        blackTextViewDefault = getResources().getString(R.string.timer_move_black_text_default);
+
+        popupPermissionSettingAtFirstTime();
+
+        inittimer_move();
+    }
+
+    //TODO might no need or could move to Utils
+    private void popupPermissionSettingAtFirstTime(){
+
         firstTimeOrNot = sharedPrefs.getBoolean("firstTimeOrNot", true);
-        Log.d(TAG,"firstTimeOrNot : "+ firstTimeOrNot);
 
         if(firstTimeOrNot) {
+
             startpermission();
             firstTimeOrNot = false;
             sharedPrefs.edit().putBoolean("firstTimeOrNot", firstTimeOrNot).apply();
         }
+    }
 
-        inittimer_move();
+    public void startpermission(){
+
+        startActivity(new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS));  // 協助工具
+
+        Intent intent1 = new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS);  //usage
+        startActivity(intent1);
+
+//        Intent intent = new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS); //notification
+//        startActivity(intent);
+
+        startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));	//location
     }
 
     @Override
@@ -97,19 +116,6 @@ public class Timer_move extends AppCompatActivity {
         }
 
         return super.onKeyDown(keyCode, event);
-    }
-
-    public void startpermission(){
-
-        startActivity(new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS));  // 協助工具
-
-        Intent intent1 = new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS);  //usage
-        startActivity(intent1);
-
-//        Intent intent = new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS); //notification
-//        startActivity(intent);
-
-        startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));	//location
     }
 
     public void inittimer_move(){
@@ -155,7 +161,7 @@ public class Timer_move extends AppCompatActivity {
 
             if(!buttonActivity.equals(ongoingActivity)){
 
-                Toast toast = Toast.makeText(Timer_move.this, "您必須先結束目前的移動方式 : " + getActivityTypeInChinese(trafficType), Toast.LENGTH_SHORT);
+                Toast toast = Toast.makeText(Timer_move.this, getResources().getString(R.string.reminder_your_must_stop_the_current_activity) + getActivityTypeInChinese(trafficType), Toast.LENGTH_SHORT);
                 toast.show();
             }else {
 
@@ -187,7 +193,6 @@ public class Timer_move extends AppCompatActivity {
         }
     }
 
-    //CountFlag: countung situation --- true:stop, false:ongoing
     private ImageButton.OnClickListener bikingTime = new ImageButton.OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -228,6 +233,7 @@ public class Timer_move extends AppCompatActivity {
         }
     };
 
+    //TODO Clean Code: encounter Constant Expressions issue if utilitize "case" in string.xml file
     private String getActivityTypeString(String activityType){
 
         switch (activityType){
@@ -248,32 +254,15 @@ public class Timer_move extends AppCompatActivity {
 
         switch (activityType){
             case "walk":
-                return "走路";
+                return getResources().getString(R.string.walk_activity_type_in_chinese);
             case "bike":
-                return "自行車";
+                return getResources().getString(R.string.bike_activity_type_in_chinese);
             case "car" :
-                return "汽車";
+                return getResources().getString(R.string.car_activity_type_in_chinese);
             case "static":
-                return "定點";
+                return getResources().getString(R.string.static_activity_type_in_chinese);
             default:
                 return TransportationModeStreamGenerator.TRANSPORTATION_MODE_NAME_NA;
-        }
-    }
-
-    private String getActivityStringType(String activityString){
-
-        switch (activityString){
-
-            case TransportationModeStreamGenerator.TRANSPORTATION_MODE_NAME_ON_FOOT:
-                return "walk";
-            case TransportationModeStreamGenerator.TRANSPORTATION_MODE_NAME_ON_BICYCLE:
-                return "bike";
-            case TransportationModeStreamGenerator.TRANSPORTATION_MODE_NAME_IN_VEHICLE:
-                return "car";
-            case TransportationModeStreamGenerator.TRANSPORTATION_MODE_NAME_NO_TRANSPORTATION:
-                return "static";
-            default:
-                return "";
         }
     }
 

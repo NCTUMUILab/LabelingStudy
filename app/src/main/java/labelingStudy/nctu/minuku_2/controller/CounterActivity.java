@@ -15,7 +15,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -25,7 +24,6 @@ import android.widget.TextView;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Timer;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -50,9 +48,6 @@ public class CounterActivity extends AppCompatActivity {
 
     final private String TAG = "CounterActivity";
 
-    private Context mContext;
-    private LayoutInflater mInflater;
-
     private String siteName;
     public static TextView counter;
     public static String stoptime, starttime;
@@ -63,8 +58,6 @@ public class CounterActivity extends AppCompatActivity {
     public static ImageView traffic;
 
     private String trafficType;
-
-    Timer timer;
 
     public static Button changedMovement;
 
@@ -79,16 +72,6 @@ public class CounterActivity extends AppCompatActivity {
     private final String NotASite = "NotASite";
 
     NotificationManager mNotificationManager;
-
-    public CounterActivity(){}
-
-    public CounterActivity(Context mContext){
-        this.mContext = mContext;
-    }
-
-    public CounterActivity(LayoutInflater mInflater){
-        this.mInflater = mInflater;
-    }
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -126,6 +109,8 @@ public class CounterActivity extends AppCompatActivity {
             trafficType = sharedPrefs.getString("trafficType", trafficType);
         }
 
+        Log.d(TAG, "trafficType : " + trafficType);
+
         try {
 
             siteName = getIntent().getExtras().getString("SiteName", NotASite);
@@ -133,6 +118,13 @@ public class CounterActivity extends AppCompatActivity {
         }catch (NullPointerException e){
 
             siteName = NotASite;
+        }finally {
+
+            if(!siteName.equals(NotASite)){
+
+                trafficType = "site";
+                sharedPrefs.edit().putString("trafficType", trafficType).apply();
+            }
         }
 
         counter = (TextView) findViewById(R.id.tv_timer);
@@ -140,7 +132,6 @@ public class CounterActivity extends AppCompatActivity {
 
         changedMovement = (Button) findViewById(R.id.changedMovement);
         changedMovement.setOnClickListener(changedMoving);
-
 
         play_stop = (ImageButton) findViewById(R.id.btn_play_stop);
 
@@ -162,7 +153,6 @@ public class CounterActivity extends AppCompatActivity {
                 //prevent the situation that the app stop recording accidentally so that the ongoing id is gone
                 try {
 
-                    //TODO we need to store the ongoing session id before shutdown
                     int ongoingId = SessionManager.getOngoingSessionIdList().get(0);
                     Session ongoingSession = SessionManager.getSession(ongoingId);
 
@@ -283,7 +273,6 @@ public class CounterActivity extends AppCompatActivity {
                 changedMovement.setTextColor(ContextCompat.getColor(this, R.color.colorAccentDark));
                 play_stop.setBackgroundColor(ContextCompat.getColor(this, R.color.white));
                 break;
-
         }
 
     }
@@ -363,6 +352,7 @@ public class CounterActivity extends AppCompatActivity {
                 Constants.MILLISECONDS_PER_SECOND,
                 TimeUnit.MILLISECONDS);
 
+        //TODO deprecated
         /*timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask(){
             @Override
@@ -384,6 +374,7 @@ public class CounterActivity extends AppCompatActivity {
             mScheduledFuture.cancel(false);
         }
 
+        //TODO deprecated
         /*if(timer!=null) {
 
             timer.cancel();
@@ -421,6 +412,7 @@ public class CounterActivity extends AppCompatActivity {
             session.addAnnotation(annotation);
             session.setIsSent(Constants.SESSION_SHOULDNT_BEEN_SENT_FLAG);
             session.setType(Constants.SESSION_TYPE_DETECTED_BY_USER);
+            session.setHidedOrNot(Constants.SESSION_NEVER_GET_HIDED_FLAG);
 
             //if there is a sitename, add into the session
             if(transportation.equals(TransportationModeStreamGenerator.TRANSPORTATION_MODE_NAME_NO_TRANSPORTATION)){
@@ -584,11 +576,11 @@ public class CounterActivity extends AppCompatActivity {
         switch (activity){
 
             case "walk":
-                return "走路";
+                return getResources().getString(R.string.walk_activity_type_in_chinese);
             case "bike":
-                return "自行車";
+                return getResources().getString(R.string.bike_activity_type_in_chinese);
             case "car":
-                return "汽車";
+                return getResources().getString(R.string.car_activity_type_in_chinese);
         }
 
         return siteName;

@@ -52,7 +52,7 @@ public class MobileAccessibilityService extends AccessibilityService {
 
     @Override
     public void onAccessibilityEvent(AccessibilityEvent accessibilityEvent) {
-        // TODO Auto-generated method stub
+
         int eventType = accessibilityEvent.getEventType();
         String pack = "";
         String text = "";

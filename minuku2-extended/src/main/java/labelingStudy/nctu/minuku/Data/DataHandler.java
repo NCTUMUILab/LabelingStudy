@@ -63,7 +63,7 @@ public class DataHandler {
 
         long latestTime = 0;
 
-        res = DBHelper.queryLastRecord(
+        res = DBHelper.queryLastRecordBySession(
                 sourceName,
                 sessionId);
 

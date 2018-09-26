@@ -11,8 +11,6 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -33,13 +31,10 @@ public class Timer_site extends AppCompatActivity {
 
     final private String TAG = "Timer_site";
 
-    ImageButton site_1,site_2,Customize;
-    private Button move;
     private ListView listview;
     public static ArrayList<String> availSite;
 
     private SharedPreferences sharedPrefs;
-    private SharedPreferences.Editor editor;
 
     public Timer_site(){}
 
@@ -48,10 +43,8 @@ public class Timer_site extends AppCompatActivity {
         setContentView(R.layout.timer_site);
 
         sharedPrefs = getSharedPreferences(Constants.sharedPrefString, Context.MODE_PRIVATE);
-        editor = getSharedPreferences(Constants.sharedPrefString, Context.MODE_PRIVATE).edit();
 
-        availSite = new ArrayList<String>();
-
+        availSite = new ArrayList<>();
     }
 
     @Override
@@ -90,9 +83,10 @@ public class Timer_site extends AppCompatActivity {
 
         listview = (ListView) findViewById(R.id.convenientList);
 
-        availSite = new ArrayList<String>();
+        availSite = new ArrayList<>();
 
-        availSite.add("新增地點");
+        final String ADD_NEW_SITE_NAME = getResources().getString(R.string.timer_site_add_new_site);
+        availSite.add(ADD_NEW_SITE_NAME);
 
         //output their custom sites from sqlite
         SQLiteDatabase db = DBManager.getInstance().openDatabase();
@@ -122,7 +116,7 @@ public class Timer_site extends AppCompatActivity {
                 if(position == 0) {
 
                     if(!Utils.haveNetworkConnection(getApplicationContext()))
-                        Toast.makeText(Timer_site.this, "請確認您有連上網路", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Timer_site.this, getResources().getString(R.string.reminder_check_connection), Toast.LENGTH_SHORT).show();
                     else
                         startActivity(new Intent(Timer_site.this, PlaceSelection.class));
                 }else{

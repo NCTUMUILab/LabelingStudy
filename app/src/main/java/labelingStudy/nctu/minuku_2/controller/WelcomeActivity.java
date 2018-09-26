@@ -14,9 +14,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import labelingStudy.nctu.minuku.config.Constants;
 import labelingStudy.nctu.minuku.logger.Log;
@@ -48,16 +51,15 @@ public class WelcomeActivity extends AppCompatActivity {
         watchMyTimeline = (Button) findViewById(R.id.watchMyTimeline);
         watchMyTimeline.setOnClickListener(watchingMyTimeline);
 
-//        startService(new Intent(getBaseContext(), BackgroundService.class));
-
         current_task = getResources().getString(R.string.current_task);
-        if(current_task.equals("ESM")) {
+        Constants.currentWork = current_task;
 
-            //conceal the button
+        if(current_task.equals(getResources().getString(R.string.task_ESM))) {
+
             chooseMyMobility.setVisibility(View.GONE);
-        }else if(current_task.equals("CAR")){
+        }else if(current_task.equals(getResources().getString(R.string.task_CAR))){
 
-            chooseMyMobility.setText("切換移動方式");
+            chooseMyMobility.setText(R.string.homepage_switch_activity_button);
         }
 
 //        EventBus.getDefault().register(this);
@@ -65,13 +67,11 @@ public class WelcomeActivity extends AppCompatActivity {
         sharedPrefs = getSharedPreferences(Constants.sharedPrefString, MODE_PRIVATE);
 
         int sdk_int = Build.VERSION.SDK_INT;
-        if(sdk_int>=23) {
+        if(sdk_int >= Build.VERSION_CODES.M) {
             checkAndRequestPermissions();
         }else{
             startServiceWork();
         }
-
-        Constants.currentWork = getResources().getString(R.string.current_task);
 
         Intent intent = new Intent(getApplicationContext(), Timeline.class);
         MinukuNotificationManager.setIntentToTimeline(intent);
@@ -112,6 +112,12 @@ public class WelcomeActivity extends AppCompatActivity {
                 return true;
 
             case R.id.action_permissions:
+
+                int sdk_int = Build.VERSION.SDK_INT;
+                if(sdk_int >= Build.VERSION_CODES.M) {
+                    checkAndRequestPermissions();
+                }
+
                 startpermission();
                 sharedPrefs.edit().putBoolean("firstTimeOrNot", false).apply();
                 return true;
@@ -126,12 +132,11 @@ public class WelcomeActivity extends AppCompatActivity {
 
             String current_task = getResources().getString(R.string.current_task);
 
-
-            if(current_task.equals("PART")) {
+            if(current_task.equals(getResources().getString(R.string.task_PART))) {
 
                 Intent intent = new Intent(WelcomeActivity.this, Timer_move.class);
                 startActivity(intent);
-            }else if(current_task.equals("CAR")){
+            }else if(current_task.equals(getResources().getString(R.string.task_CAR))){
 
                 Intent intent = new Intent(WelcomeActivity.this, CheckPointActivity.class);
                 startActivity(intent);
@@ -144,9 +149,7 @@ public class WelcomeActivity extends AppCompatActivity {
         public void onClick(View v) {
 
             Intent intent = new Intent(WelcomeActivity.this, Timeline.class);
-
             startActivity(intent);
-
         }
     };
 
@@ -206,11 +209,57 @@ public class WelcomeActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_ID_MULTIPLE_PERMISSIONS: {
+
+                Map<String, Integer> perms = new HashMap<>();
+
+                // Initialize the map with both permissions
+                perms.put(android.Manifest.permission.READ_EXTERNAL_STORAGE, PackageManager.PERMISSION_GRANTED);
+                perms.put(android.Manifest.permission.WRITE_EXTERNAL_STORAGE, PackageManager.PERMISSION_GRANTED);
+                //perms.put(Manifest.permission.SYSTEM_ALERT_WINDOW, PackageManager.PERMISSION_GRANTED);
+                perms.put(android.Manifest.permission.ACCESS_FINE_LOCATION, PackageManager.PERMISSION_GRANTED);
+                perms.put(android.Manifest.permission.ACCESS_COARSE_LOCATION, PackageManager.PERMISSION_GRANTED);
+                perms.put(android.Manifest.permission.READ_PHONE_STATE, PackageManager.PERMISSION_GRANTED);
+//                perms.put(android.Manifest.permission.BODY_SENSORS, PackageManager.PERMISSION_GRANTED);
+
+                // Fill with actual results from user
+                if (grantResults.length > 0) {
+                    for (int i = 0; i < permissions.length; i++)
+                        perms.put(permissions[i], grantResults[i]);
+                    // Check for both permissions
+                    if (perms.get(android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+                            && perms.get(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+                            && perms.get(android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                            && perms.get(android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                            && perms.get(android.Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED
+//                            && perms.get(android.Manifest.permission.BODY_SENSORS) == PackageManager.PERMISSION_GRANTED
+                            ){
+//                        Log.d("permission", "[permission test]all permission granted");
+                        //permission_ok=1;
+                        startServiceWork();
+                    } else {
+                        Toast.makeText(this, "Go to settings and enable permissions", Toast.LENGTH_LONG).show();
+                    }
+                }
+
+            }
+        }
+    }
+
     public void startServiceWork(){
 
         Log.d(TAG, "startServiceWork");
 
         getDeviceid();
+
+        popupPermissionSettingAtFirstTime();
+    }
+
+    private void popupPermissionSettingAtFirstTime(){
 
         firstTimeOrNot = sharedPrefs.getBoolean("firstTimeOrNot", true);
 
@@ -233,9 +282,6 @@ public class WelcomeActivity extends AppCompatActivity {
             Constants.DEVICE_ID = mngr.getDeviceId();
 
             sharedPrefs.edit().putString("DEVICE_ID",  mngr.getDeviceId()).apply();
-
-            Log.d(TAG,"DEVICE_ID "+Constants.DEVICE_ID+" : "+mngr.getDeviceId());
-
         }
     }
 }

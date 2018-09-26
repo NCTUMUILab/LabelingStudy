@@ -35,7 +35,6 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
-import android.net.LinkProperties;
 import android.net.Network;
 import android.net.NetworkCapabilities;
 import android.net.NetworkRequest;
@@ -162,14 +161,14 @@ public class BackgroundService extends Service {
 //        FileHelper fileHelper = FileHelper.getInstance(getApplicationContext());
 //        FileHelper.readTestFile();
 
-        return START_REDELIVER_INTENT; //START_STICKY_COMPATIBILITY;
+        return START_REDELIVER_INTENT;
     }
 
     private void updateNotificationAndStreamManagerThread(){
 
         mScheduledFuture = mScheduledExecutorService.scheduleAtFixedRate(
                 updateStreamManagerRunnable,
-                10,
+                Constants.STREAM_UPDATE_DELAY,
                 Constants.STREAM_UPDATE_FREQUENCY,
                 TimeUnit.SECONDS);
     }
@@ -234,7 +233,8 @@ public class BackgroundService extends Service {
 
     @Override
     public void onDestroy() {
-//        super.onDestroy();
+
+        Log.d(TAG, "onDestroy");
 
         stopTheSessionByServiceClose();
 
@@ -244,10 +244,8 @@ public class BackgroundService extends Service {
 
         sendBroadcastToStartService();
 
-        checkingRemovedFromForeground();
-        removeRunnable();
-
         isBackgroundServiceRunning = false;
+        isBackgroundRunnableRunning = false;
 
         mNotificationManager.cancel(ongoingNotificationID);
 
@@ -256,28 +254,31 @@ public class BackgroundService extends Service {
         sharedPrefs.edit().putInt("CurrentState", TransportationModeStreamGenerator.mCurrentState).apply();
         sharedPrefs.edit().putInt("ConfirmedActivityType", TransportationModeStreamGenerator.mConfirmedActivityType).apply();
 
+//        checkingRemovedFromForeground();
+        removeRunnable();
+
         unregisterReceiver(mWifiReceiver);
-        unregisterReceiver(CheckRunnableReceiver);
     }
 
     @Override
     public void onTaskRemoved(Intent intent){
         super.onTaskRemoved(intent);
 
-        sendBroadcastToStartService();
-
-        checkingRemovedFromForeground();
-        removeRunnable();
+        mNotificationManager.cancel(ongoingNotificationID);
 
         isBackgroundServiceRunning = false;
-
-        mNotificationManager.cancel(ongoingNotificationID);
+        isBackgroundRunnableRunning = false;
 
         String onTaskRemoved = "BackGround, onTaskRemoved";
         CSVHelper.storeToCSV(CSVHelper.CSV_CheckService_alive, onTaskRemoved);
 
         sharedPrefs.edit().putInt("CurrentState", TransportationModeStreamGenerator.mCurrentState).apply();
         sharedPrefs.edit().putInt("ConfirmedActivityType", TransportationModeStreamGenerator.mConfirmedActivityType).apply();
+
+//        checkingRemovedFromForeground();
+        removeRunnable();
+
+        sendBroadcastToStartService();
     }
 
     private void registerConnectivityNetworkMonitorForAPI21AndUp() {
@@ -295,38 +296,10 @@ public class BackgroundService extends Service {
                 new ConnectivityManager.NetworkCallback() {
 
                     @Override
-                    public void onAvailable(Network network) {
-                        /*sendBroadcast(
-                                getConnectivityIntent("onAvailable")
-                        );*/
-                    }
-
-                    @Override
                     public void onCapabilitiesChanged(Network network, NetworkCapabilities networkCapabilities){
                         sendBroadcast(
                                 getConnectivityIntent("onCapabilitiesChanged : "+networkCapabilities.toString())
                         );
-                    }
-
-                    @Override
-                    public void onLinkPropertiesChanged(Network network, LinkProperties linkProperties) {
-                        /*sendBroadcast(
-                                getConnectivityIntent("onLinkPropertiesChanged : "+linkProperties.toString())
-                        );*/
-                    }
-
-                    @Override
-                    public void onLosing(Network network, int maxMsToLive) {
-                        /*sendBroadcast(
-                                getConnectivityIntent("onLosing")
-                        );*/
-                    }
-
-                    @Override
-                    public void onLost(Network network) {
-                        /*sendBroadcast(
-                                getConnectivityIntent("onLost")
-                        );*/
                     }
                 }
         );
@@ -402,20 +375,6 @@ public class BackgroundService extends Service {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
-    /*private void createNotificationChannel() {
-        // Create the NotificationChannel, but only on API 26+ because
-        // the NotificationChannel class is new and not in the support library
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = Constants.ONGOING_CHANNEL_NAME;
-            int importance = NotificationManager.IMPORTANCE_LOW;
-            NotificationChannel channel = new NotificationChannel(Constants.ONGOING_CHANNEL_ID, name, importance);
-            // Register the channel with the system; you can't change the importance
-            // or other notification behaviors after this
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
-        }
-    }*/
-
     private void createNotificationChannel(String channelName, String channelID, int channelImportance) {
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is new and not in the support library
@@ -429,20 +388,6 @@ public class BackgroundService extends Service {
             notificationManager.createNotificationChannel(channel);
         }
     }
-
-    /*private void createSurveyNotificationChannel() {
-        // Create the NotificationChannel, but only on API 26+ because
-        // the NotificationChannel class is new and not in the support library
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = Constants.SURVEY_CHANNEL_NAME;
-            int importance = NotificationManager.IMPORTANCE_HIGH;
-            NotificationChannel channel = new NotificationChannel(Constants.SURVEY_CHANNEL_ID, name, importance);
-            // Register the channel with the system; you can't change the importance
-            // or other notification behaviors after this
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
-        }
-    }*/
 
     BroadcastReceiver CheckRunnableReceiver = new BroadcastReceiver() {
 
@@ -471,11 +416,21 @@ public class BackgroundService extends Service {
                 PendingIntent pi = PendingIntent.getBroadcast(BackgroundService.this, 0, new Intent(CHECK_RUNNABLE_ACTION), 0);
 
                 AlarmManager alarm = (AlarmManager) getSystemService(ALARM_SERVICE);
-                alarm.set(
-                        AlarmManager.RTC_WAKEUP,
-                        System.currentTimeMillis() + Constants.PROMPT_SERVICE_REPEAT_MILLISECONDS,
-                        pi
-                );
+
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+
+                    alarm.setAndAllowWhileIdle(
+                            AlarmManager.RTC_WAKEUP,
+                            System.currentTimeMillis() + Constants.PROMPT_SERVICE_REPEAT_MILLISECONDS,
+                            pi);
+                }else{
+
+                    alarm.set(
+                            AlarmManager.RTC_WAKEUP,
+                            System.currentTimeMillis() + Constants.PROMPT_SERVICE_REPEAT_MILLISECONDS,
+                            pi
+                    );
+                }
             }
         }
     };

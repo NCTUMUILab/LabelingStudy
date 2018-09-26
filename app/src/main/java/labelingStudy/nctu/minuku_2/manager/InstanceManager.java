@@ -25,11 +25,6 @@ package labelingStudy.nctu.minuku_2.manager;
 import android.content.Context;
 import android.content.Intent;
 
-import org.greenrobot.eventbus.EventBus;
-
-import java.util.Calendar;
-import java.util.Date;
-
 import labelingStudy.nctu.minuku.Data.DBHelper;
 import labelingStudy.nctu.minuku.dao.AccessibilityDataRecordDAO;
 import labelingStudy.nctu.minuku.dao.ActivityRecognitionDataRecordDAO;
@@ -42,7 +37,6 @@ import labelingStudy.nctu.minuku.dao.SensorDataRecordDAO;
 import labelingStudy.nctu.minuku.dao.TelephonyDataRecordDAO;
 import labelingStudy.nctu.minuku.dao.TransportationModeDAO;
 import labelingStudy.nctu.minuku.dao.UserInteractionDataRecordDAO;
-import labelingStudy.nctu.minuku.logger.Log;
 import labelingStudy.nctu.minuku.manager.MinukuDAOManager;
 import labelingStudy.nctu.minuku.manager.MinukuSituationManager;
 import labelingStudy.nctu.minuku.model.DataRecord.AccessibilityDataRecord;
@@ -68,7 +62,6 @@ import labelingStudy.nctu.minuku.streamgenerator.SensorStreamGenerator;
 import labelingStudy.nctu.minuku.streamgenerator.TelephonyStreamGenerator;
 import labelingStudy.nctu.minuku.streamgenerator.TransportationModeStreamGenerator;
 import labelingStudy.nctu.minuku.streamgenerator.UserInteractionStreamGenerator;
-import labelingStudy.nctu.minuku_2.question.QuestionConfig;
 
 /**
  * Created by neerajkumar on 8/28/16.
@@ -187,107 +180,6 @@ public class InstanceManager {
         // All situations must be registered AFTER the stream generators are registers.
         MinukuSituationManager situationManager = MinukuSituationManager.getInstance();
 
-
-        //TODO additional function
-        //for testing to trigger qualtrics
-        //QuestionnaireManager questionnaireManager = new QuestionnaireManager(getApplicationContext());
-
-        //create questionnaires
-        QuestionConfig.getInstance().setUpQuestions(getApplicationContext());
-
-        // Fetch tags
-//        Model tagsModel = Model.getInstance();
-
-        /*AsyncTask.execute(new Runnable() {
-            @Override
-            public void run() {
-                Future<UserSubmissionStats> submissionStatsFuture = ((UserSubmissionStatsDAO)
-                        MinukuDAOManager.getInstance().getDaoFor(UserSubmissionStats.class)).get();
-                EventBus.getDefault().post(new IncrementLoadingProcessCountEvent());
-                while (!submissionStatsFuture.isDone()) {
-                    try {
-                        Thread.sleep(500);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-                //
-                try {
-                    Log.d(LOG_TAG, "initialize: getting mUserSubmissionStats from future ");
-                     mUserSubmissionStats = submissionStatsFuture.get();
-                    //date check - ensuring that every day we have a new instance of submission
-                    // stats. Needs to be tested
-
-                    if(!areDatesEqual((new Date().getTime()), mUserSubmissionStats.getCreationTime())
-                            || mUserSubmissionStats==null) {
-                        if(mUserSubmissionStats == null)
-                            Log.d(LOG_TAG, "initialize: userSubmissionStats is null");
-                        Log.d(LOG_TAG, "initialize: userSubmissionStats is either null or we have a new date." +
-                                "Creating new userSubmissionStats object");
-                        mUserSubmissionStats = new UserSubmissionStats();
-
-                    }
-                    EventBus.getDefault().post(mUserSubmissionStats);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                    Log.d(LOG_TAG, "initialize: Creating mUserSubmissionStats");
-                    //gotUserStatsFromDatabase(null);
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                    Log.d(LOG_TAG, "initialize: Creating mUserSubmissionStats");
-                    //gotUserStatsFromDatabase(null);
-                } finally {
-                    EventBus.getDefault().post(new DecrementLoadingProcessCountEvent());
-                }
-            }
-        });*/
-
     }
 
-    public UserSubmissionStats getUserSubmissionStats() {
-            if((mUserSubmissionStats == null) || !areDatesEqual((new Date().getTime()), mUserSubmissionStats.getCreationTime())) {
-                if(mUserSubmissionStats == null)
-                    Log.d(LOG_TAG, "getUserSubmissionStats: userSubmissionStats is null");
-
-                Log.d(LOG_TAG, "getUserSubmissionStats: userSubmissionStats is either null or we have a new date." +
-                                "Creating new userSubmissionStats object");
-            mUserSubmissionStats = new UserSubmissionStats();
-        }
-        return mUserSubmissionStats;
-    }
-
-    public synchronized void setUserSubmissionStats(UserSubmissionStats aUserSubmissionStats) {
-        try {
-            MinukuDAOManager.getInstance().getDaoFor(UserSubmissionStats.class).update(null,
-                    aUserSubmissionStats);
-        } catch (Exception e) {
-            Log.e(LOG_TAG, "Could not upload user stats via DAO.");
-        }
-
-        mUserSubmissionStats = aUserSubmissionStats;
-        EventBus.getDefault().post(mUserSubmissionStats);
-    }
-
-    protected boolean areDatesEqual(long currentTime, long previousTime) {
-        Log.d(LOG_TAG, "Checking if the both dates are the same");
-
-        Calendar currentDate = Calendar.getInstance();
-        Calendar previousDate = Calendar.getInstance();
-
-        currentDate.setTimeInMillis(currentTime);
-        previousDate.setTimeInMillis(previousTime);
-        Log.d(LOG_TAG, "Current Year:" + currentDate.get(Calendar.YEAR) + " Previous Year:" + previousDate.get(Calendar.YEAR));
-        Log.d(LOG_TAG, "Current Day:" + currentDate.get(Calendar.DAY_OF_YEAR) + " Previous Day:" + previousDate.get(Calendar.DAY_OF_YEAR));
-        Log.d(LOG_TAG, "Current Month:" + currentDate.get(Calendar.MONTH) + " Previous Month:" + previousDate.get(Calendar.MONTH));
-
-        boolean sameDay = (currentDate.get(Calendar.YEAR) == previousDate.get(Calendar.YEAR)) &&
-                (currentDate.get(Calendar.DAY_OF_YEAR) == previousDate.get(Calendar.DAY_OF_YEAR)) &&
-                (currentDate.get(Calendar.MONTH) == previousDate.get(Calendar.MONTH));
-
-        if(sameDay)
-            Log.d(LOG_TAG, "it is the same day, should not create a new object");
-        else
-            Log.d(LOG_TAG, "it is not the same day - a new day, should create a new object");
-        return sameDay;
-    }
 }

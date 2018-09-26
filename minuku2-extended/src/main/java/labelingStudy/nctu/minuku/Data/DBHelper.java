@@ -56,6 +56,8 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String trip_transportation_col = "trip_transportation";
     public static final String trip_site_col = "trip_site";
     public static final String userPressOrNot_col = "userPressOrNot";
+    public static final int COL_INDEX_LOC_LATITUDE = 2;
+    public static final int COL_INDEX_LOC_LONGITUDE = 3;
 
     //ActivityRecognition
     public static final String MostProbableActivity_col = "MostProbableActivity";
@@ -926,7 +928,7 @@ public class DBHelper extends SQLiteOpenHelper {
             String sql = "SELECT *"  +" FROM " + DBHelper.SESSION_TABLE_NAME +
                     " order by " + COL_SESSION_START_TIME + " DESC ";
 
-            Log.d(TAG, "[queryLastRecord] the query statement is " +sql);
+            Log.d(TAG, "[queryLastRecordBySession] the query statement is " +sql);
 
             Cursor cursor = db.rawQuery(sql, null);
             int columnCount = cursor.getColumnCount();
@@ -959,7 +961,7 @@ public class DBHelper extends SQLiteOpenHelper {
             String sql = "SELECT *"  +" FROM " + DBHelper.SESSION_TABLE_NAME +
                     " order by " + COL_SESSION_START_TIME + " "+order;
 
-            Log.d(TAG, "[queryLastRecord] the query statement is " +sql);
+            Log.d(TAG, "[queryLastRecordBySession] the query statement is " +sql);
 
             Cursor cursor = db.rawQuery(sql, null);
             int columnCount = cursor.getColumnCount();
@@ -995,7 +997,7 @@ public class DBHelper extends SQLiteOpenHelper {
                     " WHERE " + DBHelper.COL_SESSION_SENTORNOT_FLAG + " = " + Constants.SESSION_SHOULD_BE_SENT_FLAG +
                     " order by " + COL_SESSION_START_TIME + " " + "ASC";
 
-            Log.d(TAG, "[queryLastRecord] the query statement is " +sql);
+            Log.d(TAG, "[queryLastRecordBySession] the query statement is " +sql);
 
             Cursor cursor = db.rawQuery(sql, null);
             int columnCount = cursor.getColumnCount();
@@ -1024,7 +1026,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
         Log.d(TAG, "[test show trip] querySessions");
 
-        ArrayList<String> rows = new ArrayList<String>();
+        ArrayList<String> rows = new ArrayList<>();
 
         try{
 
@@ -1034,7 +1036,7 @@ public class DBHelper extends SQLiteOpenHelper {
                     " AND "+ DBHelper.COL_SESSION_SENTORNOT_FLAG + " <> " + Constants.SESSION_IS_ALREADY_SENT_FLAG +
                     " order by " + DBHelper.COL_SESSION_START_TIME + " " + "ASC";
 
-            Log.d(TAG, "[queryLastRecord] the query statement is " +sql);
+            Log.d(TAG, "[queryLastRecordBySession] the query statement is " +sql);
 
             Cursor cursor = db.rawQuery(sql, null);
             int columnCount = cursor.getColumnCount();
@@ -1082,7 +1084,40 @@ public class DBHelper extends SQLiteOpenHelper {
 
     }
 
-    public static ArrayList<String> queryLastRecord(String table_name, int sessionId) {
+    public static ArrayList<String> queryLastRecord(String table_name) {
+
+        ArrayList<String> rows = new ArrayList<String>();
+
+        try{
+
+            SQLiteDatabase db = DBManager.getInstance().openDatabase();
+            String sql = "SELECT *"  +" FROM " + table_name  +
+                    " order by " + COL_ID + " DESC LIMIT 1";
+
+            //execute the query
+            Cursor cursor = db.rawQuery(sql, null);
+            int columnCount = cursor.getColumnCount();
+            while(cursor.moveToNext()){
+                String curRow = "";
+                for (int i=0; i<columnCount; i++){
+                    curRow += cursor.getString(i)+ Constants.DELIMITER;
+                }
+
+                rows.add(curRow);
+            }
+            cursor.close();
+
+
+            DBManager.getInstance().closeDatabase();
+
+        }catch (Exception e){
+
+        }
+
+        return rows;
+    }
+
+    public static ArrayList<String> queryLastRecordBySession(String table_name, int sessionId) {
 
         ArrayList<String> rows = new ArrayList<String>();
 
@@ -1101,7 +1136,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 for (int i=0; i<columnCount; i++){
                     curRow += cursor.getString(i)+ Constants.DELIMITER;
                 }
-                Log.d(TAG, "[queryLastRecord] get result row " +curRow);
+                Log.d(TAG, "[queryLastRecordBySession] get result row " +curRow);
 
                 rows.add(curRow);
             }
@@ -1137,7 +1172,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 for (int i=0; i<columnCount; i++){
                     curRow += cursor.getString(i)+ Constants.DELIMITER;
                 }
-                Log.d(TAG, "[test combine queryLastRecord] get result row " +curRow);
+                Log.d(TAG, "[test combine queryLastRecordBySession] get result row " +curRow);
 
                 rows.add(curRow);
             }
@@ -1173,7 +1208,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 for (int i=0; i<columnCount; i++){
                     curRow += cursor.getString(i)+ Constants.DELIMITER;
                 }
-                Log.d(TAG, "[test combine queryLastRecord] get result row " +curRow);
+                Log.d(TAG, "[test combine queryLastRecordBySession] get result row " +curRow);
 
                 rows.add(curRow);
             }
@@ -1205,7 +1240,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 for (int i=0; i<columnCount; i++){
                     curRow += cursor.getString(i)+ Constants.DELIMITER;
                 }
-                Log.d(TAG, "[test combine queryLastRecord] get result row " +curRow);
+                Log.d(TAG, "[test combine queryLastRecordBySession] get result row " +curRow);
 
                 rows.add(curRow);
             }

@@ -134,7 +134,9 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
+<!--
         <activity android:name="labelingStudy.nctu.minuku_2.MainActivity" />
+-->
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="490219889f9c5227241662e1fa307d31f82f536d" />

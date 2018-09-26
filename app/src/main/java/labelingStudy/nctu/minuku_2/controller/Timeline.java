@@ -52,15 +52,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -68,10 +62,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-import javax.net.ssl.HttpsURLConnection;
-
 import labelingStudy.nctu.minuku.Data.DBHelper;
 import labelingStudy.nctu.minuku.Data.DataHandler;
+import labelingStudy.nctu.minuku.NearbyPlaces.GetUrl;
 import labelingStudy.nctu.minuku.Utilities.ScheduleAndSampleManager;
 import labelingStudy.nctu.minuku.config.Constants;
 import labelingStudy.nctu.minuku.manager.SessionManager;
@@ -79,16 +72,10 @@ import labelingStudy.nctu.minuku.model.Annotation;
 import labelingStudy.nctu.minuku.model.AnnotationSet;
 import labelingStudy.nctu.minuku.model.Session;
 import labelingStudy.nctu.minuku.streamgenerator.TransportationModeStreamGenerator;
-import labelingStudy.nctu.minuku.NearbyPlaces.GetUrl;
 import labelingStudy.nctu.minuku_2.R;
 
 
 public class Timeline extends AppCompatActivity {
-
-    public static ArrayList<String> myTimeDataset = new ArrayList<>();
-    public static ArrayList<String> myActivityDataset = new ArrayList<>();
-    public static ArrayList<String> myTrafficDataset = new ArrayList<>();
-    public static ArrayList<String> myAnnotationDataset = new ArrayList<>();
 
     public static String selectedSiteName = "請選擇地點";
 
@@ -96,8 +83,6 @@ public class Timeline extends AppCompatActivity {
 
     private String TAG = "Timeline";
     Context mContext;
-
-    private View recordview;
 
     private int mYear, mMonth, mDay;
 
@@ -125,21 +110,26 @@ public class Timeline extends AppCompatActivity {
 
         sharedPrefs = getSharedPreferences(Constants.sharedPrefString, MODE_PRIVATE);
 
-        firstTimeOrNot = sharedPrefs.getBoolean("firstTimeOrNot", true);
-        android.util.Log.d(TAG,"firstTimeOrNot : "+ firstTimeOrNot);
-
         timelineOrder = sharedPrefs.getString("timelineOrder", "ASC");
 
-        if(firstTimeOrNot) {
-            startpermission();
-            firstTimeOrNot = false;
-            sharedPrefs.edit().putBoolean("firstTimeOrNot", firstTimeOrNot).apply();
-        }
+        popupPermissionSettingAtFirstTime();
 
         SimpleDateFormat sdf_date = new SimpleDateFormat(Constants.DATE_FORMAT_NOW_DAY);
         dateToQuery = ScheduleAndSampleManager.getTimeString(ScheduleAndSampleManager.getCurrentTimeInMillis(), sdf_date);
         Log.d(TAG, "init dateToQuery : " + dateToQuery);
 
+    }
+
+    private void popupPermissionSettingAtFirstTime(){
+
+        firstTimeOrNot = sharedPrefs.getBoolean("firstTimeOrNot", true);
+
+        if(firstTimeOrNot) {
+
+            startpermission();
+            firstTimeOrNot = false;
+            sharedPrefs.edit().putBoolean("firstTimeOrNot", firstTimeOrNot).apply();
+        }
     }
 
     public void startpermission(){
@@ -194,10 +184,10 @@ public class Timeline extends AppCompatActivity {
 
         if(timelineOrder.equals(Constants.DESC)){
 
-            item.setTitle("從舊到新");
+            item.setTitle(getResources().getString(R.string.timeline_from_old_to_new));
         }else if (timelineOrder.equals(Constants.ASC)) {
 
-            item.setTitle("從新到舊");
+            item.setTitle(getResources().getString(R.string.timeline_from_new_to_old));
         }
 
         return true;
@@ -209,16 +199,16 @@ public class Timeline extends AppCompatActivity {
 
             case R.id.action_getWantedOrder:
 
-                if(item.getTitle().equals("從舊到新")){
+                if(item.getTitle().equals(getResources().getString(R.string.timeline_from_old_to_new))){
 
                     sharedPrefs.edit().putString("timelineOrder", Constants.ASC).apply();
 
-                    item.setTitle("從新到舊");
-                }else if (item.getTitle().equals("從新到舊")){
+                    item.setTitle(getResources().getString(R.string.timeline_from_new_to_old));
+                }else if (item.getTitle().equals(getResources().getString(R.string.timeline_from_new_to_old))){
 
                     sharedPrefs.edit().putString("timelineOrder", Constants.DESC).apply();
 
-                    item.setTitle("從舊到新");
+                    item.setTitle(getResources().getString(R.string.timeline_from_old_to_new));
                 }
 
                 timelineOrder = sharedPrefs.getString("timelineOrder", Constants.DESC);
@@ -323,20 +313,21 @@ public class Timeline extends AppCompatActivity {
 
 //                timelineAdapterBackup = TimelineAdapterBackup.getInstance(mSessions, this, timelineOrder);
 
-                RecyclerView mList = (RecyclerView) findViewById(R.id.list_view);
-                mList.setVisibility(View.VISIBLE);
-
-                //TODO if there have some new availSite, start from the top (reset)
-                //TODO not working
-                int currentposition = sharedPrefs.getInt("currentposition", 0);
-                mList.scrollToPosition(currentposition);
+                RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.list_view);
+                mRecyclerView.setVisibility(View.VISIBLE);
 
                 final LinearLayoutManager layoutManager = new LinearLayoutManager(Timeline.this);
 
                 layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-                mList.setLayoutManager(layoutManager);
-                mList.setAdapter(timelineAdapter);
+                layoutManager.onSaveInstanceState();
+                mRecyclerView.setLayoutManager(layoutManager);
+                mRecyclerView.setAdapter(timelineAdapter);
 //                mList.setAdapter(timelineAdapterBackup);
+
+                //TODO if there have some new availSite, start from the top (reset)
+                //TODO not working
+                int currentposition = sharedPrefs.getInt("currentposition", 0);
+                mRecyclerView.scrollToPosition(currentposition);
 
             }else{
 
@@ -354,42 +345,7 @@ public class Timeline extends AppCompatActivity {
 
     }
 
-    public void initTime(View v){
-
-        Log.d(TAG, "[test show Timeline] initTime");
-
-        recordview = v;
-
-        try{
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-                new ListSessionAsyncTask(mContext).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR).get();
-            else
-                new ListSessionAsyncTask(mContext).execute().get();
-
-            //TODO find better method
-            if(mSessions != null){
-
-                TimelineAdapter timelineAdapter = new TimelineAdapter(mSessions);
-                RecyclerView mList = (RecyclerView) v.findViewById(R.id.list_view);
-
-                final LinearLayoutManager layoutManager = new LinearLayoutManager(Timeline.this);
-
-                layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-                mList.setLayoutManager(layoutManager);
-                mList.setAdapter(timelineAdapter);
-            }
-
-        } catch (InterruptedException e) {
-            Log.d(TAG,"InterruptedException");
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            Log.d(TAG,"ExecutionException");
-            e.printStackTrace();
-        }
-    }
-
-        public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHolder> {
+    public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHolder> {
 
         private List<Session> mSessions;
         public String detectedSiteName = "";
@@ -401,10 +357,11 @@ public class Timeline extends AppCompatActivity {
         private boolean IsSplitLocationChosen = false;
         private HashMap<Integer, Marker> addedSplitMarker = new HashMap<>();
         private int currentMarkerKey = -1;
+        private String transportationInChinese;
 
         public class ViewHolder extends RecyclerView.ViewHolder {
 
-            public TextView time, duration, date, sessionType;
+            public TextView time, goal, date, sessionType;
             public TimelineView lineView;
             public LinearLayout cardbackground;
             public android.support.v7.widget.CardView cardView;
@@ -414,7 +371,7 @@ public class Timeline extends AppCompatActivity {
                 super(v);
 
                 time = (TextView) v.findViewById(R.id.tv_time);
-                duration = (TextView) v.findViewById(R.id.tv_duration);
+                goal = (TextView) v.findViewById(R.id.tv_goal);
                 date = (TextView) v.findViewById(R.id.tv_date);
                 sessionType = (TextView) v.findViewById(R.id.sessionType);
                 traffic = (ImageView) v.findViewById(R.id.iv_traffic);
@@ -556,15 +513,19 @@ public class Timeline extends AppCompatActivity {
                     holder.traffic.setVisibility(View.INVISIBLE);
                 }
 
+                //TODO change the original field from transportation to goal
                 if(transportation.equals(TransportationModeStreamGenerator.TRANSPORTATION_MODE_NAME_NO_TRANSPORTATION)){
 
                     String labeledSitename = labelJson.getString(Constants.ANNOTATION_Label_SITENAME);
                     Log.d(TAG, "[storing sitename] Sitename from DB : "+ labeledSitename);
 
-                    holder.duration.setText(labeledSitename);
+                    transportationInChinese = labeledSitename;
+
+//                    holder.goal.setText(labeledSitename);
                 }else{
 
-                    holder.duration.setText(label_Transportation);
+                    transportationInChinese = label_Transportation;
+//                    holder.goal.setText(label_Transportation);
                 }
             }catch (JSONException e){
 
@@ -653,14 +614,14 @@ public class Timeline extends AppCompatActivity {
                                     transportationDuration = closestSite;
                                 }else {
 
-                                    name = getSiteNameFromNet(lat, lng);
+                                    name = GetUrl.getSiteNameFromNet(lat, lng);
                                     //TODO store(update) them into the session table at the first time they see this record at the first time
 
                                     transportationDuration = name;
                                 }
                             }else {
 
-                                name = getSiteNameFromNet(lat, lng);
+                                name = GetUrl.getSiteNameFromNet(lat, lng);
                                 //TODO store(update) them into the session table at the first time they see this record at the first time
 
                                 transportationDuration = name;
@@ -668,17 +629,12 @@ public class Timeline extends AppCompatActivity {
 
                             detectedSiteName = transportationDuration;
 
-                            holder.duration.setText(transportationDuration);
+                            transportationInChinese = transportationDuration;
+//                            holder.goal.setText(transportationDuration);
 
                             int icon = getIconToShowTransportation(transportation);
                             holder.traffic.setImageResource(icon);
 
-                        }catch (InterruptedException e){
-                            Log.e(TAG, "InterruptedException", e);
-                        }catch (ExecutionException e){
-                            Log.e(TAG, "ExecutionException", e);
-                        }catch (JSONException e){
-                            Log.e(TAG, "JSONException", e);
                         }catch (IndexOutOfBoundsException e){
 
                         }
@@ -688,7 +644,8 @@ public class Timeline extends AppCompatActivity {
 
                         Annotation annotation_sitename = annotations_sitename.get(annotations_sitename.size()-1);
                         String sitename = annotation_sitename.getContent();
-                        holder.duration.setText(sitename);
+                        transportationInChinese = sitename;
+//                        holder.goal.setText(sitename);
 
                         int icon = getIconToShowTransportation(transportation);
                         holder.traffic.setImageResource(icon);
@@ -697,7 +654,8 @@ public class Timeline extends AppCompatActivity {
                     //if it isn't static set the text and icon directly
                 }else if(transportation.equals(TransportationModeStreamGenerator.TRANSPORTATION_MODE_HASNT_DETECTED_FLAG)){
 
-                    holder.duration.setText(transportation);
+                    transportationInChinese = transportation;
+//                    holder.goal.setText(transportation);
 
                     int icon = getIconToShowTransportation(transportation);
                     holder.traffic.setImageResource(icon);
@@ -706,7 +664,8 @@ public class Timeline extends AppCompatActivity {
                     //set the transportation (from detected) icon and text
                     String activityName = getActivityNameFromTransportationString(transportation);
 
-                    holder.duration.setText(activityName);
+                    transportationInChinese = activityName;
+//                    holder.goal.setText(activityName);
 
                     int icon = getIconToShowTransportation(transportation);
                     holder.traffic.setImageResource(icon);
@@ -728,7 +687,7 @@ public class Timeline extends AppCompatActivity {
 
             String currentWork = getResources().getString(labelingStudy.nctu.minuku.R.string.current_task);
 
-            if(currentWork.equals("CAR")){
+            if(currentWork.equals(getResources().getString(R.string.task_CAR))){
 
                 holder.sessionType.setVisibility(View.VISIBLE);
 
@@ -739,6 +698,8 @@ public class Timeline extends AppCompatActivity {
 
                 holder.sessionType.setVisibility(View.GONE);
             }
+
+            holder.goal.setText(getGoal(session));
 
             holder.itemView.setOnClickListener(new View.OnClickListener() {
 
@@ -754,7 +715,7 @@ public class Timeline extends AppCompatActivity {
                     final Button showMapButton = (Button) layout.findViewById(R.id.showMap);
                     final Button startTimeButton = (Button) layout.findViewById(R.id.startTime);
                     final Button endTimeButton = (Button) layout.findViewById(R.id.endTime);
-                    final String[] activity = {"請選擇交通模式", "走路", "自行車", "汽車", "定點", "此移動不存在", "與上一個相同"};
+                    final String[] activity = {"請選擇交通模式", "走路", "自行車", "汽車", "定點", "此移動不存在", "與前一個相同"};
                     final ArrayAdapter<String> activityList = new ArrayAdapter<>(mContext,
                             android.R.layout.simple_spinner_dropdown_item,
                             activity);
@@ -767,7 +728,7 @@ public class Timeline extends AppCompatActivity {
                     modifiedEndTime[0] = endTime;
 
                     //get the availSite from the label
-                    final String labeled_transportation = holder.duration.getText().toString();
+                    final String labeled_transportation = transportationInChinese;
 
                     Dspinner.setAdapter(activityList);
                     Dspinner.setSelection(getIndex(Dspinner, labeled_transportation));
@@ -784,14 +745,14 @@ public class Timeline extends AppCompatActivity {
 
                                 DchoosingSite.setVisibility(View.VISIBLE);
 
-                                String textFromDuration = holder.duration.getText().toString();
+                                String textFromTransportation = labeled_transportation;
 
-                                if(checkTheTextInSpinner(Dspinner, textFromDuration)){
+                                if(checkTheTextInSpinner(Dspinner, textFromTransportation)){
 
                                     DchoosingSite.setText("請選擇地點");
                                 }else{
 
-                                    DchoosingSite.setText(holder.duration.getText());
+                                    DchoosingSite.setText(textFromTransportation);
                                 }
 
                                 DchoosingSite.setOnClickListener(new Button.OnClickListener() {
@@ -822,14 +783,14 @@ public class Timeline extends AppCompatActivity {
                                         }catch (IndexOutOfBoundsException e){
 
                                             e.printStackTrace();
-                                            Toast.makeText(mContext, "尚未抓到GPS", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(mContext, getResources().getString(R.string.reminder_havent_got_gps), Toast.LENGTH_SHORT).show();
                                         }
                                     }
                                 });
                             }else{
 
                                 DchoosingSite.setVisibility(View.INVISIBLE);
-                                DchoosingSite.setText("請選擇地點");
+                                DchoosingSite.setText(getResources().getString(R.string.reminder_choose_your_site));
                             }
                         }
 
@@ -848,8 +809,8 @@ public class Timeline extends AppCompatActivity {
                             final View layout = inflater.inflate(R.layout.splitedmap_dialog,null);
 
                             builder.setView(layout)
-                                    .setPositiveButton("確認", null)
-                                    .setNegativeButton("取消", null);
+                                    .setPositiveButton(R.string.confirm_in_chinese, null)
+                                    .setNegativeButton(R.string.cancel_in_chinese, null);
 
                             final AlertDialog mAlertDialog = builder.create();
                             mAlertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
@@ -896,7 +857,7 @@ public class Timeline extends AppCompatActivity {
 
                                                 }
 
-                                                Toast.makeText(Timeline.this, "您的旅程已成功分開", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(Timeline.this, getResources().getString(R.string.reminder_your_trip_is_split), Toast.LENGTH_SHORT).show();
 
                                                 //reset the Timeline
                                                 initTime();
@@ -905,7 +866,7 @@ public class Timeline extends AppCompatActivity {
 
                                             }else {
 
-                                                Toast.makeText(Timeline.this, "請點擊地圖以選擇中斷點", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(Timeline.this, getResources().getString(R.string.reminder_choose_a_point_to_split), Toast.LENGTH_SHORT).show();
                                             }
                                         }
                                     });
@@ -1021,6 +982,7 @@ public class Timeline extends AppCompatActivity {
                     Dannotation_goal.setText("");
                     Dannotation_specialEvent.setText("");
 
+                    //TODO become function
                     try {
 
                         AnnotationSet annotationSet = session.getAnnotationsSet();
@@ -1047,7 +1009,7 @@ public class Timeline extends AppCompatActivity {
 
                     builder.setView(layout)
                             .setPositiveButton(R.string.ok, null)
-                            .setNegativeButton("Cancel", null);
+                            .setNegativeButton(R.string.cancel, null);
 
                     final AlertDialog mAlertDialog = builder.create();
                     mAlertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
@@ -1068,7 +1030,7 @@ public class Timeline extends AppCompatActivity {
 
                                     if (selectedActivityString.equals("定點")) {
 
-//                                        sitename = holder.duration.getText().toString();
+//                                        sitename = holder.goal.getText().toString();
                                         sitename = DchoosingSite.getText().toString();
                                         Log.d(TAG, "[storing sitename] Sitename going to store : "+ sitename);
                                     }
@@ -1104,7 +1066,7 @@ public class Timeline extends AppCompatActivity {
 
                                         //now, we keep the same trip which is claimed by users with different Ids,
                                         //because it is _id, but we show them by checking their labels
-                                        /*if(Dspinner.getSelectedItem().equals("與上一個相同")){
+                                        /*if(Dspinner.getSelectedItem().equals("與前一個相同")){
 
                                         }*/
 
@@ -1135,42 +1097,16 @@ public class Timeline extends AppCompatActivity {
 
                                         DataHandler.updateSession(sessionId, startTimeLabel, endTimeLabel, annotationSet, Constants.SESSION_SHOULD_BE_SENT_FLAG);
 
-
-                                        //TODO deprecated
-                                        //preparing the updated availSite to show after the notifyDataSetChanged
-                                        /*try {
-
-                                            mSessions = new ArrayList<>();
-
-                                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-                                                mSessions = new ListSessionAsyncTask(mContext).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR).get();
-                                            else
-                                                mSessions = new ListSessionAsyncTask(mContext).execute().get();
-
-                                            //conceal the red highlight circle
-                                            GradientDrawable sd = new GradientDrawable();
-
-                                            int backgroundColor = mContext.getResources().getColor(R.color.custom);
-                                            sd.setColor(backgroundColor);
-                                            holder.cardView.setBackground(sd);
-
-                                        } catch (InterruptedException e) {
-                                            Log.d(TAG, "InterruptedException");
-//                                            e.printStackTrace();
-                                        } catch (ExecutionException e) {
-                                            Log.d(TAG, "ExecutionException");
-//                                            e.printStackTrace();
-                                        }*/
-
                                         initTime();
 
-//                                        notifyDataSetChanged();
+                                        //TODO check the mechanism
+                                        notifyItemChanged(position);
 
                                         sharedPrefs.edit().putInt("currentposition", position).apply();
 
                                         DchoosingSite.setVisibility(View.INVISIBLE); // set back to default
 
-                                        Toast.makeText(mContext, "感謝您的填答", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(mContext, getResources().getString(R.string.reminder_thank_for_your_reply), Toast.LENGTH_SHORT).show();
                                         dialogInterface.dismiss();
                                     }
                                 }
@@ -1185,6 +1121,34 @@ public class Timeline extends AppCompatActivity {
 
         }
 
+
+        private String getGoal(final Session session){
+
+            String goal = "";
+
+            try {
+
+                AnnotationSet annotationSet = session.getAnnotationsSet();
+
+                ArrayList<Annotation> annotations_label = annotationSet.getAnnotationByTag(Constants.ANNOTATION_TAG_Label);
+                Annotation annotation_label = annotations_label.get(annotations_label.size() - 1);
+                String label = annotation_label.getContent();
+                JSONObject labelJson = new JSONObject(label);
+
+                goal = labelJson.getString(Constants.ANNOTATION_Label_GOAL);
+            }catch (IndexOutOfBoundsException e){
+                Log.d(TAG, "IndexOutOfBoundsException");
+//                        e.printStackTrace();
+            }catch (JSONException e){
+                Log.d(TAG, "JSONException");
+//                        e.printStackTrace();
+            }catch (NullPointerException e){
+                Log.d(TAG, "NullPointerException");
+//                        e.printStackTrace();
+            }
+
+            return goal;
+        }
 
         private void showMapInDialog(Dialog dialog, final View view, final Session currentSession){
 
@@ -1496,28 +1460,6 @@ public class Timeline extends AppCompatActivity {
             return false;
         }
 
-        public String getSiteNameFromNet(double lat, double lng) throws InterruptedException, ExecutionException, JSONException{
-
-            String jsonInString, name;
-
-            String url = GetUrl.getUrl(lat, lng);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-                jsonInString = new HttpAsyncGetSiteTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
-                        url
-                ).get();
-            else
-                jsonInString = new HttpAsyncGetSiteTask().execute(
-                        url
-                ).get();
-
-            JSONObject jsonObject = new JSONObject(jsonInString);
-            JSONArray results = jsonObject.getJSONArray("results");
-            //default now we choose the second index from the json.(first index is ken(縣名) name.)
-            name = results.getJSONObject(1).getString("name");
-
-            return name;
-        }
-
         @Override
         public int getItemCount() {
             return mSessions.size();
@@ -1595,8 +1537,8 @@ public class Timeline extends AppCompatActivity {
                 return TransportationModeStreamGenerator.TRANSPORTATION_MODE_NAME_NO_TRANSPORTATION;
             case "此移動不存在":
                 return "此移動不存在";
-            case "與上一個相同":
-                return "與上一個相同";
+            case "與前一個相同":
+                return "與前一個相同";
             default:
                 return "Unknown";
         }
@@ -1650,7 +1592,7 @@ public class Timeline extends AppCompatActivity {
                 return R.drawable.bike;
             case TransportationModeStreamGenerator.TRANSPORTATION_MODE_NAME_IN_VEHICLE:
                 return R.drawable.car;
-            case "與上一個相同":
+            case "與前一個相同":
                 return R.drawable.transparent;
             case TransportationModeStreamGenerator.TRANSPORTATION_MODE_HASNT_DETECTED_FLAG:
                 return R.drawable.question_mark;
@@ -1660,65 +1602,6 @@ public class Timeline extends AppCompatActivity {
                 return R.drawable.if_94_171453;
         }
 
-    }
-
-    private class HttpAsyncGetSiteTask extends AsyncTask<String, Void, String> {
-
-        @Override
-        protected String doInBackground(String... params) {
-
-            String url = params[0];
-
-            String result = getJSON(url);
-
-            return result;
-        }
-
-        // onPostExecute displays the results of the AsyncTask.
-        @Override
-        protected void onPostExecute(String result) {
-
-        }
-
-    }
-
-    public String getJSON(String url) {
-
-        HttpsURLConnection con = null;
-        String json = "";
-
-        try {
-            URL u = new URL(url);
-            con = (HttpsURLConnection) u.openConnection();
-
-            con.connect();
-
-            BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
-            StringBuilder sb = new StringBuilder();
-            String line;
-            while ((line = br.readLine()) != null) {
-                sb.append(line + "\n");
-            }
-
-            json = sb.toString();
-            br.close();
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-
-            if (con != null) {
-
-                try {
-
-                    con.disconnect();
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-            }
-        }
-        return json;
     }
 
     /**

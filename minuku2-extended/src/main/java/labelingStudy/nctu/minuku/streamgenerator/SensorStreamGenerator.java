@@ -199,7 +199,7 @@ public class SensorStreamGenerator extends AndroidStreamGenerator<SensorDataReco
 
     @Override
     public long getUpdateFrequency() {
-        return 1; // 1 minutes
+        return 1;
     }
 
     @Override
@@ -211,10 +211,6 @@ public class SensorStreamGenerator extends AndroidStreamGenerator<SensorDataReco
     public void onStreamRegistration() {
 
     }
-
-    /**handle different json form convertion**/
-
-
 
     /** handle sensor **/
     /**register sensor - Not sure**/

@@ -25,11 +25,13 @@ package labelingStudy.nctu.minuku_2;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.util.Log;
 
 import org.javatuples.Tuple;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Calendar;
 
 import labelingStudy.nctu.minuku.streamgenerator.TransportationModeStreamGenerator;
 
@@ -113,6 +115,29 @@ public class Utils {
             default:
                 return "";
         }
+    }
+
+    protected boolean areDatesEqual(String LOG_TAG, long currentTime, long previousTime) {
+        Log.d(LOG_TAG, "Checking if the both dates are the same");
+
+        Calendar currentDate = Calendar.getInstance();
+        Calendar previousDate = Calendar.getInstance();
+
+        currentDate.setTimeInMillis(currentTime);
+        previousDate.setTimeInMillis(previousTime);
+        Log.d(LOG_TAG, "Current Year:" + currentDate.get(Calendar.YEAR) + " Previous Year:" + previousDate.get(Calendar.YEAR));
+        Log.d(LOG_TAG, "Current Day:" + currentDate.get(Calendar.DAY_OF_YEAR) + " Previous Day:" + previousDate.get(Calendar.DAY_OF_YEAR));
+        Log.d(LOG_TAG, "Current Month:" + currentDate.get(Calendar.MONTH) + " Previous Month:" + previousDate.get(Calendar.MONTH));
+
+        boolean sameDay = (currentDate.get(Calendar.YEAR) == previousDate.get(Calendar.YEAR)) &&
+                (currentDate.get(Calendar.DAY_OF_YEAR) == previousDate.get(Calendar.DAY_OF_YEAR)) &&
+                (currentDate.get(Calendar.MONTH) == previousDate.get(Calendar.MONTH));
+
+        if(sameDay)
+            Log.d(LOG_TAG, "it is the same day, should not create a new object");
+        else
+            Log.d(LOG_TAG, "it is not the same day - a new day, should create a new object");
+        return sameDay;
     }
 
 }

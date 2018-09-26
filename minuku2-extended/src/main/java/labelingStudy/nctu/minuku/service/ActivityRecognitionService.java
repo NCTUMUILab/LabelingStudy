@@ -31,11 +31,8 @@ public class ActivityRecognitionService extends IntentService {
 
     private final String TAG = "ActivityRecognitionService";
 
-    private String Latest_mMostProbableActivitytype;
     private DetectedActivity mMostProbableActivity;
     private List<DetectedActivity> mProbableActivities;
-    private CSVWriter csv_writer = null;
-
 
     //for saving a set of activity records
     private static ArrayList<ActivityRecognitionDataRecord> mActivityRecognitionRecords;
@@ -47,14 +44,9 @@ public class ActivityRecognitionService extends IntentService {
     private TimerTask ARRecordExpirationTimerTask;
     private TimerTask ReplayTimerTask;
 
-    //private static String detectedtime;
     private long detectedtime;
 
-    private Boolean updateOrNot = false;
-
     private static Context serviceInstance = null;
-
-    private SharedPreferences sharedPrefs;
 
     public ActivityRecognitionService() {
         super("ActivityRecognitionService");
@@ -79,11 +71,10 @@ public class ActivityRecognitionService extends IntentService {
 
         Log.d(TAG, "[test replay] entering onHandleIntent");
 
-        /**  move to TriggerManager  **/
-        //TODO triggerManager situationManager, triggerManager: replace ModeWork.work. , situationManager: replace ModeWork.condition. 放transportationManager(In Minuku).
         if(ActivityRecognitionResult.hasResult(intent)) {
 
             try {
+
                 mActivityRecognitionStreamGenerator = (ActivityRecognitionStreamGenerator) MinukuStreamManager.getInstance().getStreamGeneratorFor(ActivityRecognitionDataRecord.class);
             }catch (StreamNotFoundException e){
                 e.printStackTrace();
@@ -102,9 +93,7 @@ public class ActivityRecognitionService extends IntentService {
                     mActivityRecognitionStreamGenerator.setActivitiesandDetectedtime(mProbableActivities, mMostProbableActivity, detectedtime);
 
                     Log.d(TAG, "[test replay] before store to CSV in AR Service");
-
                 }
-
             }catch(Exception e){
 
             }
@@ -232,9 +221,6 @@ public class ActivityRecognitionService extends IntentService {
         ReplayTimer.schedule(ReplayTimerTask,0,1000);
 
     }
-
-
-
 
     public static boolean isServiceRunning() {
         return serviceInstance != null;
