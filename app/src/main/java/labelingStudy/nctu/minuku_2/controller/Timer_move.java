@@ -161,7 +161,7 @@ public class Timer_move extends AppCompatActivity {
 
             if(!buttonActivity.equals(ongoingActivity)){
 
-                Toast toast = Toast.makeText(Timer_move.this, "您必須先結束目前的移動方式 : " + getActivityTypeInChinese(trafficType), Toast.LENGTH_SHORT);
+                Toast toast = Toast.makeText(Timer_move.this, getResources().getString(R.string.reminder_your_must_stop_the_current_activity) + getActivityTypeInChinese(trafficType), Toast.LENGTH_SHORT);
                 toast.show();
             }else {
 

@@ -139,70 +139,6 @@ public class WifiReceiver extends BroadcastReceiver {
         }
     }
 
-    public String gettingTripLastTime(){
-
-        JSONObject data = new JSONObject();
-
-        String curr =  getDateCurrentTimeZone(new Date().getTime());
-
-        String result = "";
-
-        try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-                result = new HttpAsyncPostJsonTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
-                        postTripUrl_search+Constants.DEVICE_ID,
-                        data.toString(),
-                        "Trip",
-                        curr).get();
-            else
-                result = new HttpAsyncPostJsonTask().execute(
-                        postTripUrl_search+Constants.DEVICE_ID,
-                        data.toString(),
-                        "Trip",
-                        curr).get();
-
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-
-        return result;
-
-    }
-
-    public String gettingDumpLastTime(){
-        //TODO upload to MongoDB
-        JSONObject data = new JSONObject();
-
-        String curr =  getDateCurrentTimeZone(new Date().getTime());
-
-        String result = "";
-
-        try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-                result = new HttpAsyncPostJsonTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
-                        postDumpUrl_search+Constants.DEVICE_ID,
-                        data.toString(),
-                        "Dump",
-                        curr).get();
-            else
-                result = new HttpAsyncPostJsonTask().execute(
-                        postDumpUrl_search+Constants.DEVICE_ID,
-                        data.toString(),
-                        "Dump",
-                        curr).get();
-
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-
-        return result;
-
-    }
-
     public void sendingDumpData(){
 
         Log.d(TAG, "sendingDumpData");
@@ -337,18 +273,15 @@ public class WifiReceiver extends BroadcastReceiver {
 
             //if it doesn't response the setting with initialize ones
             //initialize
-
             Calendar designatedStartTime = Calendar.getInstance();
             designatedStartTime.set(year, month, day, hour, min);
 
-//            long startstartTime = getSpecialTimeInMillis(makingDataFormat(year, month, day, hour, min));
             long startstartTime = designatedStartTime.getTimeInMillis();
             startTime = sharedPrefs.getLong("StartTime", startstartTime); //default
             Log.d(TAG, "StartTimeString : " + ScheduleAndSampleManager.getTimeString(startTime));
 
             sharedPrefs.edit().putLong("StartTime", startTime).apply();
 
-//            long startendTime = getSpecialTimeInMillis(makingDataFormat(year, month, day, hour + 1, min));
             long startendTime = startstartTime + Constants.MILLISECONDS_PER_HOUR;
             endTime = sharedPrefs.getLong("EndTime", startendTime);
             Log.d(TAG, "EndTimeString : " + ScheduleAndSampleManager.getTimeString(endTime));
@@ -375,7 +308,11 @@ public class WifiReceiver extends BroadcastReceiver {
 
     private void sendingTripData(long time24HrAgo){
 
+        Log.d(TAG, "sendingTripData");
+
         ArrayList<JSONObject> datas = getSessionData(time24HrAgo);
+
+        Log.d(TAG, "tripData size : "+datas.size());
 
         for(int index = 0; index < datas.size(); index++){
 
@@ -478,7 +415,7 @@ public class WifiReceiver extends BroadcastReceiver {
         @Override
         protected String doInBackground(String... params) {
 
-            String result=null;
+            String result = null;
             String url = params[0];
             String data = params[1];
             String dataType = params[2];
@@ -573,12 +510,12 @@ public class WifiReceiver extends BroadcastReceiver {
         } catch (MalformedURLException e) {
             e.printStackTrace();
             Log.d(TAG, "MalformedURLException", e);
-        } /*catch (java.net.SocketTimeoutException e){
+        } catch (java.net.SocketTimeoutException e){
 
             Log.d(TAG, "SocketTimeoutException EE", e);
             conn.disconnect();
 
-        } */catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }finally {
 
@@ -613,7 +550,7 @@ public class WifiReceiver extends BroadcastReceiver {
     }
 
     /***
-     * trust all hsot....
+     * trust all host....
      */
     private void trustAllHosts() {
 
@@ -622,19 +559,16 @@ public class WifiReceiver extends BroadcastReceiver {
             public void checkClientTrusted(
                     X509Certificate[] chain,
                     String authType) throws CertificateException {
-                // Oh, I am easy!
             }
 
             public void checkServerTrusted(
                     X509Certificate[] chain,
                     String authType) throws CertificateException {
-                // Oh, I am easy!
             }
 
             public X509Certificate[] getAcceptedIssuers() {
                 return null;
             }
-
 
         };
 
@@ -660,7 +594,6 @@ public class WifiReceiver extends BroadcastReceiver {
 
         ArrayList<JSONObject> sessionJsons = new ArrayList<>();
 
-//        ArrayList<String> unsentSessions = DBHelper.queryUnSentSessions();
         ArrayList<String> overTimeSessions = DBHelper.querySessions(time24HrAgo);
 
         Log.d(TAG, "unsentSessions size : "+ overTimeSessions.size());
@@ -737,9 +670,15 @@ public class WifiReceiver extends BroadcastReceiver {
 
         Log.d(TAG, "labelsInString : "+labelsInString);
 
-        //TODO, do we need to make of Json?
-        //new JSONObject(labelsInString)
-        annotationSetJson.put(Constants.ANNOTATION_TAG_Label, labelsInString);
+        labelsInString = labelsInString.trim();
+
+        if(!labelsInString.equals("")){
+
+            annotationSetJson.put(Constants.ANNOTATION_TAG_Label, new JSONObject(labelsInString));
+        }else{
+
+            annotationSetJson.put(Constants.ANNOTATION_TAG_Label, labelsInString);
+        }
 
         return annotationSetJson;
     }

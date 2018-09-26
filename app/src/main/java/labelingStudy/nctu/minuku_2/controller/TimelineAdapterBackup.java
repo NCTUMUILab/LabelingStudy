@@ -109,7 +109,7 @@ public class TimelineAdapterBackup extends RecyclerView.Adapter<TimelineAdapterB
             super(v);
 
             time = (TextView) v.findViewById(R.id.tv_time);
-            duration = (TextView) v.findViewById(R.id.tv_duration);
+            duration = (TextView) v.findViewById(R.id.tv_goal);
             date = (TextView) v.findViewById(R.id.tv_date);
             sessionType = (TextView) v.findViewById(R.id.sessionType);
             traffic = (ImageView) v.findViewById(R.id.iv_traffic);
@@ -770,7 +770,7 @@ public class TimelineAdapterBackup extends RecyclerView.Adapter<TimelineAdapterB
 
                                 if (selectedActivityString.equals("定點")) {
 
-//                                        sitename = holder.duration.getText().toString();
+//                                        sitename = holder.goal.getText().toString();
                                     sitename = DchoosingSite.getText().toString();
                                     Log.d(TAG, "[storing sitename] Sitename going to store : "+ sitename);
                                 }

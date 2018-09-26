@@ -278,6 +278,8 @@ public class MinukuStreamManager implements StreamManager {
                                 && !transportationModeDataRecord.getConfirmedActivityString().equals(TransportationModeStreamGenerator.TRANSPORTATION_MODE_NAME_NA)) {
 
                         Log.d(TAG, "[test triggering] addSessionFlag = true there's no session in the db");
+                        CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_SESSION, "addSessionFlag = true there's no session in the db");
+
                         addSessionFlag = true;
                     }
                     //there's exizstint sessions in the DB
@@ -293,14 +295,20 @@ public class MinukuStreamManager implements StreamManager {
 
                         Log.d(TAG, "[test triggering] session " + sessionIdOfLastSession + " with annotation string " + annotationSet.toString() + " end time " + endTimeOfLastSession + " startTime " + startTimeOfLastSession);
 
+                        CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_SESSION, "session id : " + sessionIdOfLastSession +
+                                " with annotation string : " + annotationSet.toString() + ", end time : " + ScheduleAndSampleManager.getTimeString(endTimeOfLastSession) +
+                                ", startTime : " + ScheduleAndSampleManager.getTimeString(startTimeOfLastSession));
+
                         boolean emptySessionOn = SessionManager.isSessionEmptyOngoing(sessionIdOfLastSession);
 
                         if (!this.transportationModeDataRecord.getConfirmedActivityString().equals(TransportationModeStreamGenerator.TRANSPORTATION_MODE_NAME_NA)) {
 
-                            CSVHelper.storeToCSV(CSVHelper.CSV_ESM, "not emptySessionOn ? "+(!emptySessionOn));
+                            CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_SESSION, "not emptySessionOn ? "+(!emptySessionOn));
 
                             //if there is an empty session, don't stop it
                             if(!emptySessionOn){
+
+                                CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_SESSION, "lastSession id : "+lastSession.getId() + " is empty Session ");
 
                                 //if we end the current session, we should update its time and set a long enough flag
                                 long endTime = ScheduleAndSampleManager.getCurrentTimeInMillis();
@@ -326,14 +334,20 @@ public class MinukuStreamManager implements StreamManager {
                                     }
                                 }
 
-                                CSVHelper.storeToCSV(CSVHelper.CSV_ESM, " lastSession EndTime : "+ScheduleAndSampleManager.getTimeString(lastSession.getEndTime()));
+                                CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_SESSION, " lastSession EndTime : "+ScheduleAndSampleManager.getTimeString(lastSession.getEndTime()));
 
                                 //end the current session
                                 SessionManager.endCurSession(lastSession);
 
+                                CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_SESSION, " End lastSession which is empty Session.");
+
                                 sharedPrefs.edit().putInt("ongoingSessionid", -1).apply();
 
+                                CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_SESSION, " Update ongoing session id with : -1(invalid id)");
+
                                 addSessionFlag = true;
+
+                                CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_SESSION, " addSessionFlag : "+addSessionFlag);
                             }
                         }
                     }
@@ -341,8 +355,8 @@ public class MinukuStreamManager implements StreamManager {
                     Log.d(TAG, "[test triggering] addSessionFlag : "+addSessionFlag);
                     Log.d(TAG, "[test triggering] is NA ? : "+!transportationModeDataRecord.getConfirmedActivityString().equals(TransportationModeStreamGenerator.TRANSPORTATION_MODE_NAME_NA));
 
-                    CSVHelper.storeToCSV(CSVHelper.CSV_ESM, " addSessionFlag ? "+addSessionFlag);
-                    CSVHelper.storeToCSV(CSVHelper.CSV_ESM, " tranp not NA ? "+(!transportationModeDataRecord.getConfirmedActivityString().equals(TransportationModeStreamGenerator.TRANSPORTATION_MODE_NAME_NA)));
+                    CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_SESSION, " addSessionFlag ? "+addSessionFlag);
+                    CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_SESSION, " tranp not NA ? "+(!transportationModeDataRecord.getConfirmedActivityString().equals(TransportationModeStreamGenerator.TRANSPORTATION_MODE_NAME_NA)));
 
                     //if we need to add a session
                     if (addSessionFlag && !transportationModeDataRecord.getConfirmedActivityString().equals(TransportationModeStreamGenerator.TRANSPORTATION_MODE_NAME_NA)) {
@@ -358,12 +372,14 @@ public class MinukuStreamManager implements StreamManager {
                         Log.d(TAG, "[test triggering] is emptySessionOn ? " + emptySessionOn);
                         Log.d(TAG, "[test triggering] is CAR & emptySessionOn ? " + (currentWork.equals("CAR") && emptySessionOn));
 
-                        CSVHelper.storeToCSV(CSVHelper.CSV_ESM, " is CAR ? "+(currentWork.equals("CAR")));
-                        CSVHelper.storeToCSV(CSVHelper.CSV_ESM, " is emptySessionOn ? "+emptySessionOn);
-                        CSVHelper.storeToCSV(CSVHelper.CSV_ESM, " is CAR & emptySessionOn ? "+(currentWork.equals("CAR") && emptySessionOn));
+                        CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_SESSION, " is CAR ? "+(currentWork.equals("CAR")));
+                        CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_SESSION, " is emptySessionOn ? "+emptySessionOn);
+                        CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_SESSION, " is CAR & emptySessionOn ? "+(currentWork.equals("CAR") && emptySessionOn));
 
                         //if there is an emptySession, update it to the next different system detected transportationMode
                         if (currentWork.equals("CAR") && emptySessionOn) {
+
+                            CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_SESSION, " update the empty session");
 
                             Annotation annotation = new Annotation();
                             annotation.setContent(transportationModeDataRecord.getConfirmedActivityString());
@@ -374,9 +390,14 @@ public class MinukuStreamManager implements StreamManager {
 
                             SessionManager.getEmptyOngoingSessionIdList().remove(Integer.valueOf(lastSession.getId()));
 
+                            CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_SESSION,
+                                    " filled the transportation : "+transportationModeDataRecord.getConfirmedActivityString()+" in the emptysession : "+lastSession.getId());
+
                             //to end a session (the previous is moving)
                             //we first need to check whether the previous is a transportation
                         } else {
+
+                            CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_SESSION, " insert a new session");
 
                             //insert into the session table;
                             int sessionId = (int) sessionCount + 1;
@@ -401,10 +422,12 @@ public class MinukuStreamManager implements StreamManager {
                                     String suspectTime = suspectedStartTransportation.get(DBHelper.COL_INDEX_Suspected_Transportation_TIME);
 
                                     session.setStartTime(Long.valueOf(suspectTime));
+
+                                    CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_SESSION, " set Session StartTime with the suspectStartTime : "+ScheduleAndSampleManager.getTimeString(session.getStartTime()));
                                 }
                             }
 
-                            CSVHelper.storeToCSV(CSVHelper.CSV_ESM, " Session StartTime : "+ScheduleAndSampleManager.getTimeString(session.getStartTime()));
+                            CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_SESSION, " Session StartTime : "+ScheduleAndSampleManager.getTimeString(session.getStartTime()));
 
                             Annotation annotationForTransportation = new Annotation();
                             annotationForTransportation.setContent(transportationModeDataRecord.getConfirmedActivityString());
@@ -430,6 +453,8 @@ public class MinukuStreamManager implements StreamManager {
                                 annotationForSite.addTag(Constants.ANNOTATION_TAG_DETECTED_SITENAME);
                                 session.addAnnotation(annotationForSite);
 
+                                CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_SESSION, " Session detected site name : "+ siteName);
+
                                 Log.d(TAG, "[test triggering] detected siteName");
                             }
 
@@ -439,24 +464,33 @@ public class MinukuStreamManager implements StreamManager {
                             session.setType(Constants.SESSION_TYPE_DETECTED_BY_SYSTEM);
                             session.setHidedOrNot(Constants.SESSION_NEVER_GET_HIDED_FLAG);
 
-                            CSVHelper.storeToCSV(CSVHelper.CSV_ESM, " insert the session is with annotation : "+session.getAnnotationsSet().toJSONObject().toString());
+                            CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_SESSION, " insert the session is with annotation : "+session.getAnnotationsSet().toJSONObject().toString());
 
                             Log.d(TAG, "[test triggering] insert the session is with annotation " + session.getAnnotationsSet().toJSONObject().toString());
 
                             String beforeSendESM = "Preparing to send ESM";
-                            CSVHelper.storeToCSV(CSVHelper.CSV_ESM, beforeSendESM);
+                            CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_SESSION, beforeSendESM);
+
+                            CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_SESSION, " Examine if combine sessions, please check "+CSVHelper.CSV_EXAMINE_COMBINE_SESSION);
 
                             if (SessionManager.examineSessionCombinationByActivityAndTime(transportationModeDataRecord.getConfirmedActivityString(), session.getStartTime()) == true) {
+
+                                CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_SESSION, " continue2ndLastSession ");
 
                                 //Should combine
                                 SessionManager.continue2ndLastSession(session);
                             } else {
+
+                                CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_SESSION, " startNewSession ");
+
                                 SessionManager.startNewSession(session);
                             }
 
-                            CSVHelper.storeToCSV(CSVHelper.CSV_ESM, " after startNewSession ");
+                            CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_SESSION, " after startNewSession ");
 
                             sharedPrefs.edit().putInt("ongoingSessionid", SessionManager.getOngoingSessionIdList().get(0)).apply();
+
+                            CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_SESSION, " update ongoingSessionid to : "+SessionManager.getOngoingSessionIdList().get(0));
                         }
 
                         final Session sessionJustStart = SessionManager.getLastSession();
@@ -470,7 +504,7 @@ public class MinukuStreamManager implements StreamManager {
                             sendNotification(context, sessionJustStart.getStartTime());
 
                             String afterSendESM = "After sending ESM";
-                            CSVHelper.storeToCSV(CSVHelper.CSV_ESM, afterSendESM);
+                            CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_SESSION, afterSendESM);
 
                             Log.d(TAG, "[test triggering] ESM Notification");
 
@@ -503,14 +537,14 @@ public class MinukuStreamManager implements StreamManager {
                                             sendNotification(context, sessionJustStart.getStartTime());
 
                                             String afterSendCAR = "After sending CAR";
-                                            CSVHelper.storeToCSV(CSVHelper.CSV_CAR, afterSendCAR);
+                                            CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_SESSION, afterSendCAR);
 
                                             Log.d(TAG, "[test triggering] CAR Notification");
                                         } else {
 
                                             //recording
                                             String checkCAR = "the CAR record has been checkpointed by the user";
-                                            CSVHelper.storeToCSV(CSVHelper.CSV_CAR, checkCAR);
+                                            CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_SESSION, checkCAR);
 
                                             Log.d(TAG, "[test triggering] CAR check");
                                         }
@@ -519,7 +553,7 @@ public class MinukuStreamManager implements StreamManager {
                                     }else{
 
                                         String checkCAR = "the ongoing session is removed, assumed it was checkpoioned";
-                                        CSVHelper.storeToCSV(CSVHelper.CSV_CAR, checkCAR);
+                                        CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_SESSION, checkCAR);
 
                                         Log.d(TAG, "[test triggering] "+ checkCAR);
                                     }

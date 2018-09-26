@@ -11,7 +11,7 @@ import labelingStudy.nctu.minuku.logger.Log;
 import labelingStudy.nctu.minuku.manager.MinukuDAOManager;
 import labelingStudy.nctu.minuku.model.DataRecord.AccessibilityDataRecord;
 import labelingStudy.nctu.minuku.service.MobileAccessibilityService;
-import labelingStudy.nctu.minuku.stream.BatteryStream;
+import labelingStudy.nctu.minuku.stream.AccessibilityStream;
 import labelingStudy.nctu.minukucore.dao.DAOException;
 import labelingStudy.nctu.minukucore.exception.StreamAlreadyExistsException;
 import labelingStudy.nctu.minukucore.exception.StreamNotFoundException;
@@ -39,7 +39,7 @@ public class AccessibilityStreamGenerator extends AndroidStreamGenerator<Accessi
     public AccessibilityStreamGenerator(Context applicationContext){
         super(applicationContext);
         this.mContext = applicationContext;
-        this.mStream = new BatteryStream(Constants.DEFAULT_QUEUE_SIZE);
+        this.mStream = new AccessibilityStream(Constants.DEFAULT_QUEUE_SIZE);
         this.mDAO = MinukuDAOManager.getInstance().getDaoFor(AccessibilityDataRecord.class);
 
         mobileAccessibilityService = new MobileAccessibilityService(this);

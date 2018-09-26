@@ -22,6 +22,10 @@ public class MobileAccessibilityService extends AccessibilityService {
 
     private static AccessibilityStreamGenerator accessibilityStreamGenerator;
 
+    public MobileAccessibilityService(){
+        super();
+    }
+
     public MobileAccessibilityService(AccessibilityStreamGenerator accessibilityStreamGenerator){
         super();
 

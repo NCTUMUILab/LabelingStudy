@@ -45,10 +45,14 @@
     <string name="placeselection_yourplace">您的位置</string>
     <string name="placeselection_newsite">新增地點</string>
 
+    <string name="timeline_from_old_to_new">從舊到新</string>
+    <string name="timeline_from_new_to_old">從新到舊</string>
+
     <string name="reminder_check_connection">請確認您有連上網路</string>
     <string name="reminder_choose_your_site">請選擇地點</string>
     <string name="reminder_enter_site">請輸入地點</string>
     <string name="reminder_enter_site_successfully">成功新增地點</string>
+    <string name="reminder_your_must_stop_the_current_activity">您必須先結束目前的移動方式 : </string>
     <string name="reminder_already_checkpointed">當前活動已經Checkpoint過了</string>
     <string name="reminder_checkpoint_successfully">成功Checkpoint!</string>
     <string name="reminder_havent_got_gps">尚未抓到GPS!</string>
@@ -64,6 +68,7 @@
     <string name="walk_activity_type_in_eng">walk</string>
     <string name="bike_activity_type_in_eng">bike</string>
     <string name="car_activity_type_in_eng">car</string>
+    <string name="site_activity_type_in_eng">site</string>
     <string name="static_activity_type_in_eng">static</string>
 
 </resources>

@@ -175,6 +175,15 @@ public class TransportationModeStreamGenerator extends AndroidStreamGenerator<Tr
         mCurrentState = sharedPrefs.getInt("CurrentState", STATE_STATIC);
         mConfirmedActivityType = sharedPrefs.getInt("ConfirmedActivityType", NO_ACTIVITY_TYPE);
 
+        CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_TRANSPORTATION,
+                "transportationCreationTime",
+                "transportationConfirmedActivity",
+                "transportationSuspectedTime",
+                "transportationSuspectedStartActivity",
+                "transportationSuspectedStopActivity",
+                "activityRecognitionMostProbableActivity",
+                "activityRecognitionProbableActivity");
+
         this.register();
     }
 
@@ -267,22 +276,6 @@ public class TransportationModeStreamGenerator extends AndroidStreamGenerator<Tr
     @Override
     public void onStreamRegistration() {
 
-        CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_TRANSPORTATION,
-                "transportationCreationTime",
-                "transportationConfirmedActivity",
-                "transportationSuspectedTime",
-                "transportationSuspectedStartActivity",
-                "transportationSuspectedStopActivity",
-                "activityRecognitionMostProbableActivity",
-                "activityRecognitionProbableActivity");
-    }
-
-    public void setTransportationModeDataRecord(String getConfirmedActvitiyString){
-
-        ConfirmedActvitiyString = getConfirmedActvitiyString;
-
-        Log.d(TAG, "ConfirmedActvitiyString : " + ConfirmedActvitiyString);
-
     }
 
     @Override
@@ -301,17 +294,28 @@ public class TransportationModeStreamGenerator extends AndroidStreamGenerator<Tr
             mCurrentState = sharedPrefs.getInt("CurrentState", STATE_INITIAL);
         }
 
-
         if(activityRecognitionDataRecord.getProbableActivities()==null || activityRecognitionDataRecord.getProbableActivities().isEmpty()){
             return -1;
         }
 
         List<DetectedActivity> probableActivities = activityRecognitionDataRecord.getProbableActivities();
 
-
         //Log.d(TAG, "[test replay] examine the incoming record.....for transportation " + activityRecognitionDataRecord.getDetectedtime()  +" : "+ activityRecognitionDataRecord.getProbableActivities().toString());
 
         long detectionTime = activityRecognitionDataRecord.getCreationTime();
+
+        if (probableActivities.get(0).getType() != DetectedActivity.STILL &&
+                        probableActivities.get(0).getConfidence() >= CANCEL_SUSPECT_Threshold) {
+
+            //back to static, cancel the suspection
+            setCurrentState(STATE_CONFIRMED);
+
+            setSuspectedStartActivityType(NO_ACTIVITY_TYPE);
+
+            CSVHelper.TransportationState_StoreToCSV(new Date().getTime(), "STATE_CONFIRMED", getConfirmedActivityString());
+
+            return getConfirmedActivityType();
+        }
 
         //if in the static state or initial state, we try to suspect new activity
         if (getCurrentState()==STATE_STATIC || getCurrentState()==STATE_INITIAL) {
@@ -335,20 +339,6 @@ public class TransportationModeStreamGenerator extends AndroidStreamGenerator<Tr
 
         }
         else if (getCurrentState()==STATE_SUSPECTING_START) {
-
-            if (probableActivities.get(0).getType() == getSuspectedStartActivityType() &&
-                    probableActivities.get(0).getType() != DetectedActivity.STILL &&
-                    probableActivities.get(0).getConfidence() >= CANCEL_SUSPECT_Threshold) {
-
-                //back to static, cancel the suspection
-                setCurrentState(STATE_CONFIRMED);
-
-                setSuspectedStartActivityType(NO_ACTIVITY_TYPE);
-
-                CSVHelper.TransportationState_StoreToCSV(new Date().getTime(), "STATE_CONFIRMED", getConfirmedActivityString());
-
-                return getConfirmedActivityType();
-            }
 
             //Log.d(TAG,"[test replay] in Suspect start, the suspected AR is " +getActivityNameFromType(getSuspectedStartActivityType()) );
             boolean isTimeToConfirm = checkTimeElapseOfLatestActivityFromSuspectPoint(detectionTime, getSuspectTime(), getWindowLengh(getSuspectedStartActivityType(), getCurrentState()) );
@@ -424,65 +414,45 @@ public class TransportationModeStreamGenerator extends AndroidStreamGenerator<Tr
                             getCurrentState())
             );
 
-            //if we see the original transportation label with a high confidence level, we cancel the suspect stop
-            if (probableActivities.get(0).getType() == getSuspectedStopActivityType() &&
-                    probableActivities.get(0).getType() != DetectedActivity.STILL &&
-                    probableActivities.get(0).getConfidence() >= CANCEL_SUSPECT_Threshold) {
-
-                //back to static, cancel the suspection
-                setCurrentState(STATE_CONFIRMED);
-
-                setSuspectedStartActivityType(NO_ACTIVITY_TYPE);
-
-                CSVHelper.TransportationState_StoreToCSV(new Date().getTime(), "STATE_CONFIRMED", getConfirmedActivityString());
-
-                return getConfirmedActivityType();
-            }
-
-            //the incoming label is not the confirmed transportation mode with a high confidence, so we need to check labels in a window time
-            else {
-
-                if (isTimeToConfirm) {
-                    long startTime =detectionTime -
-                            getWindowLengh(getSuspectedStartActivityType(),
-                                    getCurrentState())
-                            ;
-                    long endTime = detectionTime;
-                    boolean isExitingTransportationMode =
-                            confirmStopPossibleTransportation(getSuspectedStopActivityType(), getWindowData(startTime, endTime),
-                                    getWindowLengh(getSuspectedStartActivityType(), getCurrentState()));
+            if (isTimeToConfirm) {
+                long startTime =detectionTime -
+                        getWindowLengh(getSuspectedStartActivityType(),
+                                getCurrentState())
+                        ;
+                long endTime = detectionTime;
+                boolean isExitingTransportationMode =
+                        confirmStopPossibleTransportation(getSuspectedStopActivityType(), getWindowData(startTime, endTime),
+                                getWindowLengh(getSuspectedStartActivityType(), getCurrentState()));
 
 
-                    if (isExitingTransportationMode) {
+                if (isExitingTransportationMode) {
 
-                        //back to static
-                        setCurrentState(STATE_STATIC);
+                    //back to static
+                    setCurrentState(STATE_STATIC);
 
-                        setConfirmedActivityType(NO_ACTIVITY_TYPE);
+                    setConfirmedActivityType(NO_ACTIVITY_TYPE);
 
-                        setSuspectedStopActivityType(NO_ACTIVITY_TYPE);
+                    setSuspectedStopActivityType(NO_ACTIVITY_TYPE);
 
-                        //set the suspect time so that other class can access it.(Trip_startTime is when we think the transportation starts)
-                        setSuspectTime(startTime);
+                    //set the suspect time so that other class can access it.(Trip_startTime is when we think the transportation starts)
+                    setSuspectTime(startTime);
 
-                        CSVHelper.TransportationState_StoreToCSV(new Date().getTime(), "STATE_STATIC", getConfirmedActivityString());
+                    CSVHelper.TransportationState_StoreToCSV(new Date().getTime(), "STATE_STATIC", getConfirmedActivityString());
 
-                    }
-                    //not exiting the confirmed activity
-                    else {
-                        //back to static, cancel the suspection
-                        setCurrentState(STATE_CONFIRMED);
-
-                        setSuspectedStartActivityType(NO_ACTIVITY_TYPE);
-
-                        CSVHelper.TransportationState_StoreToCSV(new Date().getTime(), "STATE_CONFIRMED", getConfirmedActivityString());
-
-                    }
-
-                    setSuspectTime(0);
                 }
-            }
+                //not exiting the confirmed activity
+                else {
+                    //back to static, cancel the suspection
+                    setCurrentState(STATE_CONFIRMED);
 
+                    setSuspectedStartActivityType(NO_ACTIVITY_TYPE);
+
+                    CSVHelper.TransportationState_StoreToCSV(new Date().getTime(), "STATE_CONFIRMED", getConfirmedActivityString());
+
+                }
+
+                setSuspectTime(0);
+            }
 
             /**
              * switch activity

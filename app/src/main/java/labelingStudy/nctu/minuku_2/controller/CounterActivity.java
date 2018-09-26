@@ -109,6 +109,8 @@ public class CounterActivity extends AppCompatActivity {
             trafficType = sharedPrefs.getString("trafficType", trafficType);
         }
 
+        Log.d(TAG, "trafficType : " + trafficType);
+
         try {
 
             siteName = getIntent().getExtras().getString("SiteName", NotASite);
@@ -116,6 +118,13 @@ public class CounterActivity extends AppCompatActivity {
         }catch (NullPointerException e){
 
             siteName = NotASite;
+        }finally {
+
+            if(!siteName.equals(NotASite)){
+
+                trafficType = "site";
+                sharedPrefs.edit().putString("trafficType", trafficType).apply();
+            }
         }
 
         counter = (TextView) findViewById(R.id.tv_timer);
@@ -123,7 +132,6 @@ public class CounterActivity extends AppCompatActivity {
 
         changedMovement = (Button) findViewById(R.id.changedMovement);
         changedMovement.setOnClickListener(changedMoving);
-
 
         play_stop = (ImageButton) findViewById(R.id.btn_play_stop);
 

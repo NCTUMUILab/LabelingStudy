@@ -1026,7 +1026,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
         Log.d(TAG, "[test show trip] querySessions");
 
-        ArrayList<String> rows = new ArrayList<String>();
+        ArrayList<String> rows = new ArrayList<>();
 
         try{
 

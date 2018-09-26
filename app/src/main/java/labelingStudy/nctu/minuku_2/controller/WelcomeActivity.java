@@ -14,9 +14,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import labelingStudy.nctu.minuku.config.Constants;
 import labelingStudy.nctu.minuku.logger.Log;
@@ -109,6 +112,12 @@ public class WelcomeActivity extends AppCompatActivity {
                 return true;
 
             case R.id.action_permissions:
+
+                int sdk_int = Build.VERSION.SDK_INT;
+                if(sdk_int >= Build.VERSION_CODES.M) {
+                    checkAndRequestPermissions();
+                }
+
                 startpermission();
                 sharedPrefs.edit().putBoolean("firstTimeOrNot", false).apply();
                 return true;
@@ -193,15 +202,52 @@ public class WelcomeActivity extends AppCompatActivity {
         if (!listPermissionsNeeded.isEmpty()) {
             Log.d(TAG, "!listPermissionsNeeded.isEmpty() : "+!listPermissionsNeeded.isEmpty() );
 
-            //TODO after request permissions, pop-up the three setting
-            //TODO set to before the requestPermissions in code is to make sure that the pop-up could show after the request
-            popupPermissionSettingAtFirstTime();
-
             ActivityCompat.requestPermissions(this, listPermissionsNeeded.toArray(new String[listPermissionsNeeded.size()]),REQUEST_ID_MULTIPLE_PERMISSIONS);
         }else{
             startServiceWork();
         }
 
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_ID_MULTIPLE_PERMISSIONS: {
+
+                Map<String, Integer> perms = new HashMap<>();
+
+                // Initialize the map with both permissions
+                perms.put(android.Manifest.permission.READ_EXTERNAL_STORAGE, PackageManager.PERMISSION_GRANTED);
+                perms.put(android.Manifest.permission.WRITE_EXTERNAL_STORAGE, PackageManager.PERMISSION_GRANTED);
+                //perms.put(Manifest.permission.SYSTEM_ALERT_WINDOW, PackageManager.PERMISSION_GRANTED);
+                perms.put(android.Manifest.permission.ACCESS_FINE_LOCATION, PackageManager.PERMISSION_GRANTED);
+                perms.put(android.Manifest.permission.ACCESS_COARSE_LOCATION, PackageManager.PERMISSION_GRANTED);
+                perms.put(android.Manifest.permission.READ_PHONE_STATE, PackageManager.PERMISSION_GRANTED);
+//                perms.put(android.Manifest.permission.BODY_SENSORS, PackageManager.PERMISSION_GRANTED);
+
+                // Fill with actual results from user
+                if (grantResults.length > 0) {
+                    for (int i = 0; i < permissions.length; i++)
+                        perms.put(permissions[i], grantResults[i]);
+                    // Check for both permissions
+                    if (perms.get(android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+                            && perms.get(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+                            && perms.get(android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                            && perms.get(android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                            && perms.get(android.Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED
+//                            && perms.get(android.Manifest.permission.BODY_SENSORS) == PackageManager.PERMISSION_GRANTED
+                            ){
+//                        Log.d("permission", "[permission test]all permission granted");
+                        //permission_ok=1;
+                        startServiceWork();
+                    } else {
+                        Toast.makeText(this, "Go to settings and enable permissions", Toast.LENGTH_LONG).show();
+                    }
+                }
+
+            }
+        }
     }
 
     public void startServiceWork(){
