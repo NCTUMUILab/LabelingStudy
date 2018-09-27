@@ -501,7 +501,7 @@ public class WifiReceiver extends BroadcastReceiver {
             conn.setFixedLengthStreamingMode(json.getBytes().length);
             conn.setRequestProperty("Content-Type","application/json");
             conn.connect();
-
+            
             OutputStreamWriter wr= new OutputStreamWriter(conn.getOutputStream());
             wr.write(json);
             wr.close();
