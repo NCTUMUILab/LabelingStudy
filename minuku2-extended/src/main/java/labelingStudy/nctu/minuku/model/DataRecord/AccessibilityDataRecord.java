@@ -15,6 +15,7 @@ public class AccessibilityDataRecord implements DataRecord {
     private String text;
     private String type;
     private String extra;
+    private String sessionid;
 
     public AccessibilityDataRecord(){
         this.creationTime = new Date().getTime();
@@ -27,6 +28,16 @@ public class AccessibilityDataRecord implements DataRecord {
         this.text = text;
         this.type = type;
         this.extra = extra;
+    }
+
+    public AccessibilityDataRecord(String pack, String text, String type, String extra, String sessionid){
+        this.creationTime = new Date().getTime();
+
+        this.pack = pack;
+        this.text = text;
+        this.type = type;
+        this.extra = extra;
+        this.sessionid = sessionid;
     }
 
     @Override
@@ -48,5 +59,9 @@ public class AccessibilityDataRecord implements DataRecord {
 
     public String getExtra(){
         return extra;
+    }
+
+    public String getSessionid() {
+        return sessionid;
     }
 }

@@ -24,6 +24,7 @@ import labelingStudy.nctu.minuku.dao.AppUsageDataRecordDAO;
 import labelingStudy.nctu.minuku.logger.Log;
 import labelingStudy.nctu.minuku.manager.MinukuDAOManager;
 import labelingStudy.nctu.minuku.manager.MinukuStreamManager;
+import labelingStudy.nctu.minuku.manager.SessionManager;
 import labelingStudy.nctu.minuku.model.DataRecord.AppUsageDataRecord;
 import labelingStudy.nctu.minuku.stream.AppUsageStream;
 import labelingStudy.nctu.minukucore.dao.DAOException;
@@ -135,7 +136,10 @@ public class AppUsageStreamGenerator extends AndroidStreamGenerator<AppUsageData
 //        getAppUsageUpdate();
 
         Log.d(TAG,"Screen_Status : "+Screen_Status+" LastestForegroundPackage : "+mLastestForegroundPackage+" LastestForegroundActivity : "+mLastestForegroundActivity);
-        AppUsageDataRecord appUsageDataRecord = new AppUsageDataRecord(Screen_Status,mLastestForegroundPackage,mLastestForegroundActivity);
+
+        int session_id = SessionManager.getOngoingSessionId();
+
+        AppUsageDataRecord appUsageDataRecord = new AppUsageDataRecord(Screen_Status,mLastestForegroundPackage,mLastestForegroundActivity, String.valueOf(session_id));
 
         //appUsageDataRecord.setCreationTime();
         if(appUsageDataRecord!=null) {

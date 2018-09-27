@@ -22,6 +22,7 @@ public class BatteryDataRecord implements DataRecord{
     public float BatteryPercentage;
     private String BatteryChargingState = "NA";
     public boolean isCharging;
+    private String sessionid;
 
     public BatteryDataRecord(){}
 
@@ -38,6 +39,24 @@ public class BatteryDataRecord implements DataRecord{
 
         Log.d(TAG,"BatteryLevel : "+ this.BatteryLevel+" BatteryPercentage : "+ this.BatteryPercentage
         +" BatteryChargingState : "+ this.BatteryChargingState +" isCharging : "+ this.isCharging);
+    }
+
+    public BatteryDataRecord(int BatteryLevel, float BatteryPercentage, String BatteryChargingState, boolean isCharging, String sessionid){
+        this.creationTime = new Date().getTime();
+        Log.d(TAG, "creationTime : "+creationTime);
+        Log.d(TAG, "creationTime String : "+getmillisecondToDateWithTime(creationTime));
+//        this.taskDayCount = Constants.TaskDayCount;
+//        this.hour = getmillisecondToHour(creationTime);
+        this.BatteryLevel = BatteryLevel;
+        this.BatteryPercentage = BatteryPercentage;
+        this.BatteryChargingState = BatteryChargingState;
+        this.isCharging = isCharging;
+        this.sessionid = sessionid;
+
+    }
+
+    public String getSessionid() {
+        return sessionid;
     }
 
     private long getmillisecondToHour(long timeStamp){

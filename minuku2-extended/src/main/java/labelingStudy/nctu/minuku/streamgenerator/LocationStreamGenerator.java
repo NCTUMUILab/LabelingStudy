@@ -130,8 +130,6 @@ public class LocationStreamGenerator extends AndroidStreamGenerator<LocationData
         this.latestLongitude = new AtomicDouble();
 
         this.context = applicationContext;
-//        tripManager = new SessionManager();
-
 
         mLocationDataRecords = new ArrayList<LocationDataRecord>();
 
@@ -268,14 +266,7 @@ public class LocationStreamGenerator extends AndroidStreamGenerator<LocationData
     public boolean updateStream() {
 
         LocationDataRecord newlocationDataRecord;
-        int session_id = 0;
-
-        int countOfOngoingSession = SessionManager.getInstance().getOngoingSessionIdList().size();
-
-        //if there exists an ongoing session
-        if (countOfOngoingSession>0){
-            session_id = SessionManager.getInstance().getOngoingSessionIdList().get(0);
-        }
+        int session_id = SessionManager.getOngoingSessionId();
 
 //        Log.d(TAG, "[test replay] Update stream session is " + session_id);
 

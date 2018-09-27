@@ -26,6 +26,7 @@ import labelingStudy.nctu.minuku.config.Constants;
 import labelingStudy.nctu.minuku.dao.TransportationModeDAO;
 import labelingStudy.nctu.minuku.manager.MinukuDAOManager;
 import labelingStudy.nctu.minuku.manager.MinukuStreamManager;
+import labelingStudy.nctu.minuku.manager.SessionManager;
 import labelingStudy.nctu.minuku.model.DataRecord.ActivityRecognitionDataRecord;
 import labelingStudy.nctu.minuku.model.DataRecord.TransportationModeDataRecord;
 import labelingStudy.nctu.minuku.stream.TransportationModeStream;
@@ -233,17 +234,20 @@ public class TransportationModeStreamGenerator extends AndroidStreamGenerator<Tr
             }
         }*/
 
+        int session_id = SessionManager.getOngoingSessionId();
+
         String suspectedStartActivity = getActivityNameFromType(getSuspectedStartActivityType());
         String suspectedEndActivity = getActivityNameFromType(getSuspectedStopActivityType());
 
         TransportationModeDataRecord transportationModeDataRecord =
-                new TransportationModeDataRecord(getConfirmedActivityString(), getSuspectTime(), suspectedStartActivity, suspectedEndActivity);
+                new TransportationModeDataRecord(getConfirmedActivityString(), getSuspectTime(), suspectedStartActivity, suspectedEndActivity, String.valueOf(session_id));
 
         Log.d(TAG,"updateStream transportationModeDataRecord : " + getConfirmedActivityString());
 
         mStream.add(transportationModeDataRecord);
         Log.d(TAG, "TransportationMode to be sent to event bus" + transportationModeDataRecord);
 
+        //TODO move to AR after examine the transportation
         MinukuStreamManager.getInstance().setTransportationModeDataRecord(transportationModeDataRecord, mContext, sharedPrefs);
 
         // also post an event.

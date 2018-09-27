@@ -13,6 +13,7 @@ import labelingStudy.nctu.minuku.config.Constants;
 import labelingStudy.nctu.minuku.dao.BatteryDataRecordDAO;
 import labelingStudy.nctu.minuku.manager.MinukuDAOManager;
 import labelingStudy.nctu.minuku.manager.MinukuStreamManager;
+import labelingStudy.nctu.minuku.manager.SessionManager;
 import labelingStudy.nctu.minuku.model.DataRecord.BatteryDataRecord;
 import labelingStudy.nctu.minuku.stream.BatteryStream;
 import labelingStudy.nctu.minukucore.dao.DAOException;
@@ -67,9 +68,12 @@ public class BatteryStreamGenerator extends AndroidStreamGenerator<BatteryDataRe
     @Override
     public boolean updateStream() {
         Log.d(TAG, "updateStream called");
+
+        int session_id = SessionManager.getOngoingSessionId();
+
         //TODO get service data
         BatteryDataRecord batteryDataRecord
-                = new BatteryDataRecord(mBatteryLevel, mBatteryPercentage, mBatteryChargingState, isCharging);
+                = new BatteryDataRecord(mBatteryLevel, mBatteryPercentage, mBatteryChargingState, isCharging, String.valueOf(session_id));
         mStream.add(batteryDataRecord);
         Log.d(TAG, "CheckFamiliarOrNot to be sent to event bus" + batteryDataRecord);
         // also post an event.

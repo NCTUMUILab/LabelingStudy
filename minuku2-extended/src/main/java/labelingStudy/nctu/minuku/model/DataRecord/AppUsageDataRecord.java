@@ -23,7 +23,7 @@ public class AppUsageDataRecord implements DataRecord{
     private String Screen_Status;
     private String Latest_Used_App;
     private String Latest_Used_App_Time;
-    private String Recent_Apps;
+    private String sessionid;
     //private String Users;
     private String Latest_Foreground_Activity;
 
@@ -52,12 +52,12 @@ public class AppUsageDataRecord implements DataRecord{
         //this.Users = Users;
     }
 
-    public AppUsageDataRecord(String Screen_Status, String Latest_Used_App, String Latest_Used_App_Time, String Recent_Apps) {
+    public AppUsageDataRecord(String Screen_Status, String Latest_Used_App, String Latest_Used_App_Time, String sessionid) {
         this.creationTime = new java.util.Date().getTime();
         this.Screen_Status = Screen_Status;
         this.Latest_Used_App = Latest_Used_App;
         this.Latest_Used_App_Time = Latest_Used_App_Time;
-        this.Recent_Apps = Recent_Apps;
+        this.sessionid = sessionid;
         //this.Users = Users;
     }
 
@@ -67,6 +67,10 @@ public class AppUsageDataRecord implements DataRecord{
     }
 
     public void setCreationTime(long t){this.creationTime = t;}
+
+    public String getSessionid() {
+        return sessionid;
+    }
 
 //    public String getScreenStatus() {
 //        Log.e(TAG, "GetScreenStatus called.");
@@ -114,11 +118,6 @@ public class AppUsageDataRecord implements DataRecord{
     public String getLatestUsedAppTime() {
         Log.e(TAG, "GetLatestUsedAppTime called.");
         return Latest_Used_App_Time;
-    }
-
-    public String getRecentApps() {
-        Log.e(TAG, "GetRecentApps called.");
-        return Recent_Apps;
     }
 
 //      public String getUsers() {

@@ -13,6 +13,7 @@ import labelingStudy.nctu.minuku.config.Constants;
 import labelingStudy.nctu.minuku.dao.TelephonyDataRecordDAO;
 import labelingStudy.nctu.minuku.logger.Log;
 import labelingStudy.nctu.minuku.manager.MinukuDAOManager;
+import labelingStudy.nctu.minuku.manager.SessionManager;
 import labelingStudy.nctu.minuku.model.DataRecord.TelephonyDataRecord;
 import labelingStudy.nctu.minuku.stream.TelephonyStream;
 import labelingStudy.nctu.minukucore.dao.DAOException;
@@ -89,8 +90,10 @@ public class TelephonyStreamGenerator extends AndroidStreamGenerator<TelephonyDa
     public boolean updateStream() {
         Log.d(TAG, "updateStream called");
 
+        int session_id = SessionManager.getOngoingSessionId();
+
         TelephonyDataRecord telephonyDataRecord = new TelephonyDataRecord(mNetworkOperatorName, mCallState
-                , mPhoneSignalType, mGsmSignalStrength, mLTESignalStrength_dbm, mCdmaSignalStrengthLevel);
+                , mPhoneSignalType, mGsmSignalStrength, mLTESignalStrength_dbm, mCdmaSignalStrengthLevel, String.valueOf(session_id));
         mStream.add(telephonyDataRecord);
         Log.d(TAG, "Telephony to be sent to event bus" + telephonyDataRecord);
 
@@ -98,7 +101,6 @@ public class TelephonyStreamGenerator extends AndroidStreamGenerator<TelephonyDa
         EventBus.getDefault().post(telephonyDataRecord);
         try {
             mDAO.add(telephonyDataRecord);
-            mDAO.query_check();
         } catch (DAOException e) {
             e.printStackTrace();
             return false;

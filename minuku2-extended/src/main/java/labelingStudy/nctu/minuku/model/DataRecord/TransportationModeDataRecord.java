@@ -19,6 +19,7 @@ public class TransportationModeDataRecord implements DataRecord{
     public String confirmedActivityString;
     public String suspectedStartActivityString;
     public String suspectedStopActivityString;
+    private String sessionid;
 
     public String getSuspectedStopActivityString() {
         return suspectedStopActivityString;
@@ -44,6 +45,10 @@ public class TransportationModeDataRecord implements DataRecord{
         this.suspectedStartActivityString = suspectedStartActivityString;
     }
 
+    public String getSessionid() {
+        return sessionid;
+    }
+
     public TransportationModeDataRecord(){}
 
     public TransportationModeDataRecord(String confirmedActivityString){
@@ -59,6 +64,16 @@ public class TransportationModeDataRecord implements DataRecord{
         this.suspectedTime = suspectedTime;
         this.suspectedStartActivityString = suspectedStartActivityString;
         this.suspectedStopActivityString = suspectedStopActivityString;
+    }
+
+    public TransportationModeDataRecord(String confirmedActivityString, long suspectedTime, String suspectedStartActivityString, String suspectedStopActivityString, String sessionid){
+
+        this.creationTime = new Date().getTime();
+        this.confirmedActivityString = confirmedActivityString;
+        this.suspectedTime = suspectedTime;
+        this.suspectedStartActivityString = suspectedStartActivityString;
+        this.suspectedStopActivityString = suspectedStopActivityString;
+        this.sessionid = sessionid;
     }
 
     private long getmillisecondToHour(long timeStamp){

@@ -54,6 +54,7 @@ public class TelephonyDataRecordDAO implements DAO<TelephonyDataRecord> {
             values.put(DBHelper.GsmSignalStrength_col, entity.getGsmSignalStrength());
             values.put(DBHelper.LTESignalStrength_col, entity.getLTESignalStrength());
             values.put(DBHelper.CdmaSignalStrengthLevel_col, entity.getCdmaSignalStrengthLevel());
+            values.put(DBHelper.COL_SESSION_ID, entity.getSessionid());
 
             //db.insert(DBHelper.telephony_table, null, values);
             db.insertWithOnConflict(DBHelper.telephony_table, null, values, SQLiteDatabase.CONFLICT_IGNORE);

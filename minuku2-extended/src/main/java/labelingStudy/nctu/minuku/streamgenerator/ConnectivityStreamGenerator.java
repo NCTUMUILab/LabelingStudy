@@ -14,6 +14,7 @@ import labelingStudy.nctu.minuku.dao.ConnectivityDataRecordDAO;
 import labelingStudy.nctu.minuku.logger.Log;
 import labelingStudy.nctu.minuku.manager.MinukuDAOManager;
 import labelingStudy.nctu.minuku.manager.MinukuStreamManager;
+import labelingStudy.nctu.minuku.manager.SessionManager;
 import labelingStudy.nctu.minuku.model.DataRecord.ConnectivityDataRecord;
 import labelingStudy.nctu.minuku.stream.ConnectivityStream;
 import labelingStudy.nctu.minukucore.dao.DAOException;
@@ -93,10 +94,13 @@ public class ConnectivityStreamGenerator extends AndroidStreamGenerator<Connecti
     public boolean updateStream() {
 
         Log.d(TAG, "updateStream called");
+
+        int session_id = SessionManager.getOngoingSessionId();
+
         //TODO get service data
         ConnectivityDataRecord connectivityDataRecord =
                 new ConnectivityDataRecord(mNetworkType,mIsNetworkAvailable, mIsConnected, mIsWifiAvailable,
-                        mIsMobileAvailable, mIsWifiConnected, mIsMobileConnected);
+                        mIsMobileAvailable, mIsWifiConnected, mIsMobileConnected, String.valueOf(session_id));
         mStream.add(connectivityDataRecord);
         Log.d(TAG, "CheckFamiliarOrNot to be sent to event bus" + connectivityDataRecord);
         // also post an event.

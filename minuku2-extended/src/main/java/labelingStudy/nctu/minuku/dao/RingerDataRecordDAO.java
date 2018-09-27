@@ -62,6 +62,7 @@ public class RingerDataRecordDAO implements DAO<RingerDataRecord> {
             values.put(DBHelper.StreamVolumeRing_col, entity.getStreamVolumeRing());
             values.put(DBHelper.StreamVolumeVoicecall_col, entity.getStreamVolumeVoicecall());
             values.put(DBHelper.StreamVolumeSystem_col, entity.getStreamVolumeSystem());
+            values.put(DBHelper.COL_SESSION_ID, entity.getSessionid());
 
             db.insert(DBHelper.ringer_table, null, values);
         }

@@ -49,6 +49,7 @@ public class AppUsageDataRecordDAO implements DAO<AppUsageDataRecord>{
             values.put(DBHelper.ScreenStatus_col, entity.getScreen_Status());
             values.put(DBHelper.Latest_Used_App_col, entity.getLatestUsedApp());
             values.put(DBHelper.Latest_Foreground_Activity_col, entity.getLatestForegroundActivity());
+            values.put(DBHelper.COL_SESSION_ID, entity.getSessionid());
 
             db.insert(DBHelper.appUsage_table, null, values);
         }

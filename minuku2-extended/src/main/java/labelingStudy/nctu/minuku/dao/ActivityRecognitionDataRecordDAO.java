@@ -66,6 +66,7 @@ public class ActivityRecognitionDataRecordDAO implements DAO<ActivityRecognition
 //            values.put(DBHelper.HOUR, entity.getHour());
             values.put(DBHelper.MostProbableActivity_col, entity.getMostProbableActivity().toString());
             values.put(DBHelper.ProbableActivities_col, entity.getProbableActivities().toString());
+            values.put(DBHelper.COL_SESSION_ID, entity.getSessionid());
 
             db.insert(DBHelper.activityRecognition_table, null, values);
         }

@@ -9,6 +9,7 @@ import labelingStudy.nctu.minuku.config.Constants;
 import labelingStudy.nctu.minuku.dao.AccessibilityDataRecordDAO;
 import labelingStudy.nctu.minuku.logger.Log;
 import labelingStudy.nctu.minuku.manager.MinukuDAOManager;
+import labelingStudy.nctu.minuku.manager.SessionManager;
 import labelingStudy.nctu.minuku.model.DataRecord.AccessibilityDataRecord;
 import labelingStudy.nctu.minuku.service.MobileAccessibilityService;
 import labelingStudy.nctu.minuku.stream.AccessibilityStream;
@@ -26,7 +27,7 @@ import static labelingStudy.nctu.minuku.manager.MinukuStreamManager.getInstance;
 public class AccessibilityStreamGenerator extends AndroidStreamGenerator<AccessibilityDataRecord> {
 
     private final String TAG = "AccessibilityStreamGenerator";
-    private Stream mStream;
+    private AccessibilityStream mStream;
     private Context mContext;
     AccessibilityDataRecordDAO mDAO;
     MobileAccessibilityService mobileAccessibilityService;
@@ -82,8 +83,10 @@ public class AccessibilityStreamGenerator extends AndroidStreamGenerator<Accessi
 
         Log.d(TAG, "updateStream called");
 
+        int session_id = SessionManager.getOngoingSessionId();
+
         AccessibilityDataRecord accessibilityDataRecord
-                = new AccessibilityDataRecord(pack, text, type, extra);
+                = new AccessibilityDataRecord(pack, text, type, extra, String.valueOf(session_id));
         mStream.add(accessibilityDataRecord);
         Log.d(TAG,"pack = "+pack+" text = "+text+" type = "+type+" extra = "+extra);
         Log.d(TAG, "Accessibility to be sent to event bus" + accessibilityDataRecord);

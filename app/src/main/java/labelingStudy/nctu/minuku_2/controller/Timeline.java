@@ -79,7 +79,7 @@ public class Timeline extends AppCompatActivity {
 
     public static String selectedSiteName = "請選擇地點";
 
-    public static Button DchoosingSite = null;
+    public static Button dChoosingSite = null;
 
     private String TAG = "Timeline";
     Context mContext;
@@ -95,8 +95,6 @@ public class Timeline extends AppCompatActivity {
     private String timelineOrder;
 
     private String dateToQuery;
-
-    private TimelineAdapterBackup timelineAdapterBackup;
 
     public Timeline(){}
     public Timeline(Context mContext){
@@ -311,8 +309,6 @@ public class Timeline extends AppCompatActivity {
 
                 TimelineAdapter timelineAdapter = new TimelineAdapter(mSessions);
 
-//                timelineAdapterBackup = TimelineAdapterBackup.getInstance(mSessions, this, timelineOrder);
-
                 RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.list_view);
                 mRecyclerView.setVisibility(View.VISIBLE);
 
@@ -322,10 +318,8 @@ public class Timeline extends AppCompatActivity {
                 layoutManager.onSaveInstanceState();
                 mRecyclerView.setLayoutManager(layoutManager);
                 mRecyclerView.setAdapter(timelineAdapter);
-//                mList.setAdapter(timelineAdapterBackup);
 
-                //TODO if there have some new availSite, start from the top (reset)
-                //TODO not working
+                //if there have some new availSite, start from the top (reset)
                 int currentposition = sharedPrefs.getInt("currentposition", 0);
                 mRecyclerView.scrollToPosition(currentposition);
 
@@ -361,25 +355,28 @@ public class Timeline extends AppCompatActivity {
 
         public class ViewHolder extends RecyclerView.ViewHolder {
 
-            public TextView time, goal, date, sessionType;
+            public TextView time, goal, date;
+//            public TextView sessionType;
             public TimelineView lineView;
             public LinearLayout cardbackground;
             public android.support.v7.widget.CardView cardView;
             public ImageView traffic;
-            public View car_line, car_line_down, parentView;
+//            public View car_line, car_line_down;
+            public View parentView;
+
             public ViewHolder(View v) {
                 super(v);
 
                 time = (TextView) v.findViewById(R.id.tv_time);
                 goal = (TextView) v.findViewById(R.id.tv_goal);
                 date = (TextView) v.findViewById(R.id.tv_date);
-                sessionType = (TextView) v.findViewById(R.id.sessionType);
+//                sessionType = (TextView) v.findViewById(R.id.sessionType);
                 traffic = (ImageView) v.findViewById(R.id.iv_traffic);
                 lineView = (TimelineView) v.findViewById(R.id.time_marker);
                 cardView = (android.support.v7.widget.CardView) v.findViewById(R.id.cardview);
                 cardbackground = (LinearLayout) v.findViewById(R.id.cardbackground);
-                car_line = (View) v.findViewById(R.id.CAR_line);
-                car_line_down = (View) v.findViewById(R.id.CAR_line_down);
+//                car_line = (View) v.findViewById(R.id.CAR_line);
+//                car_line_down = (View) v.findViewById(R.id.CAR_line_down);
                 parentView = v;
             }
         }
@@ -451,9 +448,9 @@ public class Timeline extends AppCompatActivity {
             final String startTimeDate = ScheduleAndSampleManager.getTimeString(startTime, sdf_date);
             final String endTimeDate = ScheduleAndSampleManager.getTimeString(endTime, sdf_date);
 
-
+            //TODO deprecated
             //if it was pressed by the user show the line
-            if(session.isUserPress()) {
+            /*if(session.isUserPress()) {
 
                 if(timelineOrder.equals(Constants.ASC)) {
 
@@ -466,7 +463,7 @@ public class Timeline extends AppCompatActivity {
 
                     holder.car_line.setVisibility(View.INVISIBLE);
                 }
-            }
+            }*/
 
             Log.d(TAG, "[test triggering] timeline session id : "+ session.getId());
             Log.d(TAG, "[test triggering] timeline session isUserPress ? "+session.isUserPress());
@@ -685,7 +682,7 @@ public class Timeline extends AppCompatActivity {
                 holder.cardView.setBackground(sd);
             }
 
-            String currentWork = getResources().getString(labelingStudy.nctu.minuku.R.string.current_task);
+            /*String currentWork = getResources().getString(labelingStudy.nctu.minuku.R.string.current_task);
 
             if(currentWork.equals(getResources().getString(R.string.task_CAR))){
 
@@ -697,7 +694,7 @@ public class Timeline extends AppCompatActivity {
             }else{
 
                 holder.sessionType.setVisibility(View.GONE);
-            }
+            }*/
 
             holder.goal.setText(getGoal(session));
 
@@ -710,8 +707,8 @@ public class Timeline extends AppCompatActivity {
                     final LayoutInflater inflater = LayoutInflater.from(mContext);
                     final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
                     final View layout = inflater.inflate(R.layout.custom_dialog,null);
-                    final Spinner Dspinner = (Spinner) layout.findViewById(R.id.spinner);
-                    DchoosingSite = (Button) layout.findViewById(R.id.choosingSite);
+                    final Spinner dSpinner = (Spinner) layout.findViewById(R.id.spinner);
+                    dChoosingSite = (Button) layout.findViewById(R.id.choosingSite);
                     final Button showMapButton = (Button) layout.findViewById(R.id.showMap);
                     final Button startTimeButton = (Button) layout.findViewById(R.id.startTime);
                     final Button endTimeButton = (Button) layout.findViewById(R.id.endTime);
@@ -730,32 +727,32 @@ public class Timeline extends AppCompatActivity {
                     //get the availSite from the label
                     final String labeled_transportation = transportationInChinese;
 
-                    Dspinner.setAdapter(activityList);
-                    Dspinner.setSelection(getIndex(Dspinner, labeled_transportation));
-                    Dspinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    dSpinner.setAdapter(activityList);
+                    dSpinner.setSelection(getIndex(dSpinner, labeled_transportation));
+                    dSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                         @Override
                         public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
 
                             String selectedItem = parent.getSelectedItem().toString();
                             String selectedItemTransportationName = getTransportationFromSelectedItem(selectedItem);
 
-                            //show the button "DchoosingSite" when the user choose "定點", for choosing the real site
+                            //show the button "dChoosingSite" when the user choose "定點", for choosing the real site
                             //otherwise, conceal the button
                             if(selectedItemTransportationName.equals("static") && selectedItem.equals("定點")){
 
-                                DchoosingSite.setVisibility(View.VISIBLE);
+                                dChoosingSite.setVisibility(View.VISIBLE);
 
                                 String textFromTransportation = labeled_transportation;
 
-                                if(checkTheTextInSpinner(Dspinner, textFromTransportation)){
+                                if(checkTheTextInSpinner(dSpinner, textFromTransportation)){
 
-                                    DchoosingSite.setText("請選擇地點");
+                                    dChoosingSite.setText(getResources().getString(R.string.reminder_choose_your_site));
                                 }else{
 
-                                    DchoosingSite.setText(textFromTransportation);
+                                    dChoosingSite.setText(textFromTransportation);
                                 }
 
-                                DchoosingSite.setOnClickListener(new Button.OnClickListener() {
+                                dChoosingSite.setOnClickListener(new Button.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {
 
@@ -789,8 +786,8 @@ public class Timeline extends AppCompatActivity {
                                 });
                             }else{
 
-                                DchoosingSite.setVisibility(View.INVISIBLE);
-                                DchoosingSite.setText(getResources().getString(R.string.reminder_choose_your_site));
+                                dChoosingSite.setVisibility(View.INVISIBLE);
+                                dChoosingSite.setText(getResources().getString(R.string.reminder_choose_your_site));
                             }
                         }
 
@@ -938,7 +935,7 @@ public class Timeline extends AppCompatActivity {
 
                             String[] date = endTimeString_HHmm.split(":");
 
-                            int hour = Integer.parseInt(date[0]);//c.get(Calendar.HOUR_OF_DAY);
+                            int hour = Integer.parseInt(date[0]);
                             int minute = Integer.parseInt(date[1]);
                             new TimePickerDialog(mContext, new TimePickerDialog.OnTimeSetListener(){
                                 @Override
@@ -1022,7 +1019,7 @@ public class Timeline extends AppCompatActivity {
                                 @Override
                                 public void onClick(View view) {
 
-                                    String selectedActivityString = Dspinner.getSelectedItem().toString();
+                                    String selectedActivityString = dSpinner.getSelectedItem().toString();
                                     String goal = Dannotation_goal.getText().toString();
                                     String specialEvent = Dannotation_specialEvent.getText().toString();
 
@@ -1031,7 +1028,7 @@ public class Timeline extends AppCompatActivity {
                                     if (selectedActivityString.equals("定點")) {
 
 //                                        sitename = holder.goal.getText().toString();
-                                        sitename = DchoosingSite.getText().toString();
+                                        sitename = dChoosingSite.getText().toString();
                                         Log.d(TAG, "[storing sitename] Sitename going to store : "+ sitename);
                                     }
 
@@ -1104,7 +1101,7 @@ public class Timeline extends AppCompatActivity {
 
                                         sharedPrefs.edit().putInt("currentposition", position).apply();
 
-                                        DchoosingSite.setVisibility(View.INVISIBLE); // set back to default
+                                        dChoosingSite.setVisibility(View.INVISIBLE); // set back to default
 
                                         Toast.makeText(mContext, getResources().getString(R.string.reminder_thank_for_your_reply), Toast.LENGTH_SHORT).show();
                                         dialogInterface.dismiss();
