@@ -669,7 +669,7 @@ public class Timeline extends AppCompatActivity {
                 }
             }
 
-            //change the line color to red if its session annotation hasn't been filled.
+            //change the line color to RED if its session annotation hasn't been filled.
             if(annotations_label.size()==0){
 
                 Log.d(TAG, "[storing sitename] there are no labels in the session.");
@@ -679,6 +679,13 @@ public class Timeline extends AppCompatActivity {
                 int strokeColor = mContext.getResources().getColor(R.color.stroke);
                 sd.setColor(backgroundColor);
                 sd.setStroke(10, strokeColor);
+                holder.cardView.setBackground(sd);
+            }else{
+
+                //TODO if not set the setBackground with no color
+                GradientDrawable sd = new GradientDrawable();
+                int backgroundColor = mContext.getResources().getColor(R.color.white);
+                sd.setColor(backgroundColor);
                 holder.cardView.setBackground(sd);
             }
 

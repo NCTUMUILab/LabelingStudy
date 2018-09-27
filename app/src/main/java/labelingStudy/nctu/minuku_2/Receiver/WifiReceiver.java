@@ -130,7 +130,10 @@ public class WifiReceiver extends BroadcastReceiver {
         if (Constants.ACTION_CONNECTIVITY_CHANGE.equals(intent.getAction())) {
 
             if(activeNetwork != null &&
-                    activeNetwork.getType() == ConnectivityManager.TYPE_WIFI){
+                    activeNetwork.getType() == ConnectivityManager.TYPE_WIFI
+                    //TODO assure the situation
+                    && activeNetwork.isConnected()
+                    ){
 
                 boolean firstTimeToLogCSV_Wifi = sharedPrefs.getBoolean(CSVHelper.CSV_Wifi, true);
 
@@ -507,18 +510,16 @@ public class WifiReceiver extends BroadcastReceiver {
 
             int responseCode = conn.getResponseCode();
 
-            if(responseCode >= HttpsURLConnection.HTTP_BAD_REQUEST)
-                inputStream = conn.getErrorStream();
-            else
+            if(responseCode != HttpsURLConnection.HTTP_OK){
+
+                throw new IOException("HTTP error code: " + responseCode);
+            } else
                 inputStream = conn.getInputStream();
 
             result = convertInputStreamToString(inputStream);
 
             Log.d(TAG, "[postJSON] the result response code is " + responseCode);
             Log.d(TAG, "[postJSON] the result is " + result);
-
-//            if (conn!=null)
-//                conn.disconnect();
 
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
@@ -535,21 +536,15 @@ public class WifiReceiver extends BroadcastReceiver {
         } catch (java.net.SocketTimeoutException e){
 
             Log.d(TAG, "SocketTimeoutException EE", e);
-            conn.disconnect();
-
         } catch (IOException e) {
             e.printStackTrace();
+
+            CSVHelper.storeToCSV(CSVHelper.CSV_Wifi, "IOException", Utils.getStackTrace(e));
         }finally {
 
             if (conn != null) {
 
-                try {
-
-                    conn.disconnect();
-                } catch (Exception e) {
-
-                    Log.d(TAG, "exception", e);
-                }
+                conn.disconnect();
             }
         }
 
