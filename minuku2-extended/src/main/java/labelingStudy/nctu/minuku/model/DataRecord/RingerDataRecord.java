@@ -25,6 +25,7 @@ public class RingerDataRecord implements DataRecord {
     private int StreamVolumeRing = -9999;
     private int StreamVolumeVoicecall = -9999;
     private int StreamVolumeSystem = -9999;
+    private String sessionid;
 
     public RingerDataRecord(){}
 
@@ -45,6 +46,26 @@ public class RingerDataRecord implements DataRecord {
                 +" mStreamVolumeNotification : "+ StreamVolumeNotification+" mStreamVolumeRing : "+ StreamVolumeRing
                 +" mStreamVolumeVoicecall : "+ StreamVolumeVoicecall +" mStreamVolumeSystem : "+ StreamVolumeSystem);
 
+    }
+
+    public RingerDataRecord(String RingerMode, String AudioMode, int StreamVolumeMusic
+            , int StreamVolumeNotification, int StreamVolumeRing, int StreamVolumeVoicecall, int StreamVolumeSystem, String sessionid){
+        this.creationTime = new Date().getTime();
+//        this.taskDayCount = Constants.TaskDayCount;
+//        this.hour = getmillisecondToHour(creationTime);
+        this.RingerMode = RingerMode;
+        this.AudioMode = AudioMode;
+        this.StreamVolumeMusic = StreamVolumeMusic;
+        this.StreamVolumeNotification = StreamVolumeNotification;
+        this.StreamVolumeRing = StreamVolumeRing;
+        this.StreamVolumeVoicecall = StreamVolumeVoicecall;
+        this.StreamVolumeSystem = StreamVolumeSystem;
+        this.sessionid = sessionid;
+    }
+
+
+    public String getSessionid() {
+        return sessionid;
     }
 
     private long getmillisecondToHour(long timeStamp){

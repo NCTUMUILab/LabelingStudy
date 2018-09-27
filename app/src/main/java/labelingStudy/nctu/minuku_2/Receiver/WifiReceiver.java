@@ -132,6 +132,24 @@ public class WifiReceiver extends BroadcastReceiver {
             if(activeNetwork != null &&
                     activeNetwork.getType() == ConnectivityManager.TYPE_WIFI){
 
+                boolean firstTimeToLogCSV_Wifi = sharedPrefs.getBoolean(CSVHelper.CSV_Wifi, true);
+
+                if(firstTimeToLogCSV_Wifi) {
+                    CSVHelper.storeToCSV(CSVHelper.CSV_Wifi, "describeContents", "getDetailedState", "getExtraInfo",
+                            "getReason", "getState", "getSubtypeName", "getTypeName", "isAvailable", "isConnected",
+                            "isConnectedOrConnecting", "isFailover", "isRoaming");
+
+                    sharedPrefs.edit().putBoolean(CSVHelper.CSV_Wifi, false).apply();
+                }
+
+                CSVHelper.storeToCSV(CSVHelper.CSV_Wifi, String.valueOf(activeNetwork.describeContents()), activeNetwork.getDetailedState().toString()
+                        , activeNetwork.getExtraInfo(), activeNetwork.getReason(), activeNetwork.getState().toString(), String.valueOf(activeNetwork.getSubtypeName())
+                        , activeNetwork.getTypeName(), String.valueOf(activeNetwork.isAvailable()),
+                        String.valueOf(activeNetwork.isConnected()), String.valueOf(activeNetwork.isConnectedOrConnecting()),
+                        String.valueOf(activeNetwork.isFailover()), String.valueOf(activeNetwork.isRoaming()));
+
+                CSVHelper.storeToCSV(CSVHelper.CSV_Wifi, activeNetwork.toString());
+
                 setDataStartEndTime();
 
                 uploadData();
@@ -243,12 +261,14 @@ public class WifiReceiver extends BroadcastReceiver {
             Log.d(TAG, "endTimeString : " + ScheduleAndSampleManager.getTimeString(endTime));
             Log.d(TAG, "now > end ? " + (nowTime > endTime));
 
+            //TODO might cause the infinite loop
             while(nowTime > endTime) {
 
                 Log.d(TAG,"before send dump data NowTimeString : " + ScheduleAndSampleManager.getTimeString(nowTime));
 
                 Log.d(TAG,"before send dump data EndTimeString : " + ScheduleAndSampleManager.getTimeString(endTime));
 
+                //TODO return the boolean value to check if the network is connected
                 sendingDumpData();
 
                 //update nowTime
@@ -409,7 +429,7 @@ public class WifiReceiver extends BroadcastReceiver {
 
     }
 
-    //use HTTPAsyncTask to poHttpAsyncPostJsonTaskst availSite
+    //use HTTPAsyncTask to poHttpAsyncPostJsonTask availSite
     private class HttpAsyncPostJsonTask extends AsyncTask<String, Void, String> {
 
         @Override
@@ -474,6 +494,8 @@ public class WifiReceiver extends BroadcastReceiver {
             conn.setRequestMethod("POST");
             conn.setDoInput(true);
             conn.setDoOutput(true);
+            //TODO might need to use long instead of int is for the larger size but restricted to the api level should over 19
+            conn.setFixedLengthStreamingMode(json.getBytes().length);
             conn.setRequestProperty("Content-Type","application/json");
             conn.connect();
 
@@ -485,7 +507,7 @@ public class WifiReceiver extends BroadcastReceiver {
 
             int responseCode = conn.getResponseCode();
 
-            if(responseCode >= 400)
+            if(responseCode >= HttpsURLConnection.HTTP_BAD_REQUEST)
                 inputStream = conn.getErrorStream();
             else
                 inputStream = conn.getInputStream();
@@ -495,8 +517,8 @@ public class WifiReceiver extends BroadcastReceiver {
             Log.d(TAG, "[postJSON] the result response code is " + responseCode);
             Log.d(TAG, "[postJSON] the result is " + result);
 
-            if (conn!=null)
-                conn.disconnect();
+//            if (conn!=null)
+//                conn.disconnect();
 
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();

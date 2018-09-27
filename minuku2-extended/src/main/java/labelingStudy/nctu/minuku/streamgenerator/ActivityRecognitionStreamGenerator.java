@@ -28,6 +28,7 @@ import labelingStudy.nctu.minuku.config.Constants;
 import labelingStudy.nctu.minuku.dao.ActivityRecognitionDataRecordDAO;
 import labelingStudy.nctu.minuku.manager.MinukuDAOManager;
 import labelingStudy.nctu.minuku.manager.MinukuStreamManager;
+import labelingStudy.nctu.minuku.manager.SessionManager;
 import labelingStudy.nctu.minuku.model.DataRecord.ActivityRecognitionDataRecord;
 import labelingStudy.nctu.minuku.model.DataRecord.TransportationModeDataRecord;
 import labelingStudy.nctu.minuku.service.ActivityRecognitionService;
@@ -166,7 +167,9 @@ public class ActivityRecognitionStreamGenerator extends AndroidStreamGenerator<A
     public boolean updateStream() {
         Log.e(TAG, "Update stream called.");
 
-        activityRecognitionDataRecord = new ActivityRecognitionDataRecord(sMostProbableActivity, sProbableActivities, sLatestDetectionTime);
+        int session_id = SessionManager.getOngoingSessionId();
+
+        activityRecognitionDataRecord = new ActivityRecognitionDataRecord(sMostProbableActivity, sProbableActivities, sLatestDetectionTime, String.valueOf(session_id));
 
         MinukuStreamManager.getInstance().setActivityRecognitionDataRecord(activityRecognitionDataRecord);
 
@@ -342,6 +345,17 @@ public class ActivityRecognitionStreamGenerator extends AndroidStreamGenerator<A
                     getActivityNameFromType(TransportationModeStreamGenerator.getSuspectedStopActivityType()),
                     activityRecognitionDataRecord.getMostProbableActivity().toString(),
                     activityRecognitionDataRecord.getProbableActivities().toString());
+
+            String suspectedStartActivity = getActivityNameFromType(transportationModeStreamGenerator.getSuspectedStartActivityType());
+            String suspectedEndActivity = getActivityNameFromType(transportationModeStreamGenerator.getSuspectedStopActivityType());
+
+            TransportationModeDataRecord transportationModeDataRecord =
+                    new TransportationModeDataRecord(transportationModeStreamGenerator.getConfirmedActivityString(),
+                            transportationModeStreamGenerator.getSuspectTime(),
+                            suspectedStartActivity, suspectedEndActivity);
+
+            MinukuStreamManager.getInstance().setTransportationModeDataRecord(transportationModeDataRecord, mContext, sharedPrefs);
+
         }catch (StreamNotFoundException e){
             e.printStackTrace();
         }

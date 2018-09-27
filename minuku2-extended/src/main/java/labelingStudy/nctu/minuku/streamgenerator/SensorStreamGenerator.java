@@ -37,6 +37,7 @@ import labelingStudy.nctu.minuku.dao.SensorDataRecordDAO;
 import labelingStudy.nctu.minuku.logger.Log;
 import labelingStudy.nctu.minuku.manager.MinukuDAOManager;
 import labelingStudy.nctu.minuku.manager.MinukuStreamManager;
+import labelingStudy.nctu.minuku.manager.SessionManager;
 import labelingStudy.nctu.minuku.model.DataRecord.SensorDataRecord;
 import labelingStudy.nctu.minuku.stream.SensorStream;
 import labelingStudy.nctu.minukucore.dao.DAOException;
@@ -173,9 +174,10 @@ public class SensorStreamGenerator extends AndroidStreamGenerator<SensorDataReco
     @Override
     public boolean updateStream() {
         Log.d(TAG, "updateStream called");
+        int session_id = SessionManager.getOngoingSessionId();
 
         SensorDataRecord sensorDataRecord = new SensorDataRecord(mAccele_str, mGyroscope_str, mGravity_str, mLinearAcceleration_str,
-                mRotationVector_str, mProximity_str, mMagneticField_str, mLight_str, mPressure_str, mRelativeHumidity_str, mAmbientTemperature_str);
+                mRotationVector_str, mProximity_str, mMagneticField_str, mLight_str, mPressure_str, mRelativeHumidity_str, mAmbientTemperature_str, String.valueOf(session_id));
         mStream.add(sensorDataRecord);
         Log.d(TAG, "Sensor to be sent to event bus" + sensorDataRecord);
 
@@ -183,7 +185,6 @@ public class SensorStreamGenerator extends AndroidStreamGenerator<SensorDataReco
         EventBus.getDefault().post(sensorDataRecord);
         try {
             mDAO.add(sensorDataRecord);
-//            mDAO.query_check();
         } catch (DAOException e) {
             e.printStackTrace();
             return false;

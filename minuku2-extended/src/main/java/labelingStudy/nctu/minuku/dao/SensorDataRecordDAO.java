@@ -57,6 +57,7 @@ public class SensorDataRecordDAO implements DAO<SensorDataRecord> {
             values.put(DBHelper.PRESSURE_col, entity.getmPressure_str());
             values.put(DBHelper.RELATIVE_HUMIDITY_col, entity.getmRelativeHumidity_str());
             values.put(DBHelper.AMBIENT_TEMPERATURE_col, entity.getmAmbientTemperature_str());
+            values.put(DBHelper.COL_SESSION_ID, entity.getSessionid());
 
             db.insert(DBHelper.sensor_table, null, values);
 

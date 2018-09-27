@@ -26,6 +26,8 @@ public class CSVHelper {
 
     public static final String CSV_UserInteract = "UserInteraction.csv";
     public static final String CSV_CheckService_alive = "CheckService.csv";
+    public static final String CSV_Wifi = "CheckWifi.csv";
+
     public static final String CSV_ESM = "CheckESM.csv";
     public static final String CSV_CAR = "CheckCAR.csv";
     public static final String CSV_CHECK_SESSION = "CheckSession.csv";

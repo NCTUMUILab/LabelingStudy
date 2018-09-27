@@ -119,6 +119,20 @@ public class SessionManager {
         return SessionManager.instance;
     }
 
+    public static int getOngoingSessionId(){
+
+        int session_id = -1;
+
+        int countOfOngoingSession = mOngoingSessionIdList.size();
+
+        //if there exists an ongoing session
+        if (countOfOngoingSession > 0){
+            session_id = mOngoingSessionIdList.get(0);
+        }
+
+        return session_id;
+    }
+
     public static boolean isSessionOngoing(int sessionId) {
 
         Log.d(TAG, " [test combine] tyring to see if the session is ongoing:" + sessionId);

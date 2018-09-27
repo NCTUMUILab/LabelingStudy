@@ -55,6 +55,7 @@ import labelingStudy.nctu.minuku.model.DataRecord.LocationDataRecord;
 import labelingStudy.nctu.minuku.model.DataRecord.TransportationModeDataRecord;
 import labelingStudy.nctu.minuku.model.MinukuStreamSnapshot;
 import labelingStudy.nctu.minuku.model.Session;
+import labelingStudy.nctu.minuku.streamgenerator.ActivityRecognitionStreamGenerator;
 import labelingStudy.nctu.minuku.streamgenerator.TransportationModeStreamGenerator;
 import labelingStudy.nctu.minukucore.event.IsDataExpectedEvent;
 import labelingStudy.nctu.minukucore.event.NoDataChangeEvent;
@@ -263,7 +264,7 @@ public class MinukuStreamManager implements StreamManager {
             Log.d(TAG,"in setTransportationModeDataRecord, currentWork is "+currentWork);
 
             //in PART, the Session is controlled by the user, no need to detect by the app.
-            if(!currentWork.equals("PART")) {
+            if(!currentWork.equals(context.getResources().getString(R.string.task_PART))) {
 
                 //if the current activity is different from the latest one
                 if (!this.transportationModeDataRecord.getConfirmedActivityString().equals(transportationModeDataRecord.getConfirmedActivityString())) {
@@ -368,16 +369,16 @@ public class MinukuStreamManager implements StreamManager {
                         int sessionIdOfLastSession = lastSession.getId();
                         boolean emptySessionOn = SessionManager.isSessionEmptyOngoing(sessionIdOfLastSession);
 
-                        Log.d(TAG, "[test triggering] is CAR ? " + (currentWork.equals("CAR")));
+                        Log.d(TAG, "[test triggering] is CAR ? " + (currentWork.equals(context.getResources().getString(R.string.task_CAR))));
                         Log.d(TAG, "[test triggering] is emptySessionOn ? " + emptySessionOn);
-                        Log.d(TAG, "[test triggering] is CAR & emptySessionOn ? " + (currentWork.equals("CAR") && emptySessionOn));
+                        Log.d(TAG, "[test triggering] is CAR & emptySessionOn ? " + (currentWork.equals(context.getResources().getString(R.string.task_CAR)) && emptySessionOn));
 
-                        CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_SESSION, " is CAR ? "+(currentWork.equals("CAR")));
+                        CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_SESSION, " is CAR ? "+(currentWork.equals(context.getResources().getString(R.string.task_CAR))));
                         CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_SESSION, " is emptySessionOn ? "+emptySessionOn);
-                        CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_SESSION, " is CAR & emptySessionOn ? "+(currentWork.equals("CAR") && emptySessionOn));
+                        CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_SESSION, " is CAR & emptySessionOn ? "+(currentWork.equals(context.getResources().getString(R.string.task_CAR)) && emptySessionOn));
 
                         //if there is an emptySession, update it to the next different system detected transportationMode
-                        if (currentWork.equals("CAR") && emptySessionOn) {
+                        if (currentWork.equals(context.getResources().getString(R.string.task_CAR)) && emptySessionOn) {
 
                             CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_SESSION, " update the empty session");
 
@@ -495,20 +496,20 @@ public class MinukuStreamManager implements StreamManager {
 
                         final Session sessionJustStart = SessionManager.getLastSession();
 
-                        if (currentWork.equals("ESM")) {
+                        if (currentWork.equals(context.getResources().getString(R.string.task_ESM))) {
 
                             Log.d(TAG, "[test triggering] show session StartTime : "+sessionJustStart.getStartTime());
                             Log.d(TAG, "[test triggering] show session StartTime String : "+ScheduleAndSampleManager.getTimeString(sessionJustStart.getStartTime()));
 
-                            //TODO add the session's startTime to remind them
-                            sendNotification(context, sessionJustStart.getStartTime());
+                            String sessionTransportation = getTransportationNameOrSite(sessionJustStart, context);
+                            sendNotification(context, sessionJustStart.getStartTime(), sessionTransportation);
 
                             String afterSendESM = "After sending ESM";
                             CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_SESSION, afterSendESM);
 
                             Log.d(TAG, "[test triggering] ESM Notification");
 
-                        } else if (currentWork.equals("CAR")) {
+                        } else if (currentWork.equals(context.getResources().getString(R.string.task_CAR))) {
 
                             //CAR need to be in the start of the session, after a threshold of the time, send the notification to remind the user
 
@@ -533,8 +534,8 @@ public class MinukuStreamManager implements StreamManager {
                                         //if the user hasn't pressed the current trip(Session); after ending a trip(session), send a notification to the user
                                         if (!ongoingSession.isUserPress()) {
 
-                                            //TODO add the session's startTime to remind them
-                                            sendNotification(context, sessionJustStart.getStartTime());
+                                            String sessionTransportation = getTransportationNameOrSite(sessionJustStart, context);
+                                            sendNotification(context, sessionJustStart.getStartTime(), sessionTransportation);
 
                                             String afterSendCAR = "After sending CAR";
                                             CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_SESSION, afterSendCAR);
@@ -552,7 +553,7 @@ public class MinukuStreamManager implements StreamManager {
                                         //the ongoing session might be removed because of the empty ongoing one.
                                     }else{
 
-                                        String checkCAR = "the ongoing session is removed, assumed it was checkpoioned";
+                                        String checkCAR = "the ongoing session is removed, assumed it was checkpointed";
                                         CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_SESSION, checkCAR);
 
                                         Log.d(TAG, "[test triggering] "+ checkCAR);
@@ -571,13 +572,37 @@ public class MinukuStreamManager implements StreamManager {
         }
     }
 
-    private void sendNotification(Context context, long startTime){
+    private String getTransportationNameOrSite(Session sessionJustStart, Context context){
+
+        ArrayList<Annotation> sessionTransportations = sessionJustStart.getAnnotationsSet().getAnnotationByTag(Constants.ANNOTATION_TAG_DETECTED_TRANSPORTATION_ACTIVITY);
+
+        String sessionTransportation = "";
+
+        if(sessionTransportations.size() > 0)
+            sessionTransportation = sessionTransportations.get(sessionTransportations.size()-1).getContent();
+
+        if(sessionTransportation.equals("static")){
+
+            ArrayList<Annotation> sessionSites = sessionJustStart.getAnnotationsSet().getAnnotationByTag(Constants.ANNOTATION_TAG_DETECTED_SITENAME);
+
+            if(sessionSites.size() > 0)
+                sessionTransportation = sessionSites.get(sessionSites.size()-1).getContent();
+        }else{
+
+            //TODO convert into Chinese name
+            sessionTransportation = getTrafficInChinese(sessionTransportation, context);
+        }
+
+        return sessionTransportation;
+    }
+
+    private void sendNotification(Context context, long startTime, String sessionTransportation){
 
         NotificationManager mNotificationManager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
         SimpleDateFormat sdf_ampm_hhmm = new SimpleDateFormat(Constants.DATE_FORMAT_AMPM_HOUR_MIN);
-        String notificationText = "您有新的移動紀錄"+"\r\n"+"始於 "+ScheduleAndSampleManager.getTimeString(startTime, sdf_ampm_hhmm);
+        String notificationText = "您有新的移動紀錄 : "+sessionTransportation+"\r\n"+"始於 "+ScheduleAndSampleManager.getTimeString(startTime, sdf_ampm_hhmm);
         Notification notification = getNotification(notificationText, context);
 
         mNotificationManager.notify(MinukuNotificationManager.reminderNotificationID, notification);
@@ -615,6 +640,23 @@ public class MinukuStreamManager implements StreamManager {
 
     public void setLocationDataRecord(LocationDataRecord locationDataRecord){
         this.locationDataRecord = locationDataRecord;
+    }
+
+    private String getTrafficInChinese(String activity, Context context){
+
+        Log.d(TAG, "getTrafficInChinese activity : "+ activity);
+
+        switch (activity){
+
+            case ActivityRecognitionStreamGenerator.STRING_DETECTED_ACTIVITY_ON_FOOT:
+                return context.getResources().getString(R.string.walk_activity_type_in_chinese);
+            case ActivityRecognitionStreamGenerator.STRING_DETECTED_ACTIVITY_ON_BICYCLE:
+                return context.getResources().getString(R.string.bike_activity_type_in_chinese);
+            case ActivityRecognitionStreamGenerator.STRING_DETECTED_ACTIVITY_IN_VEHICLE:
+                return context.getResources().getString(R.string.car_activity_type_in_chinese);
+        }
+
+        return activity;
     }
 
     public LocationDataRecord getLocationDataRecord(){

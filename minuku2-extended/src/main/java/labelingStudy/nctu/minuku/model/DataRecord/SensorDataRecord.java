@@ -27,6 +27,7 @@ public class SensorDataRecord implements DataRecord {
     protected boolean isCopiedToPublicPool;
     protected JSONObject mData;
     protected String mTimestring;
+    private String sessionid;
 
     public SensorDataRecord(String mAccele_str, String mGyroscope_str, String mGravity_str, String mLinearAcceleration_str,
                             String mRotationVector_str, String mProximity_str, String mMagneticField_str, String mLight_str,
@@ -48,6 +49,27 @@ public class SensorDataRecord implements DataRecord {
                 +" mMagneticField_str "+mMagneticField_str+" mLight_str "+mLight_str+" mPressure_str "+mPressure_str
                 +" mRelativeHumidity_str "+mRelativeHumidity_str+" mAmbientTemperature_str "+mAmbientTemperature_str);
 
+    }
+
+    public SensorDataRecord(String mAccele_str, String mGyroscope_str, String mGravity_str, String mLinearAcceleration_str,
+                            String mRotationVector_str, String mProximity_str, String mMagneticField_str, String mLight_str,
+                            String mPressure_str, String mRelativeHumidity_str, String mAmbientTemperature_str, String sessionid){
+        this.mAccele_str = mAccele_str;
+        this.mGyroscope_str = mGyroscope_str;
+        this.mGravity_str = mGravity_str;
+        this.mLinearAcceleration_str = mLinearAcceleration_str;
+        this.mRotationVector_str = mRotationVector_str;
+        this.mProximity_str = mProximity_str;
+        this.mMagneticField_str = mMagneticField_str;
+        this.mLight_str = mLight_str;
+        this.mPressure_str = mPressure_str;
+        this.mRelativeHumidity_str = mRelativeHumidity_str;
+        this.mAmbientTemperature_str = mAmbientTemperature_str;
+        this.sessionid = sessionid;
+    }
+
+    public String getSessionid() {
+        return sessionid;
     }
 
     public ArrayList<Integer> getSavedSessionIds() {

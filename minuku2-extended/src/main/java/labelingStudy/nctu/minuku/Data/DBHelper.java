@@ -197,8 +197,8 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String location_table = "Location";
     public static final String activityRecognition_table = "ActivityRecognition";
     public static final String transportationMode_table = "TransportationMode";
-    public static final String annotate_table = "Annotate";
-    public static final String trip_table = "Trip";
+//    public static final String annotate_table = "Annotate";
+//    public static final String trip_table = "Trip";
     public static final String ringer_table = "Ringer";
     public static final String battery_table = "Battery";
     public static final String connectivity_table = "Connectivity";
@@ -237,19 +237,21 @@ public class DBHelper extends SQLiteOpenHelper {
         createConvenientSiteTable(db);
         createCustomSiteTable(db);
         createSessionTable(db);
+//        createAnnotationTable(db);
+//        createTripTable(db);
+
         createTransportationModeTable(db);
         createARTable(db);
         createLocationTable(db);
-        createTripTable(db);
         createRingerTable(db);
         createBatteryTable(db);
-        createUserInteractionTable(db);
         createConnectivityTable(db);
         createAppUsageTable(db);
         createSensorTable(db);
         createAccessibilityTable(db);
         createTelephonyTable(db);
-        createAnnotationTable(db);
+
+        createUserInteractionTable(db);
     }
 
     @Override
@@ -289,7 +291,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(cmd);
     }
 
-    public void createAnnotationTable(SQLiteDatabase db){
+    /*public void createAnnotationTable(SQLiteDatabase db){
         Log.d(TAG,"create annotation table");
 
         String cmd = "CREATE TABLE " +
@@ -308,7 +310,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 ");";
 
         db.execSQL(cmd);
-    }
+    }*/
 
     public void createTelephonyTable(SQLiteDatabase db){
 
@@ -323,7 +325,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 PhoneSignalType_col + " INT," +
                 GsmSignalStrength_col + " INT," +
                 LTESignalStrength_col + " INT," +
-                CdmaSignalStrengthLevel_col + " INT" +
+                CdmaSignalStrengthLevel_col + " INT," +
+                COL_SESSION_ID + " TEXT" +
                 ");";
 
         db.execSQL(cmd);
@@ -339,7 +342,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 confirmTransportation_col + " TEXT, " +
                 suspectedTransportation_Time_col + " TEXT, " +
                 suspectedStartTransportation_col + " TEXT, " +
-                suspectedStopTransportation_col + " TEXT " +
+                suspectedStopTransportation_col + " TEXT, " +
+                COL_SESSION_ID + " TEXT" +
                 ");";
 
         db.execSQL(cmd);
@@ -354,7 +358,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 TIME + " TEXT NOT NULL," +
                 ScreenStatus_col+" TEXT," +
                 Latest_Used_App_col+" TEXT," +
-                Latest_Foreground_Activity_col+" TEXT" +
+                Latest_Foreground_Activity_col+" TEXT," +
+                COL_SESSION_ID + " TEXT" +
                 ");";
 
         db.execSQL(cmd);
@@ -373,7 +378,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 IsWifiAvailable_col+" BOOLEAN," +
                 IsMobileAvailable_col+" BOOLEAN," +
                 IsWifiConnected_col+" BOOLEAN," +
-                IsMobileConnected_col+" BOOLEAN" +
+                IsMobileConnected_col+" BOOLEAN," +
+                COL_SESSION_ID + " TEXT" +
                 ");";
 
         db.execSQL(cmd);
@@ -389,7 +395,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 BatteryLevel_col+" INTEGER," +
                 BatteryPercentage_col+" FLOAT," +
                 BatteryChargingState_col+" TEXT," +
-                isCharging_col+" BOOLEAN" +
+                isCharging_col+" BOOLEAN," +
+                COL_SESSION_ID + " TEXT" +
                 ");";
 
         db.execSQL(cmd);
@@ -406,7 +413,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 pack_col + " TEXT," +
                 text_col + " TEXT," +
                 type_col + " TEXT," +
-                extra_col + " TEXT" +
+                extra_col + " TEXT," +
+                COL_SESSION_ID + " TEXT" +
                 ");";
 
         db.execSQL(cmd);
@@ -425,8 +433,9 @@ public class DBHelper extends SQLiteOpenHelper {
                 StreamVolumeNotification_col+" INTEGER," +
                 StreamVolumeRing_col+" INTEGER," +
                 StreamVolumeVoicecall_col+" INTEGER," +
-                StreamVolumeSystem_col+" INTEGER" +
-                ");";
+                StreamVolumeSystem_col+" INTEGER," +
+                COL_SESSION_ID + " TEXT" +
+        ");";
 
         db.execSQL(cmd);
     }
@@ -455,7 +464,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 id+" INTEGER PRIMARY KEY NOT NULL, " +
                 TIME + " TEXT NOT NULL," +
                 MostProbableActivity_col+" TEXT," +
-                ProbableActivities_col +" TEXT " +
+                ProbableActivities_col +" TEXT, " +
+                COL_SESSION_ID + " TEXT" +
                 ");";
 
         db.execSQL(cmd);
@@ -481,7 +491,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(cmd);
     }
 
-    public void createTripTable(SQLiteDatabase db){
+    /*public void createTripTable(SQLiteDatabase db){
 
         Log.d(TAG,"create trip table");
 
@@ -499,7 +509,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 ");";
 
         db.execSQL(cmd);
-    }
+    }*/
 
     private void createSensorTable(SQLiteDatabase db) {
 
@@ -519,7 +529,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 LIGHT_col + " TEXT," +
                 PRESSURE_col + " TEXT," +
                 RELATIVE_HUMIDITY_col + " TEXT," +
-                AMBIENT_TEMPERATURE_col + " TEXT" +
+                AMBIENT_TEMPERATURE_col + " TEXT," +
+                COL_SESSION_ID + " TEXT" +
                 ");";
 
         db.execSQL(cmd);

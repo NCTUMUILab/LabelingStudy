@@ -400,7 +400,7 @@ public class PlaceSelection extends FragmentActivity implements OnMapReadyCallba
         }else{
 
             Timeline.selectedSiteName = sitename;
-            Timeline.DchoosingSite.setText(Timeline.selectedSiteName);
+            Timeline.dChoosingSite.setText(Timeline.selectedSiteName);
         }
 
         PlaceSelection.this.finish();

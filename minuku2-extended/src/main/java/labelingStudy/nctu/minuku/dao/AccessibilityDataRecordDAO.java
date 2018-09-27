@@ -51,6 +51,7 @@ public class AccessibilityDataRecordDAO implements DAO<AccessibilityDataRecord> 
             values.put(DBHelper.text_col, entity.getText());
             values.put(DBHelper.type_col, entity.getType());
             values.put(DBHelper.extra_col, entity.getExtra());
+            values.put(DBHelper.COL_SESSION_ID, entity.getSessionid());
 
             db.insert(DBHelper.accessibility_table, null, values);
         } catch (NullPointerException e) {

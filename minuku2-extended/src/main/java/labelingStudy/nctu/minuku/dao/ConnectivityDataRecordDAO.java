@@ -58,6 +58,7 @@ public class ConnectivityDataRecordDAO implements DAO<ConnectivityDataRecord>{
             values.put(DBHelper.IsMobileAvailable_col, entity.getIsMobileAvailable());
             values.put(DBHelper.IsWifiConnected_col, entity.getIsWifiConnected());
             values.put(DBHelper.IsMobileConnected_col, entity.getIsMobileConnected());
+            values.put(DBHelper.COL_SESSION_ID, entity.getSessionid());
 
             db.insert(DBHelper.connectivity_table, null, values);
         }

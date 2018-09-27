@@ -55,6 +55,7 @@ public class BatteryDataRecordDAO implements DAO<BatteryDataRecord> {
             values.put(DBHelper.BatteryPercentage_col, entity.getBatteryPercentage());
             values.put(DBHelper.BatteryChargingState_col, entity.getBatteryChargingState());
             values.put(DBHelper.isCharging_col, entity.getisCharging());
+            values.put(DBHelper.COL_SESSION_ID, entity.getSessionid());
 
             db.insert(DBHelper.battery_table, null, values);
         }
