@@ -3,12 +3,10 @@ package labelingStudy.nctu.minuku.service;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.google.android.gms.location.ActivityRecognitionResult;
 import com.google.android.gms.location.DetectedActivity;
-import com.opencsv.CSVWriter;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -98,9 +96,8 @@ public class ActivityRecognitionService extends IntentService {
 
             }
 
-            stopARRecordExpirationTimer();
-
-            startARRecordExpirationTimer();
+//            stopARRecordExpirationTimer();
+//            startARRecordExpirationTimer();
         }
     }
 
@@ -155,7 +152,7 @@ public class ActivityRecognitionService extends IntentService {
 
 
     /** create NA activity label when it's over 10 minutes not receiving an AR label
-     * the timeer is reset when the onHandleEvent receives a label**/
+     * the timer is reset when the onHandleEvent receives a label**/
     public void initializeARRecordExpirationTimerTask() {
 
         ARRecordExpirationTimerTask = new TimerTask() {
@@ -175,8 +172,7 @@ public class ActivityRecognitionService extends IntentService {
                         e.printStackTrace();
                     }
 
-                    ActivityRecognitionDataRecord activityRecognitionDataRecord
-                            = new ActivityRecognitionDataRecord();
+                    ActivityRecognitionDataRecord activityRecognitionDataRecord = new ActivityRecognitionDataRecord();
                     //update the empty AR to MinukuStreamManager
                     MinukuStreamManager.getInstance().setActivityRecognitionDataRecord(activityRecognitionDataRecord);
 

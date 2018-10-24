@@ -52,7 +52,7 @@
         android:drawableRight="@drawable/if_ic_keyboard_arrow_right_48px_352468"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
-        android:text="汽車(汽機車)"
+        android:text="汽機車"
         android:textSize="24sp" />
 
     <Button

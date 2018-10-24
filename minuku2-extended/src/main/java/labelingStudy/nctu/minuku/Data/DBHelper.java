@@ -182,23 +182,15 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final int COL_INDEX_SESSION_TYPE = 8;
     public static final int COL_INDEX_SESSION_HIDEDORNOT = 9;
 
-    //Annotate
-    public static final String StartTime_col = "StartTime";
-    public static final String EndTime_col = "EndTime";
-    public static final String StartTimeString_col = "StartTimeString";
-    public static final String EndTimeString_col = "EndTimeString";
-    public static final String Activity_col = "Activity";
-    public static final String Annotation_Goal_col = "Annotate_Goal";
-    public static final String Annotation_SpecialEvent_col = "Annotate_SpecialEvent";
-    public static final String SiteName_col = "SiteName";
-    public static final String uploaded_col = "uploaded";
+    //ActionLog
+    public static final String action_col = "Action";
+    public static final String userUnlock_col = "UserUnlock";
 
     //table name
     public static final String location_table = "Location";
     public static final String activityRecognition_table = "ActivityRecognition";
     public static final String transportationMode_table = "TransportationMode";
-//    public static final String annotate_table = "Annotate";
-//    public static final String trip_table = "Trip";
+    public static final String actionLog_table = "ActionLog";
     public static final String ringer_table = "Ringer";
     public static final String battery_table = "Battery";
     public static final String connectivity_table = "Connectivity";
@@ -237,8 +229,6 @@ public class DBHelper extends SQLiteOpenHelper {
         createConvenientSiteTable(db);
         createCustomSiteTable(db);
         createSessionTable(db);
-//        createAnnotationTable(db);
-//        createTripTable(db);
 
         createTransportationModeTable(db);
         createARTable(db);
@@ -251,7 +241,7 @@ public class DBHelper extends SQLiteOpenHelper {
         createAccessibilityTable(db);
         createTelephonyTable(db);
 
-        createUserInteractionTable(db);
+        createActionLogTable(db);
     }
 
     @Override
@@ -270,8 +260,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 convenientsite_table + "(" +
                 id+" INTEGER PRIMARY KEY NOT NULL, " +
                 convenientsite_col+" TEXT, " +
-                convenientsite_latitude_col+" FLOAT, "+
-                convenientsite_longitude_col +" FLOAT " +
+                convenientsite_latitude_col+" TEXT, "+
+                convenientsite_longitude_col +" TEXT " +
                 ");";
 
         db.execSQL(cmd);
@@ -284,33 +274,29 @@ public class DBHelper extends SQLiteOpenHelper {
                 customsite_table + "(" +
                 id+" INTEGER PRIMARY KEY NOT NULL, " +
                 customsitename_col+" TEXT, " +
-                customsite_latitude_col+" FLOAT, "+
-                customsite_longitude_col +" FLOAT " +
+                customsite_latitude_col+" TEXT, "+
+                customsite_longitude_col +" TEXT " +
                 ");";
 
         db.execSQL(cmd);
     }
 
-    /*public void createAnnotationTable(SQLiteDatabase db){
-        Log.d(TAG,"create annotation table");
+    public void createActionLogTable(SQLiteDatabase db){
+
+        //TODO add a col for inserting the user interaction into the ActionLog table
+        //TODO might need to make action log insert a "" blank into the table to consistent the table size with sessionid
 
         String cmd = "CREATE TABLE " +
-                annotate_table + "(" +
-                id + " INTEGER PRIMARY KEY NOT NULL," +
-                StartTime_col + " TEXT NOT NULL," +
-                EndTime_col + " TEXT NOT NULL," +
-                StartTimeString_col + " TEXT NOT NULL," +
-                EndTimeString_col + " TEXT NOT NULL," +
-                sessionid_col + " TEXT," +
-                Activity_col + " TEXT," +
-                Annotation_Goal_col + " TEXT," +
-                Annotation_SpecialEvent_col + " TEXT," +
-                SiteName_col + " TEXT," +
-                uploaded_col + " BOOLEAN" +
+                actionLog_table + "(" +
+                id+" INTEGER PRIMARY KEY NOT NULL, " +
+                TIME + " TEXT NOT NULL," +
+                action_col+" TEXT, " +
+                userUnlock_col + " TEXT "+
                 ");";
 
         db.execSQL(cmd);
-    }*/
+
+    }
 
     public void createTelephonyTable(SQLiteDatabase db){
 
@@ -478,8 +464,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 location_table + "(" +
                 id+" INTEGER PRIMARY KEY NOT NULL, " +
                 TIME + " TEXT NOT NULL," +
-                latitude_col+" FLOAT,"+
-                longitude_col +" FLOAT, " +
+                latitude_col+" TEXT,"+
+                longitude_col +" TEXT, " +
                 Accuracy_col + " FLOAT, " +
                 Altitude_col +" FLOAT," +
                 Speed_col +" FLOAT," +
@@ -490,26 +476,6 @@ public class DBHelper extends SQLiteOpenHelper {
 
         db.execSQL(cmd);
     }
-
-    /*public void createTripTable(SQLiteDatabase db){
-
-        Log.d(TAG,"create trip table");
-
-        String cmd = "CREATE TABLE " +
-                trip_table + "(" +
-                id+" INTEGER PRIMARY KEY NOT NULL, " +
-                TIME + " TEXT NOT NULL," +
-                sessionid_col + " TEXT," +
-                latitude_col+" FLOAT,"+
-                longitude_col +" FLOAT, " +
-                Accuracy_col + " FLOAT," +
-                trip_transportation_col + " TEXT, " +
-                trip_site_col + " TEXT, " +
-                userPressOrNot_col + " TEXT" +
-                ");";
-
-        db.execSQL(cmd);
-    }*/
 
     private void createSensorTable(SQLiteDatabase db) {
 
@@ -557,6 +523,50 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(cmd);
     }
 
+    public static long insertActionLogTable(long createdTime, String action){
+
+        long rowId = 0;
+
+        try {
+            SQLiteDatabase db = DBManager.getInstance().openDatabase();
+            ContentValues values = new ContentValues();
+
+            values.put(DBHelper.TIME, createdTime);
+            values.put(DBHelper.action_col, action);
+            values.put(DBHelper.userUnlock_col, "");
+
+            rowId = db.insert(DBHelper.actionLog_table, null, values);
+        }
+        catch(NullPointerException e){
+            //e.printStackTrace();
+            rowId = -1;
+        }
+
+        return rowId;
+    }
+
+    public static long insertActionLogTable(long createdTime, String userpresent, String userunlock){
+
+        long rowId = 0;
+
+        try {
+            SQLiteDatabase db = DBManager.getInstance().openDatabase();
+            ContentValues values = new ContentValues();
+
+            values.put(DBHelper.TIME, createdTime);
+            values.put(DBHelper.action_col, userpresent);
+            values.put(DBHelper.userUnlock_col, userunlock);
+
+            rowId = db.insert(DBHelper.actionLog_table, null, values);
+        }
+        catch(NullPointerException e){
+            //e.printStackTrace();
+            rowId = -1;
+        }
+
+        return rowId;
+    }
+
     public static void insertConvenientSiteTable(String sitename, LatLng markerLocation){
 
         ContentValues values = new ContentValues();
@@ -588,6 +598,9 @@ public class DBHelper extends SQLiteOpenHelper {
         try {
 
             SQLiteDatabase db = DBManager.getInstance().openDatabase();
+
+            Log.d(TAG,"Going to store in DB");
+            Log.d(TAG,"lat : "+markerLocation.latitude+" lng : "+markerLocation.longitude);
 
             values.put(DBHelper.customsitename_col, sitename);
             values.put(DBHelper.customsite_latitude_col , markerLocation.latitude);
@@ -737,7 +750,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public static ArrayList<String> querySession(int sessionId){
 
-        Log.d(TAG, "[test show trip]query session in DBHelper with session id" + sessionId);
+        Log.d(TAG, "[test show trip] query session in DBHelper with session id" + sessionId);
 
         ArrayList<String> rows = new ArrayList<String>();
 
@@ -746,7 +759,6 @@ public class DBHelper extends SQLiteOpenHelper {
             SQLiteDatabase db = DBManager.getInstance().openDatabase();
 
             String sql = "SELECT *"  +" FROM " + SESSION_TABLE_NAME +
-                    //condition with session id
                     " where " + COL_ID + " = " + sessionId;
 
             Log.d(TAG, "[test show trip querySession] the query statement is " +sql);
@@ -765,7 +777,6 @@ public class DBHelper extends SQLiteOpenHelper {
             cursor.close();
 
             DBManager.getInstance().closeDatabase();
-
 
         }catch (Exception e){
 
@@ -1193,11 +1204,10 @@ public class DBHelper extends SQLiteOpenHelper {
 
         }catch (Exception e){
 
+            Log.e(TAG, "Exception", e);
         }
 
-
         return rows;
-
     }
 
     public static ArrayList<String> querySecondLastSessions() {

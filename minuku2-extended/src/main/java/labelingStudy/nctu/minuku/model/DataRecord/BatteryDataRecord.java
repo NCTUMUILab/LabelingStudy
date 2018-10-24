@@ -28,10 +28,6 @@ public class BatteryDataRecord implements DataRecord{
 
     public BatteryDataRecord(int BatteryLevel, float BatteryPercentage, String BatteryChargingState, boolean isCharging){
         this.creationTime = new Date().getTime();
-        Log.d(TAG, "creationTime : "+creationTime);
-        Log.d(TAG, "creationTime String : "+getmillisecondToDateWithTime(creationTime));
-//        this.taskDayCount = Constants.TaskDayCount;
-//        this.hour = getmillisecondToHour(creationTime);
         this.BatteryLevel = BatteryLevel;
         this.BatteryPercentage = BatteryPercentage;
         this.BatteryChargingState = BatteryChargingState;
@@ -43,16 +39,20 @@ public class BatteryDataRecord implements DataRecord{
 
     public BatteryDataRecord(int BatteryLevel, float BatteryPercentage, String BatteryChargingState, boolean isCharging, String sessionid){
         this.creationTime = new Date().getTime();
-        Log.d(TAG, "creationTime : "+creationTime);
-        Log.d(TAG, "creationTime String : "+getmillisecondToDateWithTime(creationTime));
-//        this.taskDayCount = Constants.TaskDayCount;
-//        this.hour = getmillisecondToHour(creationTime);
         this.BatteryLevel = BatteryLevel;
         this.BatteryPercentage = BatteryPercentage;
         this.BatteryChargingState = BatteryChargingState;
         this.isCharging = isCharging;
         this.sessionid = sessionid;
+    }
 
+    public BatteryDataRecord(int BatteryLevel, float BatteryPercentage, String BatteryChargingState, boolean isCharging, String sessionid, long detectedTime){
+        this.creationTime = detectedTime;
+        this.BatteryLevel = BatteryLevel;
+        this.BatteryPercentage = BatteryPercentage;
+        this.BatteryChargingState = BatteryChargingState;
+        this.isCharging = isCharging;
+        this.sessionid = sessionid;
     }
 
     public String getSessionid() {

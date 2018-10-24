@@ -93,13 +93,11 @@ public class Constants {
     public static final String YES = "YES";
     public static final String NO = "NO";
 
+    public static final int INVALID_INT_VALUE = -1;
     public static final long INVALID_TIME_VALUE = -1;
+    public static final String INVALID_STRING_VALUE = "NA";
 
-    public static int Day = c.get(Calendar.DAY_OF_MONTH);
-    public static int Year = c.get(Calendar.YEAR);
-    public static int Month = c.get(Calendar.MONTH) + 1;
-
-    //sharedPrefS
+    //sharedPrefs
     public static final String sharedPrefString = "labelingStudy.nctu.minuku_2";
 
     //file path
@@ -114,8 +112,10 @@ public class Constants {
     public static final String ANNOTATION_Label_GOAL = "Goal";
     public static final String ANNOTATION_Label_SPECIALEVENT = "SpecialEvent";
     public static final String ANNOTATION_Label_SITENAME = "Sitename";
+    public static final String ANNOTATION_Label_SITELOCATION = "SiteLocation";
+    public static final String ANNOTATION_Label_TIME = "LabeledTime";
 
-    public static final String UNKNOWN_SITE = "未知";
+    public static final String UNKNOWN_SITE = "未知定點";
 
     public static final int SESSION_NEVER_GET_HIDED_FLAG = 0;
     public static final int SESSION_IS_HIDED_FLAG = 1;
@@ -131,7 +131,6 @@ public class Constants {
     public static final long CONTEXT_SOURCE_INVALID_VALUE_FLOAT = -9999;
     public static final int SENSOR_QUEUE_SIZE = 20;
 
-
     //default queue size
     public static final int DEFAULT_QUEUE_SIZE = 20;
 
@@ -146,7 +145,6 @@ public class Constants {
 
     public static final float LOCATION_MINUMUM_DISPLACEMENT_UPDATE_THRESHOLD = 50 ;
 
-    /* from NCTU */
     public static String current_timer_state_tag = "current"; //for getTag
 
     public static String current_timer_state = "home";
@@ -164,9 +162,12 @@ public class Constants {
     public static int TaskDayCount = -1;
 
     public static final int TIMER_UPDATE_THREAD_SIZE = 1;
-    public static final int NOTIFICATION_UPDATE_THREAD_SIZE = 1;
+    public static final int MAIN_THREAD_SIZE = 2;
     public static final int STREAM_UPDATE_FREQUENCY = 10;
     public static final int STREAM_UPDATE_DELAY = 0;
+
+    public static final int ISALIVE_UPDATE_FREQUENCY = 1 * 60 * 60;
+    public static final int ISALIVE_UPDATE_DELAY = 0;
 
     public static final String ACTIVITY_CONFIDENCE_CONNECTOR = ":";
 

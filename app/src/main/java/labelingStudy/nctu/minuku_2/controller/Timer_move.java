@@ -14,6 +14,9 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import labelingStudy.nctu.minuku.Data.DBHelper;
+import labelingStudy.nctu.minuku.Utilities.ScheduleAndSampleManager;
+import labelingStudy.nctu.minuku.config.ActionLogVar;
 import labelingStudy.nctu.minuku.config.Constants;
 import labelingStudy.nctu.minuku.manager.MinukuNotificationManager;
 import labelingStudy.nctu.minuku.manager.SessionManager;
@@ -144,12 +147,15 @@ public class Timer_move extends AppCompatActivity {
 
     private void imagebuttonWork(String activityType){
 
-        ArrayList<Integer> ongoingSessionIdList = SessionManager.getOngoingSessionIdList();
+//        ArrayList<Integer> ongoingSessionIdList = SessionManager.getOngoingSessionIdList();
+
+        int ongoingSessionid = sharedPrefs.getInt("ongoingSessionid", Constants.INVALID_INT_VALUE);
 
         //if there is an ongoing session
-        if(ongoingSessionIdList.size()>0){
+//        if(ongoingSessionIdList.size()>0){
+        if(ongoingSessionid != Constants.INVALID_INT_VALUE){
 
-            int sessionId = ongoingSessionIdList.get(0);
+            int sessionId = ongoingSessionid;
             Session ongoingSession = SessionManager.getSession(sessionId);
 
             AnnotationSet ongoingAnnotationSet = ongoingSession.getAnnotationsSet();
@@ -193,11 +199,25 @@ public class Timer_move extends AppCompatActivity {
         }
     }
 
+    private ImageButton.OnClickListener walkingTime = new ImageButton.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+
+            String buttonActivity = "walk";
+
+            DBHelper.insertActionLogTable(ScheduleAndSampleManager.getCurrentTimeInMillis(), ActionLogVar.VIEW_IMAGE_VIEW_BUTTON+" - "+ ActionLogVar.ACTION_CLICK+" - "+ActionLogVar.MEANING_WALK+" - "+TAG);
+
+            imagebuttonWork(buttonActivity);
+        }
+    };
+
     private ImageButton.OnClickListener bikingTime = new ImageButton.OnClickListener() {
         @Override
         public void onClick(View view) {
 
             String buttonActivity = "bike";
+
+            DBHelper.insertActionLogTable(ScheduleAndSampleManager.getCurrentTimeInMillis(), ActionLogVar.VIEW_IMAGE_VIEW_BUTTON+" - "+ ActionLogVar.ACTION_CLICK+" - "+ActionLogVar.MEANING_BIKE+" - "+TAG);
 
             imagebuttonWork(buttonActivity);
         }
@@ -209,15 +229,7 @@ public class Timer_move extends AppCompatActivity {
 
             String buttonActivity = "car";
 
-            imagebuttonWork(buttonActivity);
-        }
-    };
-
-    private ImageButton.OnClickListener walkingTime = new ImageButton.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-
-            String buttonActivity = "walk";
+            DBHelper.insertActionLogTable(ScheduleAndSampleManager.getCurrentTimeInMillis(), ActionLogVar.VIEW_IMAGE_VIEW_BUTTON+" - "+ ActionLogVar.ACTION_CLICK+" - "+ActionLogVar.MEANING_CAR+" - "+TAG);
 
             imagebuttonWork(buttonActivity);
         }
@@ -228,6 +240,8 @@ public class Timer_move extends AppCompatActivity {
         public void onClick(View v) {
 
             String buttonActivity = "static";
+
+            DBHelper.insertActionLogTable(ScheduleAndSampleManager.getCurrentTimeInMillis(), ActionLogVar.VIEW_IMAGE_VIEW_BUTTON+" - "+ ActionLogVar.ACTION_CLICK+" - "+ActionLogVar.MEANING_SITE+" - "+TAG);
 
             imagebuttonWork(buttonActivity);
         }

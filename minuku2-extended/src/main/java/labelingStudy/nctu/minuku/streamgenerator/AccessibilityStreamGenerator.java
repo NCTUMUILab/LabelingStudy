@@ -2,14 +2,15 @@ package labelingStudy.nctu.minuku.streamgenerator;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 
 import org.greenrobot.eventbus.EventBus;
 
+import labelingStudy.nctu.minuku.Utilities.ScheduleAndSampleManager;
 import labelingStudy.nctu.minuku.config.Constants;
 import labelingStudy.nctu.minuku.dao.AccessibilityDataRecordDAO;
 import labelingStudy.nctu.minuku.logger.Log;
 import labelingStudy.nctu.minuku.manager.MinukuDAOManager;
-import labelingStudy.nctu.minuku.manager.SessionManager;
 import labelingStudy.nctu.minuku.model.DataRecord.AccessibilityDataRecord;
 import labelingStudy.nctu.minuku.service.MobileAccessibilityService;
 import labelingStudy.nctu.minuku.stream.AccessibilityStream;
@@ -37,6 +38,10 @@ public class AccessibilityStreamGenerator extends AndroidStreamGenerator<Accessi
     private String type;
     private String extra;
 
+    private long detectedTime;
+
+    private SharedPreferences sharedPrefs;
+
     public AccessibilityStreamGenerator(Context applicationContext){
         super(applicationContext);
         this.mContext = applicationContext;
@@ -45,7 +50,11 @@ public class AccessibilityStreamGenerator extends AndroidStreamGenerator<Accessi
 
         mobileAccessibilityService = new MobileAccessibilityService(this);
 
-        pack = text = type = extra = "NA";
+        pack = text = type = extra = Constants.INVALID_STRING_VALUE;
+
+        detectedTime = Constants.INVALID_TIME_VALUE;
+
+        sharedPrefs = mContext.getSharedPreferences(Constants.sharedPrefString,Context.MODE_PRIVATE);
 
         this.register();
     }
@@ -83,27 +92,37 @@ public class AccessibilityStreamGenerator extends AndroidStreamGenerator<Accessi
 
         Log.d(TAG, "updateStream called");
 
-        int session_id = SessionManager.getOngoingSessionId();
+//        int session_id = SessionManager.getOngoingSessionId();
+
+        int session_id = sharedPrefs.getInt("ongoingSessionid", Constants.INVALID_INT_VALUE);
 
         AccessibilityDataRecord accessibilityDataRecord
-                = new AccessibilityDataRecord(pack, text, type, extra, String.valueOf(session_id));
+                = new AccessibilityDataRecord(pack, text, type, extra, detectedTime, String.valueOf(session_id));
         mStream.add(accessibilityDataRecord);
         Log.d(TAG,"pack = "+pack+" text = "+text+" type = "+type+" extra = "+extra);
+        Log.d(TAG, "detectedTime : "+ScheduleAndSampleManager.getTimeString(detectedTime));
         Log.d(TAG, "Accessibility to be sent to event bus" + accessibilityDataRecord);
+
+        //if there don't have any updates for 10 minutes, add the NA one to represent it
+        if((ScheduleAndSampleManager.getCurrentTimeInMillis() - detectedTime) >= Constants.MILLISECONDS_PER_MINUTE * 10
+                && (detectedTime != Constants.INVALID_TIME_VALUE)){
+
+            accessibilityDataRecord = new AccessibilityDataRecord(Constants.INVALID_STRING_VALUE,
+                    Constants.INVALID_STRING_VALUE, Constants.INVALID_STRING_VALUE, Constants.INVALID_STRING_VALUE, ScheduleAndSampleManager.getCurrentTimeInMillis(), String.valueOf(session_id));
+        }
+
         // also post an event.
         EventBus.getDefault().post(accessibilityDataRecord);
         try {
-            mDAO.add(accessibilityDataRecord);
 
+            mDAO.add(accessibilityDataRecord);
         } catch (DAOException e) {
             e.printStackTrace();
             return false;
-        }catch (NullPointerException e){ //Sometimes no data is normal
+        }catch (NullPointerException e){
             e.printStackTrace();
             return false;
         }
-
-//        pack = text = type = extra = "NA";
 
         return false;
     }
@@ -118,13 +137,14 @@ public class AccessibilityStreamGenerator extends AndroidStreamGenerator<Accessi
 
     }
 
-    public void setLatestInAppAction(String pack, String text, String type, String extra){
+    public void setLatestInAppAction(String pack, String text, String type, String extra, long detectedTime){
 
         this.pack = pack;
         this.text = text;
         this.type = type;
         this.extra = extra;
 
+        this.detectedTime = detectedTime;
     }
 
     @Override

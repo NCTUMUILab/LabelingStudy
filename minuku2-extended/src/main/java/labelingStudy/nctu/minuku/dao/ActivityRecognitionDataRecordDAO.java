@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import org.json.JSONObject;
 
@@ -14,7 +15,6 @@ import java.util.UUID;
 import java.util.concurrent.Future;
 
 import labelingStudy.nctu.minuku.Data.DBHelper;
-import labelingStudy.nctu.minuku.logger.Log;
 import labelingStudy.nctu.minuku.manager.DBManager;
 import labelingStudy.nctu.minuku.model.DataRecord.ActivityRecognitionDataRecord;
 import labelingStudy.nctu.minukucore.dao.DAO;
@@ -54,7 +54,6 @@ public class ActivityRecognitionDataRecordDAO implements DAO<ActivityRecognition
     public void add(ActivityRecognitionDataRecord entity) throws DAOException {
 
         Log.d(TAG, "Adding ActivityRecognition data record.");
-        //TODO store in CSV file.
 
         ContentValues values = new ContentValues();
 
@@ -62,35 +61,21 @@ public class ActivityRecognitionDataRecordDAO implements DAO<ActivityRecognition
             SQLiteDatabase db = DBManager.getInstance().openDatabase();
 
             values.put(DBHelper.TIME, entity.getCreationTime());
-//            values.put(DBHelper.TaskDayCount, entity.getTaskDayCount());
-//            values.put(DBHelper.HOUR, entity.getHour());
             values.put(DBHelper.MostProbableActivity_col, entity.getMostProbableActivity().toString());
             values.put(DBHelper.ProbableActivities_col, entity.getProbableActivities().toString());
+
             values.put(DBHelper.COL_SESSION_ID, entity.getSessionid());
 
             db.insert(DBHelper.activityRecognition_table, null, values);
         }
         catch(NullPointerException e){
+            Log.e(TAG, "NullPointerException", e);
             e.printStackTrace();
         }
         finally {
             values.clear();
             DBManager.getInstance().closeDatabase(); // Closing database connection
         }
-    }
-
-    public void query_counting(){
-        SQLiteDatabase db = DBManager.getInstance().openDatabase();
-        Cursor MostProbableActivityCursor = db.rawQuery("SELECT "+ DBHelper.MostProbableActivity_col +" FROM "+ DBHelper.activityRecognition_table, null);
-        Cursor ProbableActivitiesCursor = db.rawQuery("SELECT "+ DBHelper.ProbableActivities_col +" FROM "+ DBHelper.activityRecognition_table, null);
-
-        int MostProbableActivityrow = MostProbableActivityCursor.getCount();
-        int MostProbableActivitycol = MostProbableActivityCursor.getColumnCount();
-        int ProbableActivitiesrow = ProbableActivitiesCursor.getCount();
-        int ProbableActivitiescol = ProbableActivitiesCursor.getColumnCount();
-
-        Log.d(TAG,"MostProbableActivityrow : " + MostProbableActivityrow +" MostProbableActivitycol : " + MostProbableActivitycol+
-                " ProbableActivitiesrow : " + ProbableActivitiesrow+ " ProbableActivitiescol : " + ProbableActivitiescol);
     }
 
     @Override

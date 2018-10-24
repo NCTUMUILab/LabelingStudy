@@ -1,6 +1,7 @@
 package labelingStudy.nctu.minuku.streamgenerator;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.telephony.PhoneStateListener;
@@ -13,7 +14,6 @@ import labelingStudy.nctu.minuku.config.Constants;
 import labelingStudy.nctu.minuku.dao.TelephonyDataRecordDAO;
 import labelingStudy.nctu.minuku.logger.Log;
 import labelingStudy.nctu.minuku.manager.MinukuDAOManager;
-import labelingStudy.nctu.minuku.manager.SessionManager;
 import labelingStudy.nctu.minuku.model.DataRecord.TelephonyDataRecord;
 import labelingStudy.nctu.minuku.stream.TelephonyStream;
 import labelingStudy.nctu.minukucore.dao.DAOException;
@@ -21,12 +21,12 @@ import labelingStudy.nctu.minukucore.exception.StreamAlreadyExistsException;
 import labelingStudy.nctu.minukucore.exception.StreamNotFoundException;
 import labelingStudy.nctu.minukucore.stream.Stream;
 
-import static labelingStudy.nctu.minuku.manager.MinukuStreamManager.getInstance;
 import static android.telephony.TelephonyManager.CALL_STATE_IDLE;
 import static android.telephony.TelephonyManager.CALL_STATE_OFFHOOK;
 import static android.telephony.TelephonyManager.CALL_STATE_RINGING;
 import static android.telephony.TelephonyManager.NETWORK_TYPE_CDMA;
 import static android.telephony.TelephonyManager.NETWORK_TYPE_LTE;
+import static labelingStudy.nctu.minuku.manager.MinukuStreamManager.getInstance;
 
 /**
  * Created by Lucy on 2017/9/6.
@@ -48,10 +48,13 @@ public class TelephonyStreamGenerator extends AndroidStreamGenerator<TelephonyDa
     private int mCdmaSignalStrengthLevel; // 1, 2, 3, 4
     private int GeneralSignalStrength;
     private boolean isGSM = false;
+    private Context mContext;
+    private SharedPreferences sharedPrefs;
 
     public TelephonyStreamGenerator (Context applicationContext) {
 
         super(applicationContext);
+        this.mContext = applicationContext;
         this.mStream = new TelephonyStream(Constants.DEFAULT_QUEUE_SIZE);
         this.mDAO = MinukuDAOManager.getInstance().getDaoFor(TelephonyDataRecord.class);
         this.register();
@@ -65,6 +68,9 @@ public class TelephonyStreamGenerator extends AndroidStreamGenerator<TelephonyDa
         mCdmaSignalStrengthLevel = -9999;
         GeneralSignalStrength = -9999;
         isGSM = false;
+
+        sharedPrefs = mContext.getSharedPreferences(Constants.sharedPrefString,Context.MODE_PRIVATE);
+
     }
     @Override
     public void register() {
@@ -90,7 +96,9 @@ public class TelephonyStreamGenerator extends AndroidStreamGenerator<TelephonyDa
     public boolean updateStream() {
         Log.d(TAG, "updateStream called");
 
-        int session_id = SessionManager.getOngoingSessionId();
+//        int session_id = SessionManager.getOngoingSessionId();
+
+        int session_id = sharedPrefs.getInt("ongoingSessionid", Constants.INVALID_INT_VALUE);
 
         TelephonyDataRecord telephonyDataRecord = new TelephonyDataRecord(mNetworkOperatorName, mCallState
                 , mPhoneSignalType, mGsmSignalStrength, mLTESignalStrength_dbm, mCdmaSignalStrengthLevel, String.valueOf(session_id));

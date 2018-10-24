@@ -28,6 +28,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.Location;
 import android.os.Build;
 import android.os.Handler;
 import android.util.Log;
@@ -47,6 +48,7 @@ import labelingStudy.nctu.minuku.NearbyPlaces.GetUrl;
 import labelingStudy.nctu.minuku.R;
 import labelingStudy.nctu.minuku.Utilities.CSVHelper;
 import labelingStudy.nctu.minuku.Utilities.ScheduleAndSampleManager;
+import labelingStudy.nctu.minuku.Utilities.Utils;
 import labelingStudy.nctu.minuku.config.Constants;
 import labelingStudy.nctu.minuku.model.Annotation;
 import labelingStudy.nctu.minuku.model.AnnotationSet;
@@ -125,7 +127,14 @@ public class MinukuStreamManager implements StreamManager {
             }
             if(counter % streamGenerator.getUpdateFrequency() == 0) {
                 Log.d(TAG, "Calling update stream generator for " + streamGenerator.getClass());
-                streamGenerator.updateStream();
+                try{
+
+                    streamGenerator.updateStream();
+                }catch (Exception e){
+
+                    CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_SESSION, "Class : "+streamGenerator.getClass().getName());
+                    CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_SESSION, Utils.getStackTrace(e));
+                }
             }
         }
         counter++;
@@ -238,7 +247,7 @@ public class MinukuStreamManager implements StreamManager {
         return activityRecognitionDataRecord;
     }
 
-    public void setTransportationModeDataRecord(TransportationModeDataRecord transportationModeDataRecord, final Context context, SharedPreferences sharedPrefs){
+    public void setTransportationModeDataRecord(TransportationModeDataRecord transportationModeDataRecord, final Context context, final SharedPreferences sharedPrefs){
 
         Log.d(TAG, "[test triggering] incoming transportation: " + transportationModeDataRecord.getConfirmedActivityString());
 
@@ -247,7 +256,6 @@ public class MinukuStreamManager implements StreamManager {
         //the first time we see incoming transportation mode data
         if (this.transportationModeDataRecord==null){
 
-//            this.transportationModeDataRecord = transportationModeDataRecord;
             this.transportationModeDataRecord = new TransportationModeDataRecord(TransportationModeStreamGenerator.TRANSPORTATION_MODE_NAME_NA);
             Log.d(TAG, "[test triggering] test trip original null updated to " + this.transportationModeDataRecord.getConfirmedActivityString());
         }
@@ -300,16 +308,16 @@ public class MinukuStreamManager implements StreamManager {
                                 " with annotation string : " + annotationSet.toString() + ", end time : " + ScheduleAndSampleManager.getTimeString(endTimeOfLastSession) +
                                 ", startTime : " + ScheduleAndSampleManager.getTimeString(startTimeOfLastSession));
 
-                        boolean emptySessionOn = SessionManager.isSessionEmptyOngoing(sessionIdOfLastSession);
+                        boolean emptySessionOn = SessionManager.isSessionEmptyOngoing(sessionIdOfLastSession, sharedPrefs);
 
                         if (!this.transportationModeDataRecord.getConfirmedActivityString().equals(TransportationModeStreamGenerator.TRANSPORTATION_MODE_NAME_NA)) {
 
                             CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_SESSION, "not emptySessionOn ? "+(!emptySessionOn));
 
-                            //if there is an empty session, don't stop it
+                            //if there are no empty session, stop it
                             if(!emptySessionOn){
 
-                                CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_SESSION, "lastSession id : "+lastSession.getId() + " is empty Session ");
+                                CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_SESSION, "lastSession id : "+lastSession.getId() + " is not empty Session ");
 
                                 //if we end the current session, we should update its time and set a long enough flag
                                 long endTime = ScheduleAndSampleManager.getCurrentTimeInMillis();
@@ -340,16 +348,16 @@ public class MinukuStreamManager implements StreamManager {
                                 //end the current session
                                 SessionManager.endCurSession(lastSession);
 
-                                CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_SESSION, " End lastSession which is empty Session.");
+                                CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_SESSION, " End lastSession which is not empty Session.");
 
-                                sharedPrefs.edit().putInt("ongoingSessionid", -1).apply();
+                                sharedPrefs.edit().putInt("ongoingSessionid", Constants.INVALID_INT_VALUE).apply();
 
                                 CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_SESSION, " Update ongoing session id with : -1(invalid id)");
-
-                                addSessionFlag = true;
-
-                                CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_SESSION, " addSessionFlag : "+addSessionFlag);
                             }
+
+                            addSessionFlag = true;
+
+                            CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_SESSION, " addSessionFlag : "+addSessionFlag);
                         }
                     }
 
@@ -358,6 +366,7 @@ public class MinukuStreamManager implements StreamManager {
 
                     CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_SESSION, " addSessionFlag ? "+addSessionFlag);
                     CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_SESSION, " tranp not NA ? "+(!transportationModeDataRecord.getConfirmedActivityString().equals(TransportationModeStreamGenerator.TRANSPORTATION_MODE_NAME_NA)));
+                    CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_SESSION, " tranp is : "+transportationModeDataRecord.getConfirmedActivityString());
 
                     //if we need to add a session
                     if (addSessionFlag && !transportationModeDataRecord.getConfirmedActivityString().equals(TransportationModeStreamGenerator.TRANSPORTATION_MODE_NAME_NA)) {
@@ -367,7 +376,7 @@ public class MinukuStreamManager implements StreamManager {
                         Session lastSession = SessionManager.getLastSession();
 
                         int sessionIdOfLastSession = lastSession.getId();
-                        boolean emptySessionOn = SessionManager.isSessionEmptyOngoing(sessionIdOfLastSession);
+                        boolean emptySessionOn = SessionManager.isSessionEmptyOngoing(sessionIdOfLastSession, sharedPrefs);
 
                         Log.d(TAG, "[test triggering] is CAR ? " + (currentWork.equals(context.getResources().getString(R.string.task_CAR))));
                         Log.d(TAG, "[test triggering] is emptySessionOn ? " + emptySessionOn);
@@ -389,7 +398,10 @@ public class MinukuStreamManager implements StreamManager {
 
                             DataHandler.updateSession(lastSession.getId(), lastSession.getAnnotationsSet());
 
-                            SessionManager.getEmptyOngoingSessionIdList().remove(Integer.valueOf(lastSession.getId()));
+                            sharedPrefs.edit().putInt("emptyOngoingSessionid", Constants.INVALID_INT_VALUE).apply();
+                            CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_SESSION,"update empty sessionid to "+Constants.INVALID_INT_VALUE);
+
+//                            SessionManager.getEmptyOngoingSessionIdList().remove(Integer.valueOf(lastSession.getId()));
 
                             CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_SESSION,
                                     " filled the transportation : "+transportationModeDataRecord.getConfirmedActivityString()+" in the emptysession : "+lastSession.getId());
@@ -435,28 +447,82 @@ public class MinukuStreamManager implements StreamManager {
                             annotationForTransportation.addTag(Constants.ANNOTATION_TAG_DETECTED_TRANSPORTATION_ACTIVITY);
                             session.addAnnotation(annotationForTransportation);
 
-                            //TODO if transportationMode is static add site by getUrl
-                            Annotation annotationForSite = new Annotation();
-                            //add site by getUrl
-                            //get the latest location for searching site
-                            ArrayList<String> locations = DBHelper.queryLastRecord(DBHelper.location_table);
-                            if(locations.size() > 0){
+                            //if transportationMode is static, add site by getUrl
+                            if(transportationModeDataRecord.getConfirmedActivityString().equals(TransportationModeStreamGenerator.TRANSPORTATION_MODE_NAME_NO_TRANSPORTATION)){
 
-                                Log.d(TAG, "locations : "+locations);
-                                String location = locations.get(locations.size() - 1);
-                                String[] locationPieces = location.split(Constants.DELIMITER);
-                                double lat = Double.parseDouble(locationPieces[DBHelper.COL_INDEX_LOC_LATITUDE]);
-                                double lng = Double.parseDouble(locationPieces[DBHelper.COL_INDEX_LOC_LONGITUDE]);
+                                Annotation annotationForSite = new Annotation();
+                                Annotation annotationForSiteLoc = new Annotation();
+                                //add site by getUrl
+                                //get the latest location for searching site
+                                ArrayList<String> locations = DBHelper.queryLastRecord(DBHelper.location_table);
+                                if(locations.size() > 0){
 
-                                //TODO check the AsyncTask is needed
-                                String siteName = GetUrl.getSiteNameFromNet(lat, lng);
-                                annotationForSite.setContent(siteName);
-                                annotationForSite.addTag(Constants.ANNOTATION_TAG_DETECTED_SITENAME);
-                                session.addAnnotation(annotationForSite);
+                                    Log.d(TAG, "locations : "+locations);
+                                    String location = locations.get(locations.size() - 1);
+                                    String[] locationPieces = location.split(Constants.DELIMITER);
+                                    double lat = Double.parseDouble(locationPieces[DBHelper.COL_INDEX_LOC_LATITUDE]);
+                                    double lng = Double.parseDouble(locationPieces[DBHelper.COL_INDEX_LOC_LONGITUDE]);
 
-                                CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_SESSION, " Session detected site name : "+ siteName);
+                                    //check the customizedTable first
+                                    String siteInform;
+                                    boolean checkFromNet = true;
 
-                                Log.d(TAG, "[test triggering] detected siteName");
+                                    ArrayList<String> customizedSite = DBHelper.queryCustomizedSites();
+
+                                    float smallestDist = Float.MAX_VALUE;
+                                    String closestSite = "", closestLat = "", closestLng = "";
+                                    //check the distance between the session's first location and the customizedSite
+                                    for(int index = 0; index < customizedSite.size(); index++){
+
+                                        String eachData = customizedSite.get(index);
+
+                                        String[] dataPieces = eachData.split(Constants.DELIMITER);
+
+                                        Log.d(TAG, "check 精準度");
+                                        Log.d(TAG, "sitename : "+dataPieces[1]+", siteLat : "+dataPieces[2]+", siteLng : "+dataPieces[3]);
+
+                                        double siteLat = Double.parseDouble(dataPieces[2]);
+                                        double siteLng = Double.parseDouble(dataPieces[3]);
+
+                                        float[] results = new float[1];
+                                        Location.distanceBetween(lat, lng, siteLat, siteLng, results);
+                                        float distance = results[0];
+
+                                        Log.d(TAG, "customizedSite");
+                                        Log.d(TAG, "sitename : "+dataPieces[1]+", siteLat : "+siteLat+", siteLng : "+siteLng);
+
+                                        if(smallestDist >= distance){
+
+                                            smallestDist = distance;
+                                            closestSite = dataPieces[1];
+                                            closestLat = dataPieces[2];
+                                            closestLng = dataPieces[3];
+                                        }
+
+                                    }
+
+                                    //if still no site close enough then check from the net
+                                    if(smallestDist <= Constants.siteRange){
+
+                                        siteInform = closestSite+Constants.DELIMITER+"("+closestLat+","+closestLng+")";
+                                    }else {
+
+                                        siteInform = GetUrl.getSiteInformFromNet(lat, lng);
+                                    }
+
+                                    String siteName = siteInform.split(Constants.DELIMITER)[0];
+                                    String siteLoc = siteInform.split(Constants.DELIMITER)[1];
+                                    annotationForSite.setContent(siteName);
+                                    annotationForSite.addTag(Constants.ANNOTATION_TAG_DETECTED_SITENAME);
+                                    session.addAnnotation(annotationForSite);
+                                    annotationForSiteLoc.setContent(siteLoc);
+                                    annotationForSiteLoc.addTag(Constants.ANNOTATION_TAG_DETECTED_SITELOCATION);
+                                    session.addAnnotation(annotationForSiteLoc);
+
+                                    CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_SESSION, " Session detected site name : "+ siteName);
+
+                                    Log.d(TAG, "[test triggering] detected siteName");
+                                }
                             }
 
                             session.setUserPressOrNot(false);
@@ -465,7 +531,7 @@ public class MinukuStreamManager implements StreamManager {
                             session.setType(Constants.SESSION_TYPE_DETECTED_BY_SYSTEM);
                             session.setHidedOrNot(Constants.SESSION_NEVER_GET_HIDED_FLAG);
 
-                            CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_SESSION, " insert the session is with annotation : "+session.getAnnotationsSet().toJSONObject().toString());
+                            CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_SESSION, " insert the session with annotation : "+session.getAnnotationsSet().toJSONObject().toString());
 
                             Log.d(TAG, "[test triggering] insert the session is with annotation " + session.getAnnotationsSet().toJSONObject().toString());
 
@@ -479,7 +545,7 @@ public class MinukuStreamManager implements StreamManager {
                                 CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_SESSION, " continue2ndLastSession ");
 
                                 //Should combine
-                                SessionManager.continue2ndLastSession(session);
+                                SessionManager.continue2ndLastSession(sharedPrefs);
                             } else {
 
                                 CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_SESSION, " startNewSession ");
@@ -489,12 +555,15 @@ public class MinukuStreamManager implements StreamManager {
 
                             CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_SESSION, " after startNewSession ");
 
-                            sharedPrefs.edit().putInt("ongoingSessionid", SessionManager.getOngoingSessionIdList().get(0)).apply();
+                            sharedPrefs.edit().putInt("ongoingSessionid", session.getId()).apply();
 
-                            CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_SESSION, " update ongoingSessionid to : "+SessionManager.getOngoingSessionIdList().get(0));
+                            CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_SESSION, " update ongoingSessionid to : "+session.getId());
                         }
 
                         final Session sessionJustStart = SessionManager.getLastSession();
+
+                        // set it earlier
+                        this.transportationModeDataRecord = transportationModeDataRecord;
 
                         if (currentWork.equals(context.getResources().getString(R.string.task_ESM))) {
 
@@ -513,9 +582,6 @@ public class MinukuStreamManager implements StreamManager {
 
                             //CAR need to be in the start of the session, after a threshold of the time, send the notification to remind the user
 
-                            // set it earlier than other conditions due to the CountDownTimer
-                            this.transportationModeDataRecord = transportationModeDataRecord;
-
                             SessionManager.sessionIsWaiting = true;
 
                             //wait for a minute to the user
@@ -524,11 +590,15 @@ public class MinukuStreamManager implements StreamManager {
                                 @Override
                                 public void run() {
 
+                                    CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_SESSION, "after the delay for a minute");
+
+                                    int ongoingSessionid = sharedPrefs.getInt("ongoingSessionid", Constants.INVALID_INT_VALUE);
+
                                     //detect the user has pressed the current trip(Session) or not.
-                                    if(SessionManager.getOngoingSessionIdList().size() != 0){
+//                                    if(SessionManager.getOngoingSessionIdList().size() != 0){
+                                    if(ongoingSessionid != Constants.INVALID_INT_VALUE){
 
-                                        int ongoingSessionid = SessionManager.getOngoingSessionIdList().get(0);
-
+//                                        int ongoingSessionid = SessionManager.getOngoingSessionIdList().get(0);
                                         Session ongoingSession = SessionManager.getSession(ongoingSessionid);
 
                                         //if the user hasn't pressed the current trip(Session); after ending a trip(session), send a notification to the user

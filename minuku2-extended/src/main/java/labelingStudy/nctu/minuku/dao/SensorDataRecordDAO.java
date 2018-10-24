@@ -2,7 +2,6 @@ package labelingStudy.nctu.minuku.dao;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
@@ -67,21 +66,6 @@ public class SensorDataRecordDAO implements DAO<SensorDataRecord> {
             values.clear();
             DBManager.getInstance().closeDatabase();
         }
-    }
-
-    public void query_check() {
-        SQLiteDatabase db = DBManager.getInstance().openDatabase();
-        Cursor accCursor = db.rawQuery("SELECT "+ DBHelper.ACCELEROMETER_col +" FROM "+ DBHelper.sensor_table, null);
-
-        int accrow = accCursor.getCount();
-        int acccol = accCursor.getColumnCount();
-
-        Log.d(TAG, "accrow "+accrow+" acccol "+acccol);
-        String[] columns = new  String[]{"ACCELEROMETER"};
-        Cursor c = db.query(DBHelper.sensor_table, columns, null, null, null, null, null, null);
-        c.moveToFirst();
-        Log.d(TAG, "ACCELEROMETER  "+c.getString(0));
-
     }
 
     @Override

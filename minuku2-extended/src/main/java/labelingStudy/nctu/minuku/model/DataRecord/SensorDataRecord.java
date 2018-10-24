@@ -5,6 +5,7 @@ import android.util.Log;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import labelingStudy.nctu.minuku.model.Session;
 import labelingStudy.nctu.minukucore.model.DataRecord;
@@ -54,6 +55,8 @@ public class SensorDataRecord implements DataRecord {
     public SensorDataRecord(String mAccele_str, String mGyroscope_str, String mGravity_str, String mLinearAcceleration_str,
                             String mRotationVector_str, String mProximity_str, String mMagneticField_str, String mLight_str,
                             String mPressure_str, String mRelativeHumidity_str, String mAmbientTemperature_str, String sessionid){
+
+        this.creationTime = new Date().getTime();
         this.mAccele_str = mAccele_str;
         this.mGyroscope_str = mGyroscope_str;
         this.mGravity_str = mGravity_str;

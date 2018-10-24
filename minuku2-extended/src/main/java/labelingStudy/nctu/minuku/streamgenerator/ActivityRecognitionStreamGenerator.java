@@ -24,6 +24,7 @@ import java.util.TimeZone;
 
 import labelingStudy.nctu.minuku.Utilities.CSVHelper;
 import labelingStudy.nctu.minuku.Utilities.ScheduleAndSampleManager;
+import labelingStudy.nctu.minuku.Utilities.Utils;
 import labelingStudy.nctu.minuku.config.Constants;
 import labelingStudy.nctu.minuku.dao.ActivityRecognitionDataRecordDAO;
 import labelingStudy.nctu.minuku.manager.MinukuDAOManager;
@@ -105,6 +106,8 @@ public class ActivityRecognitionStreamGenerator extends AndroidStreamGenerator<A
 
         ActivityRecognitionStreamGenerator.instance = this;
 
+        sLatestDetectionTime = Constants.INVALID_TIME_VALUE;
+
         recordCount = 0;
         sKeepalive = KEEPALIVE_MINUTE * Constants.MILLISECONDS_PER_MINUTE;
 
@@ -167,9 +170,33 @@ public class ActivityRecognitionStreamGenerator extends AndroidStreamGenerator<A
     public boolean updateStream() {
         Log.e(TAG, "Update stream called.");
 
-        int session_id = SessionManager.getOngoingSessionId();
+//        int session_id = SessionManager.getOngoingSessionId();
+
+        int session_id = sharedPrefs.getInt("ongoingSessionid", Constants.INVALID_INT_VALUE);
 
         activityRecognitionDataRecord = new ActivityRecognitionDataRecord(sMostProbableActivity, sProbableActivities, sLatestDetectionTime, String.valueOf(session_id));
+
+        //if there don't have any updates for 10 minutes, add the NA one to represent it
+        if((ScheduleAndSampleManager.getCurrentTimeInMillis() - sLatestDetectionTime) >= Constants.MILLISECONDS_PER_MINUTE * 10
+                && (sLatestDetectionTime != Constants.INVALID_TIME_VALUE)){
+
+            DetectedActivity initialDetectedActivity = getInitialDetectedActivity();
+
+            ArrayList<DetectedActivity> initialDetectedActivities = new ArrayList<>();
+            initialDetectedActivities.add(initialDetectedActivity);
+
+            ActivityRecognitionDataRecord activityRecognitionDataRecord = new ActivityRecognitionDataRecord(initialDetectedActivity, initialDetectedActivities, ScheduleAndSampleManager.getCurrentTimeInMillis(), String.valueOf(session_id));
+
+            mStream.add(activityRecognitionDataRecord);
+            try {
+
+                mDAO.add(activityRecognitionDataRecord);
+            } catch (DAOException e) {
+                e.printStackTrace();
+                return false;
+            }
+            return true;
+        }
 
         MinukuStreamManager.getInstance().setActivityRecognitionDataRecord(activityRecognitionDataRecord);
 
@@ -183,10 +210,10 @@ public class ActivityRecognitionStreamGenerator extends AndroidStreamGenerator<A
 
                 mDAO.add(activityRecognitionDataRecord);
             } catch (DAOException e) {
+                Log.e(TAG, "DAOException", e);
                 e.printStackTrace();
                 return false;
             }
-
         }
         return true;
     }
@@ -305,6 +332,11 @@ public class ActivityRecognitionStreamGenerator extends AndroidStreamGenerator<A
 
     }
 
+    private DetectedActivity getInitialDetectedActivity(){
+
+        return new DetectedActivity(-1, 100);
+    }
+
     protected void addRecord(ActivityRecognitionDataRecord activityRecognitionDataRecord) {
 
         /**1. add record to the local pool **/
@@ -358,6 +390,7 @@ public class ActivityRecognitionStreamGenerator extends AndroidStreamGenerator<A
 
         }catch (StreamNotFoundException e){
             e.printStackTrace();
+            CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_SESSION, " StreamNotFoundException : "+ Utils.getStackTrace(e));
         }
 
     }

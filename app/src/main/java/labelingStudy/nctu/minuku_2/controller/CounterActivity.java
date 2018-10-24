@@ -29,7 +29,9 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+import labelingStudy.nctu.minuku.Data.DBHelper;
 import labelingStudy.nctu.minuku.Utilities.ScheduleAndSampleManager;
+import labelingStudy.nctu.minuku.config.ActionLogVar;
 import labelingStudy.nctu.minuku.config.Constants;
 import labelingStudy.nctu.minuku.manager.MinukuNotificationManager;
 import labelingStudy.nctu.minuku.manager.SessionManager;
@@ -153,7 +155,8 @@ public class CounterActivity extends AppCompatActivity {
                 //prevent the situation that the app stop recording accidentally so that the ongoing id is gone
                 try {
 
-                    int ongoingId = SessionManager.getOngoingSessionIdList().get(0);
+                    int ongoingId = sharedPrefs.getInt("ongoingSessionid", Constants.INVALID_INT_VALUE);
+
                     Session ongoingSession = SessionManager.getSession(ongoingId);
 
                     long currentTime = ScheduleAndSampleManager.getCurrentTimeInMillis();
@@ -188,10 +191,13 @@ public class CounterActivity extends AppCompatActivity {
 
     private void updateOngoingNotification(){
 
-        ArrayList<Integer> ongoingSessionIdList = SessionManager.getOngoingSessionIdList();
+//        ArrayList<Integer> ongoingSessionIdList = SessionManager.getOngoingSessionIdList();
 
-        if(ongoingSessionIdList.size() > 0){
-            int sessionId = ongoingSessionIdList.get(0);
+        int ongoingSessionid = sharedPrefs.getInt("ongoingSessionid", Constants.INVALID_INT_VALUE);
+
+//        if(ongoingSessionIdList.size() > 0){
+        if(ongoingSessionid != Constants.INVALID_INT_VALUE){
+            int sessionId = ongoingSessionid;
             Session ongoingSession = SessionManager.getSession(sessionId);
 
             AnnotationSet ongoingAnnotationSet = ongoingSession.getAnnotationsSet();
@@ -282,6 +288,8 @@ public class CounterActivity extends AppCompatActivity {
         public void onClick(View v) {
             Log.e(TAG,"changedMoving clicked");
 
+            DBHelper.insertActionLogTable(ScheduleAndSampleManager.getCurrentTimeInMillis(), ActionLogVar.VIEW_BUTTON+" - "+ ActionLogVar.ACTION_CLICK+" - "+ActionLogVar.MEANING_CHANGEDMOVE+" - "+TAG);
+
             userLeavingPage();
 
             if(isTaskRoot()){
@@ -299,6 +307,8 @@ public class CounterActivity extends AppCompatActivity {
         public void onClick(View view) {
 
             Log.d(TAG, "view Tag : "+ view.getTag());
+
+            DBHelper.insertActionLogTable(ScheduleAndSampleManager.getCurrentTimeInMillis(), ActionLogVar.VIEW_IMAGE_VIEW_BUTTON+" - "+ ActionLogVar.ACTION_CLICK+" - "+ActionLogVar.MEANING_PLAYSTOP+" - "+TAG);
 
             int whichToShowTag = Integer.valueOf(view.getTag().toString());
 
@@ -351,21 +361,6 @@ public class CounterActivity extends AppCompatActivity {
                 0,
                 Constants.MILLISECONDS_PER_SECOND,
                 TimeUnit.MILLISECONDS);
-
-        //TODO deprecated
-        /*timer = new Timer();
-        timer.scheduleAtFixedRate(new TimerTask(){
-            @Override
-            public void run() {
-
-                tsec++;
-                sharedPrefs.edit().putInt("tsec", tsec).apply();
-
-                Message message = new Message();
-                message.what =1;
-                handler.sendMessage(message);
-            }
-        }, 0,1000);*/
     }
 
     private void endTimer(){
@@ -373,12 +368,6 @@ public class CounterActivity extends AppCompatActivity {
         if(mScheduledFuture != null){
             mScheduledFuture.cancel(false);
         }
-
-        //TODO deprecated
-        /*if(timer!=null) {
-
-            timer.cancel();
-        }*/
     }
 
     private void playSession(){
@@ -390,10 +379,13 @@ public class CounterActivity extends AppCompatActivity {
         Date curDate = new Date(System.currentTimeMillis());
         starttime = formatter.format(curDate);
 
-        ArrayList<Integer> ongoingSessionIdList = SessionManager.getOngoingSessionIdList();
+//        ArrayList<Integer> ongoingSessionIdList = SessionManager.getOngoingSessionIdList();
+
+        int ongoingSessionid = sharedPrefs.getInt("ongoingSessionid", Constants.INVALID_INT_VALUE);
 
         //if there hasn't a ongoing session, start a new one.
-        if(ongoingSessionIdList.size() == 0){
+//        if(ongoingSessionIdList.size() == 0){
+        if(ongoingSessionid == Constants.INVALID_INT_VALUE){
 
             //start new Trip
             String transportation = getTrafficActivityString();
@@ -441,8 +433,10 @@ public class CounterActivity extends AppCompatActivity {
 
         counter.setText("00:00:00");
 
+        int ongoingSessionid = sharedPrefs.getInt("ongoingSessionid", Constants.INVALID_INT_VALUE);
+
         //stop the session
-        Session ongoingSession = SessionManager.getSession(SessionManager.getOngoingSessionIdList().get(0));
+        Session ongoingSession = SessionManager.getSession(ongoingSessionid);
 
         long endTime = ScheduleAndSampleManager.getCurrentTimeInMillis();
         ongoingSession.setEndTime(endTime);
@@ -454,6 +448,7 @@ public class CounterActivity extends AppCompatActivity {
         try {
 
             SessionManager.endCurSession(ongoingSession);
+            sharedPrefs.edit().putInt("ongoingSessionid", Constants.INVALID_INT_VALUE).apply();
         } catch (IndexOutOfBoundsException e) {
 
         }
@@ -479,9 +474,9 @@ public class CounterActivity extends AppCompatActivity {
 
         Log.d(TAG, "onPause");
 
-        sharedPrefs.edit().putString("lastActivity", getClass().getName()).apply();
+        userLeavingPage();
 
-//        userLeavingPage();
+        sharedPrefs.edit().putString("lastActivity", getClass().getName()).apply();
     }
 
     @Override
@@ -490,8 +485,6 @@ public class CounterActivity extends AppCompatActivity {
         Log.d(TAG, "onKeyDown");
 
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-
-//            userLeavingPage();
 
             CounterActivity.this.finish();
 
@@ -505,20 +498,11 @@ public class CounterActivity extends AppCompatActivity {
         return super.onKeyDown(keyCode, event);
     }
 
-    public void onUserLeaveHint() {
-        super.onUserLeaveHint();
-
-        Log.d(TAG, "onUserLeaveHint");
-
-//        userLeavingPage();
-    }
-
     public void onStop(){
         super.onStop();
 
         Log.d(TAG, "onStop");
 
-        userLeavingPage();
     }
 
     //TODO change to runnable thread

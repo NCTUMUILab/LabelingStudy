@@ -31,7 +31,10 @@ import org.javatuples.Tuple;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
 
 import labelingStudy.nctu.minuku.streamgenerator.TransportationModeStreamGenerator;
 
@@ -138,6 +141,21 @@ public class Utils {
         else
             Log.d(LOG_TAG, "it is not the same day - a new day, should create a new object");
         return sameDay;
+    }
+
+    public static String getDateCurrentTimeZone(long timestamp) {
+        try{
+            Calendar calendar = Calendar.getInstance();
+            TimeZone tz = TimeZone.getDefault();
+            calendar.setTimeInMillis(timestamp);
+            calendar.add(Calendar.MILLISECOND, tz.getOffset(calendar.getTimeInMillis()));
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date currenTimeZone = (Date) calendar.getTime();
+            return sdf.format(currenTimeZone);
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 
 }
