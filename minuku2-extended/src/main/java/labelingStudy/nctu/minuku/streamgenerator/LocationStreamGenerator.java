@@ -61,7 +61,6 @@ import labelingStudy.nctu.minuku.event.IncrementLoadingProcessCountEvent;
 import labelingStudy.nctu.minuku.logger.Log;
 import labelingStudy.nctu.minuku.manager.MinukuDAOManager;
 import labelingStudy.nctu.minuku.manager.MinukuStreamManager;
-import labelingStudy.nctu.minuku.manager.SessionManager;
 import labelingStudy.nctu.minuku.model.DataRecord.LocationDataRecord;
 import labelingStudy.nctu.minuku.stream.LocationStream;
 import labelingStudy.nctu.minukucore.dao.DAOException;
@@ -104,6 +103,10 @@ public class LocationStreamGenerator extends AndroidStreamGenerator<LocationData
     private static AtomicDouble latestLatitude;
     private static AtomicDouble latestLongitude;
     private static float latestAccuracy;
+    private static float latestAltitude;
+    private static float latestSpeed;
+    private static float latestBearing;
+    private static String latestProvider;
 
     private Context context;
 
@@ -173,7 +176,11 @@ public class LocationStreamGenerator extends AndroidStreamGenerator<LocationData
             //TODO uncomment them when we stop testing
             this.latestLatitude.set(location.getLatitude());
             this.latestLongitude.set(location.getLongitude());
-            latestAccuracy = location.getAccuracy();
+            this.latestAccuracy = location.getAccuracy();
+            this.latestAltitude = (float) location.getAltitude();
+            this.latestSpeed = location.getSpeed();
+            this.latestBearing = location.getBearing();
+            this.latestProvider = location.getProvider();
 
             //the lastposition update value timestamp
             lastposupdate = new Date().getTime();
@@ -266,24 +273,35 @@ public class LocationStreamGenerator extends AndroidStreamGenerator<LocationData
     public boolean updateStream() {
 
         LocationDataRecord newlocationDataRecord;
-        int session_id = SessionManager.getOngoingSessionId();
+//        int session_id = SessionManager.getOngoingSessionId();
+
+        int session_id = sharedPrefs.getInt("ongoingSessionid", Constants.INVALID_INT_VALUE);
 
 //        Log.d(TAG, "[test replay] Update stream session is " + session_id);
 
         try {
+
             newlocationDataRecord = new LocationDataRecord(
                     (float) latestLatitude.get(),
                     (float) latestLongitude.get(),
                     latestAccuracy,
-                    //TODO improve it to ArrayList, ex. the session id should be "0, 10".
+                    latestAltitude,
+                    latestSpeed,
+                    latestBearing,
+                    latestProvider,
                     String.valueOf(session_id));
         }catch (IndexOutOfBoundsException e){
             e.printStackTrace();
+
             //no session now
             newlocationDataRecord = new LocationDataRecord(
                     (float) latestLatitude.get(),
                     (float) latestLongitude.get(),
                     latestAccuracy,
+                    latestAltitude,
+                    latestSpeed,
+                    latestBearing,
+                    latestProvider,
                     String.valueOf(session_id));
         }
 //        Log.e(TAG,"[test replay] newlocationDataRecord latestLatitude : "+ latestLatitude.get()+" latestLongitude : "+ latestLongitude.get() + "  session_id " +  session_id);
@@ -415,8 +433,7 @@ public class LocationStreamGenerator extends AndroidStreamGenerator<LocationData
                     //the lastposition update value timestamp
                     lastposupdate = new Date().getTime();
 
-                    android.util.Log.d(TAG, "[test replay] going to feed location " +   locationDataRecord.getLatitude()+  " :"  + locationDataRecord.getLongitude()  +" at index " + locationRecordCurIndex  + " in the location streamgenerator");
-
+                    Log.d(TAG, "[test replay] going to feed location " +   locationDataRecord.getLatitude()+  " :"  + locationDataRecord.getLongitude()  +" at index " + locationRecordCurIndex  + " in the location streamgenerator");
 
                     //set Location
 

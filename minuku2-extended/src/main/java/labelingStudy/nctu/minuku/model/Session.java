@@ -219,7 +219,7 @@ public class Session {
                     return TransportationModeStreamGenerator.TRANSPORTATION_MODE_NAME_ON_FOOT;
                 case "自行車":
                     return TransportationModeStreamGenerator.TRANSPORTATION_MODE_NAME_ON_BICYCLE;
-                case "汽車":
+                case "汽機車":
                     return TransportationModeStreamGenerator.TRANSPORTATION_MODE_NAME_IN_VEHICLE;
                 case "定點":
                     return TransportationModeStreamGenerator.TRANSPORTATION_MODE_NAME_NO_TRANSPORTATION;

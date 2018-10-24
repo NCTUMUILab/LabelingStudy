@@ -38,10 +38,16 @@ import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkCapabilities;
 import android.net.NetworkRequest;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.IBinder;
 import android.util.Log;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Date;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -61,9 +67,9 @@ import labelingStudy.nctu.minuku_2.Receiver.WifiReceiver;
 import labelingStudy.nctu.minuku_2.Utils;
 import labelingStudy.nctu.minuku_2.controller.Dispatch;
 import labelingStudy.nctu.minuku_2.manager.InstanceManager;
+import labelingStudy.nctu.minuku_2.manager.PostManager;
 
 public class BackgroundService extends Service {
-
 
     private static final String TAG = "BackgroundService";
 
@@ -76,7 +82,7 @@ public class BackgroundService extends Service {
     MinukuStreamManager streamManager;
 
     private ScheduledExecutorService mScheduledExecutorService;
-    ScheduledFuture<?> mScheduledFuture;
+    ScheduledFuture<?> mScheduledFuture, mScheduledFutureIsAlive;
 
     private int ongoingNotificationID = 42;
     private String ongoingNotificationText = Constants.RUNNING_APP_DECLARATION;
@@ -102,7 +108,7 @@ public class BackgroundService extends Service {
         isBackgroundRunnableRunning = false;
 
         streamManager = MinukuStreamManager.getInstance();
-        mScheduledExecutorService = Executors.newScheduledThreadPool(Constants.NOTIFICATION_UPDATE_THREAD_SIZE);
+        mScheduledExecutorService = Executors.newScheduledThreadPool(Constants.MAIN_THREAD_SIZE);
 
         intentFilter = new IntentFilter();
         intentFilter.addAction(CONNECTIVITY_ACTION);
@@ -122,8 +128,6 @@ public class BackgroundService extends Service {
 
         mNotificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
 
-//        createSurveyNotificationChannel();
-//        createNotificationChannel();
         createNotificationChannel(Constants.ONGOING_CHANNEL_NAME, Constants.ONGOING_CHANNEL_ID, NotificationManager.IMPORTANCE_LOW);
         createNotificationChannel(Constants.SURVEY_CHANNEL_NAME, Constants.SURVEY_CHANNEL_ID, NotificationManager.IMPORTANCE_HIGH);
 
@@ -152,9 +156,9 @@ public class BackgroundService extends Service {
                 InstanceManager.getInstance(this);
                 SessionManager.getInstance(this);
                 MobilityManager.getInstance(this);
-
-                updateNotificationAndStreamManagerThread();
             }
+
+            updateNotificationAndStreamManagerThread();
         }
 
         // read test file
@@ -164,14 +168,38 @@ public class BackgroundService extends Service {
         return START_REDELIVER_INTENT;
     }
 
-    private void updateNotificationAndStreamManagerThread(){
+    private void updateNotificationAndStreamManagerThread() {
 
         mScheduledFuture = mScheduledExecutorService.scheduleAtFixedRate(
                 updateStreamManagerRunnable,
                 Constants.STREAM_UPDATE_DELAY,
                 Constants.STREAM_UPDATE_FREQUENCY,
                 TimeUnit.SECONDS);
+
+        mScheduledFutureIsAlive = mScheduledExecutorService.scheduleAtFixedRate(
+                isAliveRunnable,
+                Constants.ISALIVE_UPDATE_DELAY,
+                Constants.ISALIVE_UPDATE_FREQUENCY,
+                TimeUnit.SECONDS
+        );
     }
+
+    Runnable isAliveRunnable = new Runnable() {
+        @Override
+        public void run() {
+
+            Log.d(TAG, "sendingIsAliveData");
+
+            CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_ISALIVE, "sendingIsAliveData");
+
+            Constants.DEVICE_ID = sharedPrefs.getString("DEVICE_ID",  Constants.DEVICE_ID);
+
+            if(!Constants.DEVICE_ID.equals(Constants.INVALID_STRING_VALUE)) {
+
+                sendingIsAliveData();
+            }
+        }
+    };
 
     Runnable updateStreamManagerRunnable = new Runnable() {
         @Override
@@ -191,7 +219,7 @@ public class BackgroundService extends Service {
         }
     };
 
-    private Notification getOngoingNotification(String text){
+    private Notification getOngoingNotification(String text) {
 
         Notification.BigTextStyle bigTextStyle = new Notification.BigTextStyle();
         bigTextStyle.setBigContentTitle(Constants.APP_NAME);
@@ -226,36 +254,35 @@ public class BackgroundService extends Service {
 
             notificationBuilder.setColor(Color.TRANSPARENT);
             return R.drawable.muilab_icon_noti;
-
         }
+
         return R.drawable.muilab_icon;
     }
 
     @Override
     public void onDestroy() {
+        super.onDestroy();
 
         Log.d(TAG, "onDestroy");
 
         stopTheSessionByServiceClose();
 
+        isBackgroundServiceRunning = false;
+        isBackgroundRunnableRunning = false;
+
         String onDestroy = "BackGround, onDestroy";
         CSVHelper.storeToCSV(CSVHelper.CSV_ESM, onDestroy);
         CSVHelper.storeToCSV(CSVHelper.CSV_CAR, onDestroy);
 
-        sendBroadcastToStartService();
-
-        isBackgroundServiceRunning = false;
-        isBackgroundRunnableRunning = false;
-
         mNotificationManager.cancel(ongoingNotificationID);
-
-        Log.d(TAG, "Destroying service. Your state might be lost!");
 
         sharedPrefs.edit().putInt("CurrentState", TransportationModeStreamGenerator.mCurrentState).apply();
         sharedPrefs.edit().putInt("ConfirmedActivityType", TransportationModeStreamGenerator.mConfirmedActivityType).apply();
 
 //        checkingRemovedFromForeground();
         removeRunnable();
+
+        sendBroadcastToStartService();
 
         unregisterReceiver(mWifiReceiver);
     }
@@ -324,10 +351,14 @@ public class BackgroundService extends Service {
 
     private void stopTheSessionByServiceClose(){
 
-        //if the background service is killed, set the end time of the ongoing trip (if any) using the current timestamp
-        if (SessionManager.getOngoingSessionIdList().size()>0){
+        int ongoingSessionid = sharedPrefs.getInt("ongoingSessionid", Constants.INVALID_INT_VALUE);
 
-            Session session = SessionManager.getSession(SessionManager.getOngoingSessionIdList().get(0)) ;
+        //if the background service is killed, set the end time of the ongoing trip (if any) using the current timestamp
+//        if (SessionManager.getOngoingSessionIdList().size()>0){
+
+        if(ongoingSessionid != Constants.INVALID_INT_VALUE){
+
+            Session session = SessionManager.getSession(ongoingSessionid) ;
 
             //if we end the current session, we should update its time and set a long enough flag
             if (session.getEndTime()==0){
@@ -338,13 +369,15 @@ public class BackgroundService extends Service {
             //end the current session
             SessionManager.endCurSession(session);
 
-            sharedPrefs.edit().putInt("ongoingSessionid",session.getId()).apply();
+            //keep it when the service is gone to recover to the Arraylist
+            sharedPrefs.edit().putInt("ongoingSessionid", Constants.INVALID_INT_VALUE).apply();
         }
     }
 
     private void removeRunnable(){
 
         mScheduledFuture.cancel(true);
+        mScheduledFutureIsAlive.cancel(true);
     }
 
     private void sendBroadcastToStartService(){
@@ -387,6 +420,53 @@ public class BackgroundService extends Service {
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
         }
+    }
+
+    private void sendingIsAliveData(){
+
+        final String postIsAliveUrl_insert = "http://18.219.118.106:5000/find_latest_and_insert?collection=isAlive&action=insert&id=";//&action=insert, search
+
+        String currentCondition = getResources().getString(labelingStudy.nctu.minuku.R.string.current_task);
+
+        //making isAlive
+        JSONObject dataInJson = new JSONObject();
+        try {
+            long currentTime = new Date().getTime();
+            String currentTimeString = ScheduleAndSampleManager.getTimeString(currentTime);
+
+            dataInJson.put("time", currentTime);
+            dataInJson.put("timeString", currentTimeString);
+            dataInJson.put("device_id", Constants.DEVICE_ID);
+            dataInJson.put("condition", currentCondition);
+
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+
+        Log.d(TAG, "isAlive availSite uploading : " + dataInJson.toString());
+
+        String curr = Utils.getDateCurrentTimeZone(new Date().getTime());
+
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+                new PostManager().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+                        postIsAliveUrl_insert + Constants.DEVICE_ID,
+                        dataInJson.toString(),
+                        "isAlive",
+                        curr).get();
+            else
+                new PostManager().execute(
+                        postIsAliveUrl_insert + Constants.DEVICE_ID,
+                        dataInJson.toString(),
+                        "isAlive",
+                        curr).get();
+
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
     }
 
     BroadcastReceiver CheckRunnableReceiver = new BroadcastReceiver() {

@@ -8,6 +8,8 @@ import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -34,7 +36,9 @@ import java.util.concurrent.CountDownLatch;
 
 import labelingStudy.nctu.minuku.Data.DBHelper;
 import labelingStudy.nctu.minuku.NearbyPlaces.GetUrl;
+import labelingStudy.nctu.minuku.Utilities.ScheduleAndSampleManager;
 import labelingStudy.nctu.minuku.Utilities.Utils;
+import labelingStudy.nctu.minuku.config.ActionLogVar;
 import labelingStudy.nctu.minuku.config.Constants;
 import labelingStudy.nctu.minuku.manager.MinukuStreamManager;
 import labelingStudy.nctu.minuku_2.R;
@@ -111,6 +115,13 @@ public class PlaceSelection extends FragmentActivity implements OnMapReadyCallba
         try {
 
             fromTimeLineFlag = bundle.getBoolean("fromTimeLineFlag", false);
+
+            if(fromTimeLineFlag){
+
+                lat = bundle.getDouble("lat", lat);
+                lng = bundle.getDouble("lng", lng);
+            }
+
         }catch (NullPointerException e){
 
             fromTimeLineFlag = false;
@@ -132,6 +143,8 @@ public class PlaceSelection extends FragmentActivity implements OnMapReadyCallba
                 //prepare the customizedSite from the DB for the marker
                 ArrayList<String> customizedSite = DBHelper.queryCustomizedSites();
 
+                Log.d(TAG, "current lat : "+lat+", current lng : "+lng);
+
                 if(customizedSite.size() != 0){
 
                     //check the distance between the session's first location and the customizedSite
@@ -141,12 +154,18 @@ public class PlaceSelection extends FragmentActivity implements OnMapReadyCallba
 
                         String[] dataPieces = eachData.split(Constants.DELIMITER);
 
+                        Log.d(TAG, "check 精準度");
+                        Log.d(TAG, "sitename : "+dataPieces[1]+", siteLat : "+dataPieces[2]+", siteLng : "+dataPieces[3]);
+
                         double siteLat = Double.parseDouble(dataPieces[2]);
                         double siteLng = Double.parseDouble(dataPieces[3]);
 
                         float[] results = new float[1];
                         Location.distanceBetween(lat, lng, siteLat, siteLng, results);
                         float distance = results[0];
+
+                        Log.d(TAG, "customizedSite");
+                        Log.d(TAG, "sitename : "+dataPieces[1]+", siteLat : "+siteLat+", siteLng : "+siteLng);
 
                         if(distance <= Constants.siteRange){
 
@@ -162,9 +181,9 @@ public class PlaceSelection extends FragmentActivity implements OnMapReadyCallba
                 //show the customize site in different color
                 for(int index = 0; index < customizedMarkers.size(); index++){
 
-                    LatLng latlng = customizedMarkers.get(0).getPosition();
+                    LatLng latlng = customizedMarkers.get(index).getPosition();
 
-                    map.addMarker(new MarkerOptions().position(latlng).title(customizedMarkers.get(0).getTitle()))
+                    map.addMarker(new MarkerOptions().position(latlng).title(customizedMarkers.get(index).getTitle()))
                             .setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
                 }
 
@@ -173,6 +192,8 @@ public class PlaceSelection extends FragmentActivity implements OnMapReadyCallba
 
                     @Override
                     public void onMapClick(LatLng latLng) {
+
+                        DBHelper.insertActionLogTable(ScheduleAndSampleManager.getCurrentTimeInMillis(), ActionLogVar.VIEW_MAP+" - "+ ActionLogVar.ACTION_CLICK+" - "+ActionLogVar.MEANING_MAP+" - "+TAG);
 
                         AddPlace.setText(getResources().getString(R.string.placeselection_newsite));
 
@@ -183,6 +204,9 @@ public class PlaceSelection extends FragmentActivity implements OnMapReadyCallba
                         customizedMarker = map.addMarker(new MarkerOptions()
                                 .position(new LatLng(latLng.latitude, latLng.longitude))
                                 .draggable(true).visible(true));
+
+                        Log.d(TAG, "onMapClick");
+                        Log.d(TAG, "site lat : "+latLng.latitude+", site lng : "+latLng.longitude);
 
                         customizedMarker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
 
@@ -285,6 +309,8 @@ public class PlaceSelection extends FragmentActivity implements OnMapReadyCallba
         @Override
         public boolean onMarkerClick(final Marker marker) {
 
+            DBHelper.insertActionLogTable(ScheduleAndSampleManager.getCurrentTimeInMillis(), ActionLogVar.VIEW_MARKER+" - "+ ActionLogVar.ACTION_CLICK+" - "+ActionLogVar.MEANING_MARKER+" - "+TAG);
+
             if(marker.equals(currentLocationMarker)) {
 
                 triggerAlertDialog(marker);
@@ -331,6 +357,32 @@ public class PlaceSelection extends FragmentActivity implements OnMapReadyCallba
 
                         EditText sitenameInEditText = (EditText) layout.findViewById(R.id.sitename_edittext);
 
+                        sitenameInEditText.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                                DBHelper.insertActionLogTable(ScheduleAndSampleManager.getCurrentTimeInMillis(), ActionLogVar.VIEW_EDITTEXT+" - "+ ActionLogVar.ACTION_CLICK+" - "+ActionLogVar.MEANING_SITENAME_EDITTEXT+" - "+TAG);
+                            }
+                        });
+
+                        sitenameInEditText.addTextChangedListener(new TextWatcher() {
+
+                            @Override
+                            public void afterTextChanged(Editable s) {}
+
+                            @Override
+                            public void beforeTextChanged(CharSequence s, int start,
+                                                          int count, int after) {
+                            }
+
+                            @Override
+                            public void onTextChanged(CharSequence s, int start,
+                                                      int before, int count) {
+
+                                DBHelper.insertActionLogTable(ScheduleAndSampleManager.getCurrentTimeInMillis(), ActionLogVar.VIEW_EDITTEXT+" - "+ActionLogVar.ACTION_TEXT_CHANGED+" - "+ActionLogVar.MEANING_SITENAME_EDITTEXT+" - "+TAG);
+                            }
+                        });
+
                         String sitename = sitenameInEditText.getText().toString();
 
                         //TODO if sitename is null or empty, don't insert it;
@@ -346,6 +398,8 @@ public class PlaceSelection extends FragmentActivity implements OnMapReadyCallba
 
                         markerTitle = marker.getTitle().toString();
                         markerLocation = marker.getPosition();
+
+                        Log.d(TAG, "markerTitle : "+markerTitle+", markerLocation : "+markerLocation);
 
                         DBHelper.insertCustomizedSiteTable(markerTitle, markerLocation);
 
@@ -368,13 +422,15 @@ public class PlaceSelection extends FragmentActivity implements OnMapReadyCallba
         @Override
         public void onClick(View view) {
 
+            DBHelper.insertActionLogTable(ScheduleAndSampleManager.getCurrentTimeInMillis(), ActionLogVar.VIEW_BUTTON+" - "+ ActionLogVar.ACTION_CLICK+" - "+ActionLogVar.MEANING_SITENAME_ADDPLACE+" - "+TAG);
+
             final View v = LayoutInflater.from(PlaceSelection.this).inflate(R.layout.addplace, null);
 
-            if(AddPlace.getText().equals(getResources().getString(R.string.placeselection_newsite))){
+            if (AddPlace.getText().equals(getResources().getString(R.string.placeselection_newsite))) {
 
                 triggerAlertDialog(currentLocationMarker);
 
-            }else if(AddPlace.getText().equals(getResources().getString(R.string.confirm_in_chinese))){
+            }else if (AddPlace.getText().equals(getResources().getString(R.string.confirm_in_chinese))) {
 
                 addToConvenientSiteTable();
             }
@@ -400,6 +456,7 @@ public class PlaceSelection extends FragmentActivity implements OnMapReadyCallba
         }else{
 
             Timeline.selectedSiteName = sitename;
+            Timeline.selectedSiteLoc = "("+markerLocation.latitude+","+markerLocation.longitude+")";
             Timeline.dChoosingSite.setText(Timeline.selectedSiteName);
         }
 

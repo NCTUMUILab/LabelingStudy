@@ -1,6 +1,7 @@
 package labelingStudy.nctu.minuku.streamgenerator;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkInfo;
@@ -14,7 +15,6 @@ import labelingStudy.nctu.minuku.dao.ConnectivityDataRecordDAO;
 import labelingStudy.nctu.minuku.logger.Log;
 import labelingStudy.nctu.minuku.manager.MinukuDAOManager;
 import labelingStudy.nctu.minuku.manager.MinukuStreamManager;
-import labelingStudy.nctu.minuku.manager.SessionManager;
 import labelingStudy.nctu.minuku.model.DataRecord.ConnectivityDataRecord;
 import labelingStudy.nctu.minuku.stream.ConnectivityStream;
 import labelingStudy.nctu.minukucore.dao.DAOException;
@@ -53,22 +53,18 @@ public class ConnectivityStreamGenerator extends AndroidStreamGenerator<Connecti
     private ConnectivityStream mStream;
     private ConnectivityDataRecordDAO mDAO;
 
-    public ConnectivityStreamGenerator(){
-
-        mConnectivityManager = (ConnectivityManager)mContext.getSystemService(mContext.CONNECTIVITY_SERVICE);
-
-    }
+    private SharedPreferences sharedPrefs;
 
     public ConnectivityStreamGenerator(Context applicationContext){
         super(applicationContext);
 
-        mContext = applicationContext;
-
+        this.mContext = applicationContext;
         this.mStream = new ConnectivityStream(Constants.DEFAULT_QUEUE_SIZE);
         this.mDAO = MinukuDAOManager.getInstance().getDaoFor(ConnectivityDataRecord.class);
 
-        mConnectivityManager = (ConnectivityManager)mContext.getSystemService(mContext.CONNECTIVITY_SERVICE);
+        sharedPrefs = mContext.getSharedPreferences(Constants.sharedPrefString,Context.MODE_PRIVATE);
 
+        mConnectivityManager = (ConnectivityManager)mContext.getSystemService(mContext.CONNECTIVITY_SERVICE);
 
         this.register();
     }
@@ -95,7 +91,9 @@ public class ConnectivityStreamGenerator extends AndroidStreamGenerator<Connecti
 
         Log.d(TAG, "updateStream called");
 
-        int session_id = SessionManager.getOngoingSessionId();
+//        int session_id = SessionManager.getOngoingSessionId();
+
+        int session_id = sharedPrefs.getInt("ongoingSessionid", Constants.INVALID_INT_VALUE);
 
         //TODO get service data
         ConnectivityDataRecord connectivityDataRecord =
@@ -173,12 +171,16 @@ public class ConnectivityStreamGenerator extends AndroidStreamGenerator<Connecti
             for (Network network : networks) {
                 activeNetwork = mConnectivityManager.getNetworkInfo(network);
 
+                //if there is no default network
+                if(activeNetwork == null){
+
+                    break;
+                }
+
                 if (activeNetwork.getType()== ConnectivityManager.TYPE_WIFI){
                     mIsWifiAvailable = activeNetwork.isAvailable();
                     mIsWifiConnected = activeNetwork.isConnected();
-                }
-
-                else if (activeNetwork.getType()==ConnectivityManager.TYPE_MOBILE){
+                } else if (activeNetwork.getType()==ConnectivityManager.TYPE_MOBILE){
                     mIsMobileAvailable = activeNetwork.isAvailable();
                     mIsMobileConnected = activeNetwork.isConnected();
                 }

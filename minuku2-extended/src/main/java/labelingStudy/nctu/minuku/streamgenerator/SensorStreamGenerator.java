@@ -23,6 +23,7 @@
 package labelingStudy.nctu.minuku.streamgenerator;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -37,7 +38,6 @@ import labelingStudy.nctu.minuku.dao.SensorDataRecordDAO;
 import labelingStudy.nctu.minuku.logger.Log;
 import labelingStudy.nctu.minuku.manager.MinukuDAOManager;
 import labelingStudy.nctu.minuku.manager.MinukuStreamManager;
-import labelingStudy.nctu.minuku.manager.SessionManager;
 import labelingStudy.nctu.minuku.model.DataRecord.SensorDataRecord;
 import labelingStudy.nctu.minuku.stream.SensorStream;
 import labelingStudy.nctu.minukucore.dao.DAOException;
@@ -45,8 +45,8 @@ import labelingStudy.nctu.minukucore.exception.StreamAlreadyExistsException;
 import labelingStudy.nctu.minukucore.exception.StreamNotFoundException;
 import labelingStudy.nctu.minukucore.stream.Stream;
 
-import static labelingStudy.nctu.minuku.config.Constants.CONTEXT_SOURCE_INVALID_VALUE_FLOAT;
 import static android.content.Context.SENSOR_SERVICE;
+import static labelingStudy.nctu.minuku.config.Constants.CONTEXT_SOURCE_INVALID_VALUE_FLOAT;
 
 /**
  * Created by neerajkumar on 7/18/16.
@@ -67,7 +67,7 @@ public class SensorStreamGenerator extends AndroidStreamGenerator<SensorDataReco
     public static final String RECORD_DATA_PROPERTY_NAME = "SensorValues";
     /**system components**/
     private static Context mContext;
-    private static SensorManager mSensorManager ;
+    private static SensorManager mSensorManager;
     private static List<Sensor> SensorList;
 
     public static final String STRING_PHONE_SENSOR_ACCELEROMETER = "Sensor-Accelerometer";
@@ -118,6 +118,8 @@ public class SensorStreamGenerator extends AndroidStreamGenerator<SensorDataReco
     String mAccele_str, mGyroscope_str, mGravity_str, mLinearAcceleration_str, mRotationVector_str,
             mProximity_str, mMagneticField_str, mLight_str, mPressure_str, mRelativeHumidity_str,  mAmbientTemperature_str;
 
+    private SharedPreferences sharedPrefs;
+
     /** handle stream **/
     /**sensorStreamGenerator**/
     public SensorStreamGenerator(Context applicationContext) {
@@ -139,6 +141,8 @@ public class SensorStreamGenerator extends AndroidStreamGenerator<SensorDataReco
         mHeartRate = mStepCount = mStepDetect = CONTEXT_SOURCE_INVALID_VALUE_FLOAT;
         mLight = mPressure = mRelativeHumidity = mProximity = mAmbientTemperature = CONTEXT_SOURCE_INVALID_VALUE_FLOAT;
 
+        sharedPrefs = mContext.getSharedPreferences(Constants.sharedPrefString,Context.MODE_PRIVATE);
+
         //initiate registered sensor list
         RegisterAvailableSensors();
         this.register();  // stream
@@ -152,7 +156,6 @@ public class SensorStreamGenerator extends AndroidStreamGenerator<SensorDataReco
     }
 
     /**register**/
-
     @Override
     public void register() {
         Log.d(TAG, "Registering with StreamManager.");
@@ -174,7 +177,12 @@ public class SensorStreamGenerator extends AndroidStreamGenerator<SensorDataReco
     @Override
     public boolean updateStream() {
         Log.d(TAG, "updateStream called");
-        int session_id = SessionManager.getOngoingSessionId();
+//        int session_id = SessionManager.getOngoingSessionId();
+        int session_id = sharedPrefs.getInt("ongoingSessionid", Constants.INVALID_INT_VALUE);
+
+        Log.d(TAG,"mAccele_str = "+mAccele_str+" mGyroscope_str = "+mGyroscope_str+" mGravity_str = "+mGravity_str+" mLinearAcceleration_str = "+mLinearAcceleration_str);
+        Log.d(TAG,"mRotationVector_str = "+mRotationVector_str+" mProximity_str = "+mProximity_str+" mMagneticField_str = "+mMagneticField_str+" mLight_str = "+mLight_str);
+        Log.d(TAG,"mPressure_str = "+mPressure_str+" mRelativeHumidity_str = "+mRelativeHumidity_str+" mAmbientTemperature_str = "+mAmbientTemperature_str+" session_id = "+session_id);
 
         SensorDataRecord sensorDataRecord = new SensorDataRecord(mAccele_str, mGyroscope_str, mGravity_str, mLinearAcceleration_str,
                 mRotationVector_str, mProximity_str, mMagneticField_str, mLight_str, mPressure_str, mRelativeHumidity_str, mAmbientTemperature_str, String.valueOf(session_id));
@@ -195,8 +203,6 @@ public class SensorStreamGenerator extends AndroidStreamGenerator<SensorDataReco
 
         return true;
     }
-
-
 
     @Override
     public long getUpdateFrequency() {

@@ -26,7 +26,6 @@ import labelingStudy.nctu.minuku.config.Constants;
 import labelingStudy.nctu.minuku.dao.TransportationModeDAO;
 import labelingStudy.nctu.minuku.manager.MinukuDAOManager;
 import labelingStudy.nctu.minuku.manager.MinukuStreamManager;
-import labelingStudy.nctu.minuku.manager.SessionManager;
 import labelingStudy.nctu.minuku.model.DataRecord.ActivityRecognitionDataRecord;
 import labelingStudy.nctu.minuku.model.DataRecord.TransportationModeDataRecord;
 import labelingStudy.nctu.minuku.stream.TransportationModeStream;
@@ -234,7 +233,9 @@ public class TransportationModeStreamGenerator extends AndroidStreamGenerator<Tr
             }
         }*/
 
-        int session_id = SessionManager.getOngoingSessionId();
+//        int session_id = SessionManager.getOngoingSessionId();
+
+        int session_id = sharedPrefs.getInt("ongoingSessionid", Constants.INVALID_INT_VALUE);
 
         String suspectedStartActivity = getActivityNameFromType(getSuspectedStartActivityType());
         String suspectedEndActivity = getActivityNameFromType(getSuspectedStopActivityType());
@@ -248,7 +249,7 @@ public class TransportationModeStreamGenerator extends AndroidStreamGenerator<Tr
         Log.d(TAG, "TransportationMode to be sent to event bus" + transportationModeDataRecord);
 
         //TODO move to AR after examine the transportation
-        MinukuStreamManager.getInstance().setTransportationModeDataRecord(transportationModeDataRecord, mContext, sharedPrefs);
+//        MinukuStreamManager.getInstance().setTransportationModeDataRecord(transportationModeDataRecord, mContext, sharedPrefs);
 
         // also post an event.
         EventBus.getDefault().post(transportationModeDataRecord);
@@ -308,13 +309,17 @@ public class TransportationModeStreamGenerator extends AndroidStreamGenerator<Tr
 
         long detectionTime = activityRecognitionDataRecord.getCreationTime();
 
-        if (probableActivities.get(0).getType() != DetectedActivity.STILL &&
-                        probableActivities.get(0).getConfidence() >= CANCEL_SUSPECT_Threshold) {
+        if ((probableActivities.get(0).getType() == DetectedActivity.ON_BICYCLE ||
+                    probableActivities.get(0).getType() == DetectedActivity.IN_VEHICLE ||
+                    probableActivities.get(0).getType() == DetectedActivity.ON_FOOT) &&
+                    probableActivities.get(0).getConfidence() >= CANCEL_SUSPECT_Threshold) {
 
-            //back to static, cancel the suspection
+            //back to static, cancel the suspect
             setCurrentState(STATE_CONFIRMED);
 
             setSuspectedStartActivityType(NO_ACTIVITY_TYPE);
+
+            setConfirmedActivityType(probableActivities.get(0).getType());
 
             CSVHelper.TransportationState_StoreToCSV(new Date().getTime(), "STATE_CONFIRMED", getConfirmedActivityString());
 

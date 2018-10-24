@@ -17,6 +17,8 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 import labelingStudy.nctu.minuku.Data.DBHelper;
+import labelingStudy.nctu.minuku.Utilities.ScheduleAndSampleManager;
+import labelingStudy.nctu.minuku.config.ActionLogVar;
 import labelingStudy.nctu.minuku.config.Constants;
 import labelingStudy.nctu.minuku.manager.DBManager;
 import labelingStudy.nctu.minuku_2.R;
@@ -112,6 +114,8 @@ public class Timer_site extends AppCompatActivity {
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                DBHelper.insertActionLogTable(ScheduleAndSampleManager.getCurrentTimeInMillis(), ActionLogVar.VIEW_LIST+" - "+ ActionLogVar.ACTION_CLICK+" - "+ActionLogVar.MEANING_CONV_SITE_LIST+" - "+TAG);
 
                 if(position == 0) {
 

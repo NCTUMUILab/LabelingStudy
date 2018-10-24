@@ -4,16 +4,17 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.BatteryManager;
 import android.util.Log;
 
 import org.greenrobot.eventbus.EventBus;
 
+import labelingStudy.nctu.minuku.Utilities.ScheduleAndSampleManager;
 import labelingStudy.nctu.minuku.config.Constants;
 import labelingStudy.nctu.minuku.dao.BatteryDataRecordDAO;
 import labelingStudy.nctu.minuku.manager.MinukuDAOManager;
 import labelingStudy.nctu.minuku.manager.MinukuStreamManager;
-import labelingStudy.nctu.minuku.manager.SessionManager;
 import labelingStudy.nctu.minuku.model.DataRecord.BatteryDataRecord;
 import labelingStudy.nctu.minuku.stream.BatteryStream;
 import labelingStudy.nctu.minukucore.dao.DAOException;
@@ -35,12 +36,20 @@ public class BatteryStreamGenerator extends AndroidStreamGenerator<BatteryDataRe
     public static float mBatteryPercentage = -1;
     private static String mBatteryChargingState = "NA";
     public static boolean isCharging = false;
+    private long detectedTime = Constants.INVALID_TIME_VALUE;
+    private Context mContext;
+
+    private SharedPreferences sharedPrefs;
 
     public BatteryStreamGenerator(Context applicationContext){
         super(applicationContext);
 
+        this.mContext = applicationContext;
         this.mStream = new BatteryStream(Constants.DEFAULT_QUEUE_SIZE);
         this.mDAO = MinukuDAOManager.getInstance().getDaoFor(BatteryDataRecord.class);;
+
+        sharedPrefs = mContext.getSharedPreferences(Constants.sharedPrefString, Context.MODE_PRIVATE);
+
         this.register();
     }
 
@@ -69,11 +78,21 @@ public class BatteryStreamGenerator extends AndroidStreamGenerator<BatteryDataRe
     public boolean updateStream() {
         Log.d(TAG, "updateStream called");
 
-        int session_id = SessionManager.getOngoingSessionId();
+//        int session_id = SessionManager.getOngoingSessionId();
+
+        int session_id = sharedPrefs.getInt("ongoingSessionid", Constants.INVALID_INT_VALUE);
 
         //TODO get service data
         BatteryDataRecord batteryDataRecord
-                = new BatteryDataRecord(mBatteryLevel, mBatteryPercentage, mBatteryChargingState, isCharging, String.valueOf(session_id));
+                = new BatteryDataRecord(mBatteryLevel, mBatteryPercentage, mBatteryChargingState, isCharging, String.valueOf(session_id), detectedTime);
+
+        if((ScheduleAndSampleManager.getCurrentTimeInMillis() - detectedTime) >= Constants.MILLISECONDS_PER_MINUTE * 10
+                && (detectedTime != Constants.INVALID_TIME_VALUE)){
+
+            batteryDataRecord = new BatteryDataRecord(-1,
+                    -1, "NA", false, String.valueOf(session_id), detectedTime);
+        }
+
         mStream.add(batteryDataRecord);
         Log.d(TAG, "CheckFamiliarOrNot to be sent to event bus" + batteryDataRecord);
         // also post an event.
@@ -122,6 +141,9 @@ public class BatteryStreamGenerator extends AndroidStreamGenerator<BatteryDataRe
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if (action.equals(Intent.ACTION_BATTERY_CHANGED)) {
+
+                detectedTime = ScheduleAndSampleManager.getCurrentTimeInMillis();
+
                 int status = intent.getIntExtra("status", -1);
                 //int health = intent.getIntExtra("health", 0);
                 //boolean present = intent.getBooleanExtra("present",false);

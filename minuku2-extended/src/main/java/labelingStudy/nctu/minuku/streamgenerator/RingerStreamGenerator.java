@@ -1,6 +1,7 @@
 package labelingStudy.nctu.minuku.streamgenerator;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.media.AudioDeviceInfo;
 import android.media.AudioManager;
 import android.os.Build;
@@ -13,7 +14,6 @@ import labelingStudy.nctu.minuku.config.Constants;
 import labelingStudy.nctu.minuku.dao.RingerDataRecordDAO;
 import labelingStudy.nctu.minuku.manager.MinukuDAOManager;
 import labelingStudy.nctu.minuku.manager.MinukuStreamManager;
-import labelingStudy.nctu.minuku.manager.SessionManager;
 import labelingStudy.nctu.minuku.model.DataRecord.RingerDataRecord;
 import labelingStudy.nctu.minuku.stream.RingerStream;
 import labelingStudy.nctu.minukucore.dao.DAOException;
@@ -57,6 +57,8 @@ public class RingerStreamGenerator extends AndroidStreamGenerator<RingerDataReco
 
     private static AudioManager mAudioManager;
 
+    private SharedPreferences sharedPrefs;
+
     public static int mainThreadUpdateFrequencyInSeconds = 10;
     public static long mainThreadUpdateFrequencyInMilliseconds = mainThreadUpdateFrequencyInSeconds *Constants.MILLISECONDS_PER_SECOND;
 
@@ -67,10 +69,11 @@ public class RingerStreamGenerator extends AndroidStreamGenerator<RingerDataReco
     public RingerStreamGenerator (Context applicationContext) {
         super(applicationContext);
 
-        mContext = applicationContext;
-
+        this.mContext = applicationContext;
         this.mStream = new RingerStream(Constants.DEFAULT_QUEUE_SIZE);
         this.mDAO = MinukuDAOManager.getInstance().getDaoFor(RingerDataRecord.class);
+
+        sharedPrefs = mContext.getSharedPreferences(Constants.sharedPrefString,Context.MODE_PRIVATE);
 
         mAudioManager = (AudioManager)mContext.getSystemService(mContext.AUDIO_SERVICE);
 
@@ -101,7 +104,9 @@ public class RingerStreamGenerator extends AndroidStreamGenerator<RingerDataReco
 
         Log.d(TAG, "updateStream called");
 
-        int session_id = SessionManager.getOngoingSessionId();
+//        int session_id = SessionManager.getOngoingSessionId();
+
+        int session_id = sharedPrefs.getInt("ongoingSessionid", Constants.INVALID_INT_VALUE);
 
         //TODO get service data
         RingerDataRecord ringerDataRecord = new RingerDataRecord(mRingerMode,mAudioMode,mStreamVolumeMusic

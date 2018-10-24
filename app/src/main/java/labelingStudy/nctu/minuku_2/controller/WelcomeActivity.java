@@ -21,6 +21,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import labelingStudy.nctu.minuku.Data.DBHelper;
+import labelingStudy.nctu.minuku.Utilities.ScheduleAndSampleManager;
+import labelingStudy.nctu.minuku.config.ActionLogVar;
 import labelingStudy.nctu.minuku.config.Constants;
 import labelingStudy.nctu.minuku.logger.Log;
 import labelingStudy.nctu.minuku.manager.MinukuNotificationManager;
@@ -108,10 +111,12 @@ public class WelcomeActivity extends AppCompatActivity {
         switch (item.getItemId()) {
 
             case R.id.action_getDeviceId:
+                DBHelper.insertActionLogTable(ScheduleAndSampleManager.getCurrentTimeInMillis(), ActionLogVar.VIEW_OPTIONITEM+" - "+ ActionLogVar.ACTION_CLICK+" - "+ActionLogVar.MEANING_GET_DEVICEID+" - "+TAG);
                 startActivity(new Intent(WelcomeActivity.this, DeviceIdPage.class));
                 return true;
 
             case R.id.action_permissions:
+                DBHelper.insertActionLogTable(ScheduleAndSampleManager.getCurrentTimeInMillis(), ActionLogVar.VIEW_OPTIONITEM+" - "+ ActionLogVar.ACTION_CLICK+" - "+ActionLogVar.MEANING_POP_UP_PERMISSIONS+" - "+TAG);
 
                 int sdk_int = Build.VERSION.SDK_INT;
                 if(sdk_int >= Build.VERSION_CODES.M) {
@@ -130,23 +135,27 @@ public class WelcomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-            String current_task = getResources().getString(R.string.current_task);
+                DBHelper.insertActionLogTable(ScheduleAndSampleManager.getCurrentTimeInMillis(), ActionLogVar.VIEW_BUTTON+" - "+ ActionLogVar.ACTION_CLICK+" - "+ActionLogVar.MEANING_CHOOSE_MOBILITY+" - "+TAG);
 
-            if(current_task.equals(getResources().getString(R.string.task_PART))) {
+                String current_task = getResources().getString(R.string.current_task);
 
-                Intent intent = new Intent(WelcomeActivity.this, Timer_move.class);
-                startActivity(intent);
-            }else if(current_task.equals(getResources().getString(R.string.task_CAR))){
+                if(current_task.equals(getResources().getString(R.string.task_PART))) {
 
-                Intent intent = new Intent(WelcomeActivity.this, CheckPointActivity.class);
-                startActivity(intent);
+                    Intent intent = new Intent(WelcomeActivity.this, Timer_move.class);
+                    startActivity(intent);
+                }else if(current_task.equals(getResources().getString(R.string.task_CAR))){
+
+                    Intent intent = new Intent(WelcomeActivity.this, CheckPointActivity.class);
+                    startActivity(intent);
+                }
             }
-        }
     };
 
     private Button.OnClickListener watchingMyTimeline = new Button.OnClickListener() {
         @Override
         public void onClick(View v) {
+
+            DBHelper.insertActionLogTable(ScheduleAndSampleManager.getCurrentTimeInMillis(), ActionLogVar.VIEW_BUTTON+" - "+ ActionLogVar.ACTION_CLICK+" - "+ActionLogVar.MEANING_CHOOSE_TIMELINE+" - "+TAG);
 
             Intent intent = new Intent(WelcomeActivity.this, Timeline.class);
             startActivity(intent);

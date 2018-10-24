@@ -98,7 +98,18 @@ public class LocationDataRecord implements DataRecord {
         this.Speed = Speed;
         this.Bearing = Bearing;
         this.Provider = Provider;
+    }
 
+    public LocationDataRecord(float latitude, float longitude, float Accuracy, float Altitude, float Speed, float Bearing, String Provider, String sessionid) {
+        this.creationTime = new Date().getTime();
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.Accuracy = Accuracy;
+        this.Altitude = Altitude;
+        this.Speed = Speed;
+        this.Bearing = Bearing;
+        this.Provider = Provider;
+        this.sessionid = sessionid;
     }
 
     public LocationDataRecord(float latitude, float longitude) {

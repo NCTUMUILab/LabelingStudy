@@ -21,17 +21,19 @@ public class AccessibilityDataRecord implements DataRecord {
         this.creationTime = new Date().getTime();
     }
 
-    public AccessibilityDataRecord(String pack, String text, String type, String extra){
+    public AccessibilityDataRecord(String pack, String text, String type, String extra, String sessionid){
         this.creationTime = new Date().getTime();
 
         this.pack = pack;
         this.text = text;
         this.type = type;
         this.extra = extra;
+        this.sessionid = sessionid;
     }
 
-    public AccessibilityDataRecord(String pack, String text, String type, String extra, String sessionid){
-        this.creationTime = new Date().getTime();
+
+    public AccessibilityDataRecord(String pack, String text, String type, String extra, long detectedTime, String sessionid){
+        this.creationTime = detectedTime;
 
         this.pack = pack;
         this.text = text;

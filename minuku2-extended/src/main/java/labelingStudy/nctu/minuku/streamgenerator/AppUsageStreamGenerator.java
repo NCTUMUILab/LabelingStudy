@@ -5,6 +5,7 @@ import android.app.AppOpsManager;
 import android.app.usage.UsageStats;
 import android.app.usage.UsageStatsManager;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -24,7 +25,6 @@ import labelingStudy.nctu.minuku.dao.AppUsageDataRecordDAO;
 import labelingStudy.nctu.minuku.logger.Log;
 import labelingStudy.nctu.minuku.manager.MinukuDAOManager;
 import labelingStudy.nctu.minuku.manager.MinukuStreamManager;
-import labelingStudy.nctu.minuku.manager.SessionManager;
 import labelingStudy.nctu.minuku.model.DataRecord.AppUsageDataRecord;
 import labelingStudy.nctu.minuku.stream.AppUsageStream;
 import labelingStudy.nctu.minukucore.dao.DAOException;
@@ -94,6 +94,8 @@ public class AppUsageStreamGenerator extends AndroidStreamGenerator<AppUsageData
 
     AppUsageDataRecordDAO mDAO;
 
+    private SharedPreferences sharedPrefs;
+
     public static AppUsageDataRecord toCheckFamiliarOrNotLocationDataRecord;
 
     public AppUsageStreamGenerator(Context applicationContext){
@@ -108,6 +110,7 @@ public class AppUsageStreamGenerator extends AndroidStreamGenerator<AppUsageData
         this.mDAO = MinukuDAOManager.getInstance().getDaoFor(AppUsageDataRecord.class);
 
         mPowerManager = (PowerManager) applicationContext.getSystemService(POWER_SERVICE);
+        sharedPrefs = mContext.getSharedPreferences(Constants.sharedPrefString, mContext.MODE_PRIVATE);
 
         this.register();
     }
@@ -137,7 +140,8 @@ public class AppUsageStreamGenerator extends AndroidStreamGenerator<AppUsageData
 
         Log.d(TAG,"Screen_Status : "+Screen_Status+" LastestForegroundPackage : "+mLastestForegroundPackage+" LastestForegroundActivity : "+mLastestForegroundActivity);
 
-        int session_id = SessionManager.getOngoingSessionId();
+//        int session_id = SessionManager.getOngoingSessionId();
+        int session_id = sharedPrefs.getInt("ongoingSessionid", Constants.INVALID_INT_VALUE);
 
         AppUsageDataRecord appUsageDataRecord = new AppUsageDataRecord(Screen_Status,mLastestForegroundPackage,mLastestForegroundActivity, String.valueOf(session_id));
 

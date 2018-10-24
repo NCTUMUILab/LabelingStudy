@@ -18,6 +18,8 @@ import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.util.Pair;
 import android.view.KeyEvent;
@@ -66,6 +68,7 @@ import labelingStudy.nctu.minuku.Data.DBHelper;
 import labelingStudy.nctu.minuku.Data.DataHandler;
 import labelingStudy.nctu.minuku.NearbyPlaces.GetUrl;
 import labelingStudy.nctu.minuku.Utilities.ScheduleAndSampleManager;
+import labelingStudy.nctu.minuku.config.ActionLogVar;
 import labelingStudy.nctu.minuku.config.Constants;
 import labelingStudy.nctu.minuku.manager.SessionManager;
 import labelingStudy.nctu.minuku.model.Annotation;
@@ -78,6 +81,7 @@ import labelingStudy.nctu.minuku_2.R;
 public class Timeline extends AppCompatActivity {
 
     public static String selectedSiteName = "請選擇地點";
+    public static String selectedSiteLoc = Constants.INVALID_STRING_VALUE;
 
     public static Button dChoosingSite = null;
 
@@ -197,6 +201,8 @@ public class Timeline extends AppCompatActivity {
 
             case R.id.action_getWantedOrder:
 
+                DBHelper.insertActionLogTable(ScheduleAndSampleManager.getCurrentTimeInMillis(), ActionLogVar.VIEW_OPTIONITEM+" - "+ ActionLogVar.ACTION_CLICK+" - "+ActionLogVar.MEANING_CHANGED_ORDER+" - "+TAG);
+
                 if(item.getTitle().equals(getResources().getString(R.string.timeline_from_old_to_new))){
 
                     sharedPrefs.edit().putString("timelineOrder", Constants.ASC).apply();
@@ -217,6 +223,9 @@ public class Timeline extends AppCompatActivity {
                 return true;
 
             case R.id.action_selectdate:
+
+                DBHelper.insertActionLogTable(ScheduleAndSampleManager.getCurrentTimeInMillis(), ActionLogVar.VIEW_OPTIONITEM+" - "+ ActionLogVar.ACTION_CLICK+" - "+ActionLogVar.MEANING_SELECTDATE+" - "+TAG);
+
                 final Calendar c = Calendar.getInstance();
 
                 mYear = c.get(Calendar.YEAR);
@@ -294,6 +303,8 @@ public class Timeline extends AppCompatActivity {
 
         Log.d(TAG, "[test show Timeline] initTime");
 
+        selectedSiteLoc = Constants.INVALID_STRING_VALUE;
+
         try{
 
             mSessions = new ArrayList<>();
@@ -355,7 +366,7 @@ public class Timeline extends AppCompatActivity {
 
         public class ViewHolder extends RecyclerView.ViewHolder {
 
-            public TextView time, goal, date;
+            public TextView time, goal, date, transportationRegisterView;
 //            public TextView sessionType;
             public TimelineView lineView;
             public LinearLayout cardbackground;
@@ -370,6 +381,7 @@ public class Timeline extends AppCompatActivity {
                 time = (TextView) v.findViewById(R.id.tv_time);
                 goal = (TextView) v.findViewById(R.id.tv_goal);
                 date = (TextView) v.findViewById(R.id.tv_date);
+                transportationRegisterView = (TextView) v.findViewById(R.id.tv_transportation);
 //                sessionType = (TextView) v.findViewById(R.id.sessionType);
                 traffic = (ImageView) v.findViewById(R.id.iv_traffic);
                 lineView = (TimelineView) v.findViewById(R.id.time_marker);
@@ -417,7 +429,7 @@ public class Timeline extends AppCompatActivity {
             final long endTime;
 
             //if the session is still ongoing, set the endTime with the current time.
-            if(SessionManager.isSessionOngoing(session.getId()) || SessionManager.isSessionEmptyOngoing(session.getId())){
+            if(SessionManager.isSessionOngoing(session.getId(), sharedPrefs) || SessionManager.isSessionEmptyOngoing(session.getId(), sharedPrefs)){
 
                 endTime = ScheduleAndSampleManager.getCurrentTimeInMillis();
 
@@ -510,19 +522,21 @@ public class Timeline extends AppCompatActivity {
                     holder.traffic.setVisibility(View.INVISIBLE);
                 }
 
-                //TODO change the original field from transportation to goal
                 if(transportation.equals(TransportationModeStreamGenerator.TRANSPORTATION_MODE_NAME_NO_TRANSPORTATION)){
 
                     String labeledSitename = labelJson.getString(Constants.ANNOTATION_Label_SITENAME);
                     Log.d(TAG, "[storing sitename] Sitename from DB : "+ labeledSitename);
 
-                    transportationInChinese = labeledSitename;
+//                    transportationInChinese = labeledSitename;
+                    holder.transportationRegisterView.setText(labeledSitename);
 
-//                    holder.goal.setText(labeledSitename);
+                    holder.goal.setText(labeledSitename);
                 }else{
 
-                    transportationInChinese = label_Transportation;
-//                    holder.goal.setText(label_Transportation);
+//                    transportationInChinese = label_Transportation;
+                    holder.transportationRegisterView.setText(label_Transportation);
+
+                    holder.goal.setText(label_Transportation);
                 }
             }catch (JSONException e){
 
@@ -581,7 +595,6 @@ public class Timeline extends AppCompatActivity {
                             if(customizedSite.size() != 0){
 
                                 //check the distance between the session's first location and the customizedSite
-
                                 float smallestDist = 999;
                                 String closestSite = "";
 
@@ -607,27 +620,26 @@ public class Timeline extends AppCompatActivity {
 
                                 if(!closestSite.equals("")){
 
-//                                    transportationDuration = textShortenIfTooLong(closestSite);
                                     transportationDuration = closestSite;
                                 }else {
 
-                                    name = GetUrl.getSiteNameFromNet(lat, lng);
-                                    //TODO store(update) them into the session table at the first time they see this record at the first time
+                                    String siteInform = GetUrl.getSiteInformFromNet(lat, lng);
 
-                                    transportationDuration = name;
+                                    transportationDuration = siteInform.split(Constants.DELIMITER)[0];
                                 }
                             }else {
 
-                                name = GetUrl.getSiteNameFromNet(lat, lng);
-                                //TODO store(update) them into the session table at the first time they see this record at the first time
+                                String siteInform = GetUrl.getSiteInformFromNet(lat, lng);
 
-                                transportationDuration = name;
+                                transportationDuration = siteInform.split(Constants.DELIMITER)[0];
                             }
 
                             detectedSiteName = transportationDuration;
 
-                            transportationInChinese = transportationDuration;
-//                            holder.goal.setText(transportationDuration);
+//                            transportationInChinese = transportationDuration;
+                            holder.transportationRegisterView.setText(transportationDuration);
+
+                            holder.goal.setText(transportationDuration);
 
                             int icon = getIconToShowTransportation(transportation);
                             holder.traffic.setImageResource(icon);
@@ -641,8 +653,10 @@ public class Timeline extends AppCompatActivity {
 
                         Annotation annotation_sitename = annotations_sitename.get(annotations_sitename.size()-1);
                         String sitename = annotation_sitename.getContent();
-                        transportationInChinese = sitename;
-//                        holder.goal.setText(sitename);
+//                        transportationInChinese = sitename;
+                        holder.transportationRegisterView.setText(sitename);
+
+                        holder.goal.setText(sitename);
 
                         int icon = getIconToShowTransportation(transportation);
                         holder.traffic.setImageResource(icon);
@@ -651,8 +665,10 @@ public class Timeline extends AppCompatActivity {
                     //if it isn't static set the text and icon directly
                 }else if(transportation.equals(TransportationModeStreamGenerator.TRANSPORTATION_MODE_HASNT_DETECTED_FLAG)){
 
-                    transportationInChinese = transportation;
-//                    holder.goal.setText(transportation);
+//                    transportationInChinese = transportation;
+                    holder.transportationRegisterView.setText(transportation);
+
+                    holder.goal.setText(transportation);
 
                     int icon = getIconToShowTransportation(transportation);
                     holder.traffic.setImageResource(icon);
@@ -661,8 +677,10 @@ public class Timeline extends AppCompatActivity {
                     //set the transportation (from detected) icon and text
                     String activityName = getActivityNameFromTransportationString(transportation);
 
-                    transportationInChinese = activityName;
-//                    holder.goal.setText(activityName);
+//                    transportationInChinese = activityName;
+                    holder.transportationRegisterView.setText(activityName);
+
+                    holder.goal.setText(activityName);
 
                     int icon = getIconToShowTransportation(transportation);
                     holder.traffic.setImageResource(icon);
@@ -684,11 +702,12 @@ public class Timeline extends AppCompatActivity {
 
                 //TODO if not set the setBackground with no color
                 GradientDrawable sd = new GradientDrawable();
-                int backgroundColor = mContext.getResources().getColor(R.color.white);
+                int backgroundColor = mContext.getResources().getColor(R.color.custom);
                 sd.setColor(backgroundColor);
                 holder.cardView.setBackground(sd);
             }
 
+            //TODO deprecated
             /*String currentWork = getResources().getString(labelingStudy.nctu.minuku.R.string.current_task);
 
             if(currentWork.equals(getResources().getString(R.string.task_CAR))){
@@ -703,13 +722,20 @@ public class Timeline extends AppCompatActivity {
                 holder.sessionType.setVisibility(View.GONE);
             }*/
 
-            holder.goal.setText(getGoal(session));
+            //set the goal instead of the transportation to the goal textview
+            String goal = getGoal(session);
+
+            if(!goal.equals("")) {
+
+                holder.goal.setText(goal);
+            }
 
             holder.itemView.setOnClickListener(new View.OnClickListener() {
 
                 @Override
                 public void onClick(View view) {
-                    Log.d(TAG, "mContext : " + mContext);
+
+                    DBHelper.insertActionLogTable(ScheduleAndSampleManager.getCurrentTimeInMillis(), ActionLogVar.VIEW_ITEMVIEW+" - "+ ActionLogVar.ACTION_CLICK+" - "+ActionLogVar.MEANING_EACH_RECORD+" - "+TAG);
 
                     final LayoutInflater inflater = LayoutInflater.from(mContext);
                     final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
@@ -719,7 +745,7 @@ public class Timeline extends AppCompatActivity {
                     final Button showMapButton = (Button) layout.findViewById(R.id.showMap);
                     final Button startTimeButton = (Button) layout.findViewById(R.id.startTime);
                     final Button endTimeButton = (Button) layout.findViewById(R.id.endTime);
-                    final String[] activity = {"請選擇交通模式", "走路", "自行車", "汽車", "定點", "此移動不存在", "與前一個相同"};
+                    final String[] activity = {"請選擇交通模式", "走路", "自行車", "汽機車", "定點", "此移動不存在", "與前一個相同"};
                     final ArrayAdapter<String> activityList = new ArrayAdapter<>(mContext,
                             android.R.layout.simple_spinner_dropdown_item,
                             activity);
@@ -732,13 +758,15 @@ public class Timeline extends AppCompatActivity {
                     modifiedEndTime[0] = endTime;
 
                     //get the availSite from the label
-                    final String labeled_transportation = transportationInChinese;
+                    final String labeled_transportation = holder.transportationRegisterView.getText().toString();
 
                     dSpinner.setAdapter(activityList);
                     dSpinner.setSelection(getIndex(dSpinner, labeled_transportation));
                     dSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                         @Override
                         public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+
+                            DBHelper.insertActionLogTable(ScheduleAndSampleManager.getCurrentTimeInMillis(), ActionLogVar.VIEW_SPINNER+" - "+ ActionLogVar.ACTION_ITEM_SELECTED+" - "+ActionLogVar.MEANING_CHOOSE_MOBILITY+" - "+TAG);
 
                             String selectedItem = parent.getSelectedItem().toString();
                             String selectedItemTransportationName = getTransportationFromSelectedItem(selectedItem);
@@ -762,6 +790,8 @@ public class Timeline extends AppCompatActivity {
                                 dChoosingSite.setOnClickListener(new Button.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {
+
+                                        DBHelper.insertActionLogTable(ScheduleAndSampleManager.getCurrentTimeInMillis(), ActionLogVar.VIEW_BUTTON+" - "+ ActionLogVar.ACTION_CLICK+" - "+ActionLogVar.MEANING_CHOOSE_SITE+" - "+TAG);
 
                                         //try catch the situation that the location hasn't been caught
                                         try {
@@ -787,7 +817,7 @@ public class Timeline extends AppCompatActivity {
                                         }catch (IndexOutOfBoundsException e){
 
                                             e.printStackTrace();
-                                            Toast.makeText(mContext, getResources().getString(R.string.reminder_havent_got_gps), Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(mContext, getResources().getString(R.string.reminder_didnt_got_gps), Toast.LENGTH_SHORT).show();
                                         }
                                     }
                                 });
@@ -807,6 +837,8 @@ public class Timeline extends AppCompatActivity {
                     showMapButton.setOnClickListener(new Button.OnClickListener(){
                         @Override
                         public void onClick(View v) {
+
+                            DBHelper.insertActionLogTable(ScheduleAndSampleManager.getCurrentTimeInMillis(), ActionLogVar.VIEW_MAP+" - "+ ActionLogVar.ACTION_CLICK+" - "+ActionLogVar.MEANING_SHOW_MAP+" - "+TAG);
 
                             final LayoutInflater inflater = LayoutInflater.from(Timeline.this);
                             final AlertDialog.Builder builder = new AlertDialog.Builder(Timeline.this);
@@ -831,6 +863,8 @@ public class Timeline extends AppCompatActivity {
 
                                         @Override
                                         public void onClick(View view) {
+
+                                            DBHelper.insertActionLogTable(ScheduleAndSampleManager.getCurrentTimeInMillis(), ActionLogVar.VIEW_BUTTON+" - "+ ActionLogVar.ACTION_CLICK+" - "+ActionLogVar.MEANING_OK+" - "+TAG);
 
                                             if(IsSplitLocationChosen) {
 
@@ -887,6 +921,8 @@ public class Timeline extends AppCompatActivity {
                         public void onClick(View view) {
                             Log.d(TAG,"startTime clicked");
 
+                            DBHelper.insertActionLogTable(ScheduleAndSampleManager.getCurrentTimeInMillis(), ActionLogVar.VIEW_BUTTON+" - "+ ActionLogVar.ACTION_CLICK+" - "+ActionLogVar.MEANING_CHOOSE_STARTTIME+" - "+TAG);
+
                             final SimpleDateFormat sdf_HHmm = new SimpleDateFormat(Constants.DATE_FORMAT_HOUR_MIN);
                             String startTimeString_HHmm = ScheduleAndSampleManager.getTimeString(startTime, sdf_HHmm);
 
@@ -935,7 +971,9 @@ public class Timeline extends AppCompatActivity {
                         @Override
                         public void onClick(View view) {
 
-                            Log.d(TAG,"startTime clicked");
+                            Log.d(TAG,"endTime clicked");
+
+                            DBHelper.insertActionLogTable(ScheduleAndSampleManager.getCurrentTimeInMillis(), ActionLogVar.VIEW_BUTTON+" - "+ ActionLogVar.ACTION_CLICK+" - "+ActionLogVar.MEANING_CHOOSE_ENDTIME+" - "+TAG);
 
                             final SimpleDateFormat sdf_HHmm = new SimpleDateFormat(Constants.DATE_FORMAT_HOUR_MIN);
                             String endTimeString_HHmm = ScheduleAndSampleManager.getTimeString(endTime, sdf_HHmm);
@@ -986,7 +1024,56 @@ public class Timeline extends AppCompatActivity {
                     Dannotation_goal.setText("");
                     Dannotation_specialEvent.setText("");
 
-                    //TODO become function
+                    Dannotation_goal.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            DBHelper.insertActionLogTable(ScheduleAndSampleManager.getCurrentTimeInMillis(), ActionLogVar.VIEW_EDITTEXT+" - "+ ActionLogVar.ACTION_CLICK+" - "+ActionLogVar.MEANING_ANNOTATION_GOAL+" - "+TAG);
+                        }
+                    });
+
+                    Dannotation_goal.addTextChangedListener(new TextWatcher() {
+                        @Override
+                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                        }
+
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+                            DBHelper.insertActionLogTable(ScheduleAndSampleManager.getCurrentTimeInMillis(), ActionLogVar.VIEW_EDITTEXT+" - "+ ActionLogVar.ACTION_TEXT_CHANGED+" - "+ActionLogVar.MEANING_ANNOTATION_GOAL+" - "+TAG);
+                        }
+
+                        @Override
+                        public void afterTextChanged(Editable s) {
+
+                        }
+                    });
+
+
+                    Dannotation_specialEvent.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            DBHelper.insertActionLogTable(ScheduleAndSampleManager.getCurrentTimeInMillis(), ActionLogVar.VIEW_EDITTEXT+" - "+ ActionLogVar.ACTION_CLICK+" - "+ActionLogVar.MEANING_ANNOTATION_SPECIAL_EVENT+" - "+TAG);
+                        }
+                    });
+
+                    Dannotation_specialEvent.addTextChangedListener(new TextWatcher() {
+                        @Override
+                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                        }
+
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+                            DBHelper.insertActionLogTable(ScheduleAndSampleManager.getCurrentTimeInMillis(), ActionLogVar.VIEW_EDITTEXT+" - "+ ActionLogVar.ACTION_TEXT_CHANGED+" - "+ActionLogVar.MEANING_ANNOTATION_SPECIAL_EVENT+" - "+TAG);
+                        }
+
+                        @Override
+                        public void afterTextChanged(Editable s) {
+
+                        }
+                    });
+
+
                     try {
 
                         AnnotationSet annotationSet = session.getAnnotationsSet();
@@ -1025,6 +1112,8 @@ public class Timeline extends AppCompatActivity {
 
                                 @Override
                                 public void onClick(View view) {
+
+                                    DBHelper.insertActionLogTable(ScheduleAndSampleManager.getCurrentTimeInMillis(), ActionLogVar.VIEW_BUTTON+" - "+ ActionLogVar.ACTION_CLICK+" - "+ActionLogVar.MEANING_OK+" - "+TAG);
 
                                     String selectedActivityString = dSpinner.getSelectedItem().toString();
                                     String goal = Dannotation_goal.getText().toString();
@@ -1091,6 +1180,8 @@ public class Timeline extends AppCompatActivity {
                                             labelJson.put(Constants.ANNOTATION_Label_GOAL, goal);
                                             labelJson.put(Constants.ANNOTATION_Label_SPECIALEVENT, specialEvent);
                                             labelJson.put(Constants.ANNOTATION_Label_SITENAME, sitename);
+                                            labelJson.put(Constants.ANNOTATION_Label_SITELOCATION, selectedSiteLoc);
+                                            labelJson.put(Constants.ANNOTATION_Label_TIME, ScheduleAndSampleManager.getCurrentTimeInMillis());
                                         } catch (JSONException e) {
                                             e.printStackTrace();
                                         }
@@ -1141,14 +1232,11 @@ public class Timeline extends AppCompatActivity {
 
                 goal = labelJson.getString(Constants.ANNOTATION_Label_GOAL);
             }catch (IndexOutOfBoundsException e){
-                Log.d(TAG, "IndexOutOfBoundsException");
-//                        e.printStackTrace();
+//                Log.e(TAG, "IndexOutOfBoundsException", e);
             }catch (JSONException e){
-                Log.d(TAG, "JSONException");
-//                        e.printStackTrace();
+//                Log.e(TAG, "JSONException", e);
             }catch (NullPointerException e){
-                Log.d(TAG, "NullPointerException");
-//                        e.printStackTrace();
+//                Log.e(TAG, "NullPointerException", e);
             }
 
             return goal;
@@ -1191,6 +1279,8 @@ public class Timeline extends AppCompatActivity {
                         googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
                             @Override
                             public void onMapClick(LatLng latLng) {
+
+                                DBHelper.insertActionLogTable(ScheduleAndSampleManager.getCurrentTimeInMillis(), ActionLogVar.VIEW_MAP+" - "+ ActionLogVar.ACTION_CLICK+" - "+ActionLogVar.MEANING_CHOOSE_SPLIT_POINT+" - "+TAG);
 
                                 //remove the current marker
                                 if(currentMarkerKey != -1){
@@ -1312,7 +1402,7 @@ public class Timeline extends AppCompatActivity {
             if (mGoogleMap!=null){
 
                 //if we're reviewing a previous session ( the trip is not ongoing), get session from the database (note that we have to use session id to check instead of a session instance)
-                if (!SessionManager.isSessionOngoing(sessionId)) {
+                if (!SessionManager.isSessionOngoing(sessionId, sharedPrefs)) {
 
                     //because there could be many points for already ended trace, so we use asynch to download the annotations
                     try{
@@ -1521,7 +1611,7 @@ public class Timeline extends AppCompatActivity {
                 return "on_foot";
             case "自行車":
                 return "on_bicycle";
-            case "汽車":
+            case "汽機車":
                 return "in_vehicle";
             default:
                 return "static";
@@ -1535,7 +1625,7 @@ public class Timeline extends AppCompatActivity {
                 return TransportationModeStreamGenerator.TRANSPORTATION_MODE_NAME_ON_FOOT;
             case "自行車":
                 return TransportationModeStreamGenerator.TRANSPORTATION_MODE_NAME_ON_BICYCLE;
-            case "汽車":
+            case "汽機車":
                 return TransportationModeStreamGenerator.TRANSPORTATION_MODE_NAME_IN_VEHICLE;
             case "定點":
                 return TransportationModeStreamGenerator.TRANSPORTATION_MODE_NAME_NO_TRANSPORTATION;
@@ -1544,7 +1634,7 @@ public class Timeline extends AppCompatActivity {
             case "與前一個相同":
                 return "與前一個相同";
             default:
-                return "Unknown";
+                return "未知";
         }
 
     }
@@ -1561,9 +1651,9 @@ public class Timeline extends AppCompatActivity {
 //                return "bike";
                 return "自行車";
             case TransportationModeStreamGenerator.TRANSPORTATION_MODE_NAME_IN_VEHICLE:
-            case "汽車":
+            case "汽機車":
 //                return "car";
-                return "汽車";
+                return "汽機車";
 
             case TransportationModeStreamGenerator.TRANSPORTATION_MODE_NAME_NO_TRANSPORTATION:
             case "定點":
@@ -1582,7 +1672,7 @@ public class Timeline extends AppCompatActivity {
             case "bike":
                 return "騎自行車";
             case "car":
-                return "汽車";
+                return "汽機車";
             default:
                 return "定點（未知地點）";
         }

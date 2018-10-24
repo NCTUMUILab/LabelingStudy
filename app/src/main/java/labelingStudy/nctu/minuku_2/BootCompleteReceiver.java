@@ -8,8 +8,8 @@ import android.os.Build;
 import android.util.Log;
 
 import labelingStudy.nctu.minuku.Data.DBHelper;
+import labelingStudy.nctu.minuku.Utilities.ScheduleAndSampleManager;
 import labelingStudy.nctu.minuku.config.Constants;
-import labelingStudy.nctu.minuku.manager.SessionManager;
 import labelingStudy.nctu.minuku_2.service.BackgroundService;
 
 /**
@@ -34,19 +34,13 @@ public class BootCompleteReceiver extends BroadcastReceiver {
                 dbhelper.getWritableDatabase();
                 Log.d(TAG,"db is ok");
 
-                /*if(!InstanceManager.isInitialized()) {
-                    InstanceManager.getInstance(context);
-                }*/
-
                 SharedPreferences sharedPrefs = context.getSharedPreferences(Constants.sharedPrefString, context.MODE_PRIVATE);
 
                 //recover the ongoing session
-                int ongoingSessionId = sharedPrefs.getInt("ongoingSessionid", -1);
+                int ongoingSessionId = sharedPrefs.getInt("ongoingSessionid", Constants.INVALID_INT_VALUE);
 
-                if(ongoingSessionId != -1){
-
-                    SessionManager.getInstance(context).addOngoingSessionid(ongoingSessionId);
-                }
+                //record for the value of user unlock from UserManager
+                DBHelper.insertActionLogTable(ScheduleAndSampleManager.getCurrentTimeInMillis(), "0", "1");
 
             }finally {
 

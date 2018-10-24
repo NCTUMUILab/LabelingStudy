@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import labelingStudy.nctu.minuku.Data.DBHelper;
 import labelingStudy.nctu.minuku.Utilities.CSVHelper;
 import labelingStudy.nctu.minuku.Utilities.ScheduleAndSampleManager;
+import labelingStudy.nctu.minuku.Utilities.Utils;
 import labelingStudy.nctu.minuku.config.Constants;
 import labelingStudy.nctu.minuku.model.Annotation;
 import labelingStudy.nctu.minuku.model.AnnotationSet;
@@ -28,11 +29,6 @@ import labelingStudy.nctu.minuku.streamgenerator.TransportationModeStreamGenerat
 public class SessionManager {
 
     private final static String TAG = "SessionManager";
-
-    private String sessionid;
-    private String transportation;
-    private String lasttime_transportation;
-    private String lasttime_trip_transportation;
 
     public static final String ANNOTATION_PROPERTIES_ANNOTATION = "Annotation";
     public static final String ANNOTATION_PROPERTIES_ID = "Id";
@@ -63,37 +59,19 @@ public class SessionManager {
 
     private static ArrayList<Integer> mOngoingSessionIdList;
     private static ArrayList<Integer> mEmptyOngoingSessionIdList;
-    private static boolean emptySessionOngoing;
 
     public static boolean sessionIsWaiting;
 
-    private SharedPreferences sharedPrefs;
-    private static SharedPreferences.Editor editor;
-
-//    private int testing_count;
 
     public SessionManager(Context context) {
 
         this.mContext = context;
 
-        sharedPrefs = context.getSharedPreferences("edu.umich.minuku_2",Context.MODE_PRIVATE);
-        editor = context.getSharedPreferences("edu.umich.minuku_2", Context.MODE_PRIVATE).edit();
-
-        sessionid = "0";
-
         mOngoingSessionIdList = new ArrayList<Integer>();
 
         mEmptyOngoingSessionIdList = new ArrayList<Integer>();
 
-        emptySessionOngoing = false;
-
         sessionIsWaiting = false;
-
-        transportation = "NA";
-
-        lasttime_transportation = sharedPrefs.getString("","NA");
-
-        lasttime_trip_transportation = sharedPrefs.getString("lasttime_trip_transportation","NA");
     }
 
     public static SessionManager getInstance() {
@@ -133,17 +111,25 @@ public class SessionManager {
         return session_id;
     }
 
-    public static boolean isSessionOngoing(int sessionId) {
+    public static boolean isSessionOngoing(int sessionId, SharedPreferences sharedPrefs) {
 
         Log.d(TAG, " [test combine] tyring to see if the session is ongoing:" + sessionId);
 
-        for (int i = 0; i< mOngoingSessionIdList.size(); i++){
-            //       Log.d(LOG_TAG, " [getCurRecordingSession] looping to " + i + "th session of which the id is " + mCurRecordingSessions.get(i).getId());
+//        for (int i = 0; i< mOngoingSessionIdList.size(); i++){
+//            //       Log.d(LOG_TAG, " [getCurRecordingSession] looping to " + i + "th session of which the id is " + mCurRecordingSessions.get(i).getId());
+//
+//            if (mOngoingSessionIdList.get(i)==sessionId){
+//                return true;
+//            }
+//        }
 
-            if (mOngoingSessionIdList.get(i)==sessionId){
-                return true;
-            }
+        int ongoingSessionid = sharedPrefs.getInt("ongoingSessionid", Constants.INVALID_INT_VALUE);
+
+        if(ongoingSessionid == sessionId){
+
+            return true;
         }
+
         Log.d(TAG, " [test combine] the session is not ongoing:" + sessionId);
 
         return false;
@@ -157,48 +143,27 @@ public class SessionManager {
         return mOngoingSessionIdList;
     }
 
-    public void setOngoingSessionIdList(ArrayList<Integer> ongoingSessionIdList) {
-        mOngoingSessionIdList = ongoingSessionIdList;
-    }
-
-    public void addOngoingSessionid(int id) {
-        Log.d(TAG, "test combine: adding ongonig session " + id );
-        this.mOngoingSessionIdList.add(id);
-
-    }
-
-    public ArrayList<Integer> getOngoingSessionList () {
-        return mOngoingSessionIdList;
-    }
-
-    public void removeOngoingSessionid(int id) {
-        Log.d(TAG, "test replay: inside removeongogint session renove " + id );
-        this.mOngoingSessionIdList.remove(id);
-        Log.d(TAG, "test replay: inside removeongogint session the ongoiong list is  " + mOngoingSessionIdList.toString() );
-    }
-
-
-    public static boolean isSessionEmptyOngoing(int sessionId) {
+    public static boolean isSessionEmptyOngoing(int sessionId, SharedPreferences sharedPrefs) {
 
         Log.d(TAG, " [test combine] tyring to see if the session is ongoing:" + sessionId);
 
-        for (int i = 0; i< mEmptyOngoingSessionIdList.size(); i++){
+//        for (int i = 0; i< mEmptyOngoingSessionIdList.size(); i++){
+//
+//            if (mEmptyOngoingSessionIdList.get(i)==sessionId){
+//                return true;
+//            }
+//        }
 
-            if (mEmptyOngoingSessionIdList.get(i)==sessionId){
-                return true;
-            }
+        int ongoingSessionid = sharedPrefs.getInt("emptyOngoingSessionid", Constants.INVALID_INT_VALUE);
+
+        if(ongoingSessionid == sessionId){
+
+            return true;
         }
+
         Log.d(TAG, " [test combine] the session is not ongoing:" + sessionId);
 
         return false;
-    }
-
-    public static boolean isEmptySessionOngoing() {
-        return emptySessionOngoing;
-    }
-
-    public static void setEmptySessionOngoing(boolean emptySessionOngoing) {
-        SessionManager.emptySessionOngoing = emptySessionOngoing;
     }
 
     public static void setEmptyOngoingSessionIdList(ArrayList<Integer> mEmptyOngoingSessionIdList) {
@@ -212,15 +177,6 @@ public class SessionManager {
     public static void addEmptyOngoingSessionid(int id) {
         Log.d(TAG, "test combine: adding ongonig session " + id );
         mEmptyOngoingSessionIdList.add(id);
-
-    }
-
-    public static String getTimeString(long time){
-
-        SimpleDateFormat sdf_now = new SimpleDateFormat(Constants.DATE_FORMAT_NOW_SLASH);
-        String currentTimeString = sdf_now.format(time);
-
-        return currentTimeString;
     }
 
     /**
@@ -328,6 +284,7 @@ public class SessionManager {
                 annotateionSetJSONArray = annotationSetJSON.getJSONArray(ANNOTATION_PROPERTIES_ANNOTATION);
             }
         } catch (JSONException e) {
+            Log.e(TAG, "JSONException", e);
             e.printStackTrace();
         }
 
@@ -344,7 +301,7 @@ public class SessionManager {
     public static Session getSession (String id) {
 
         int sessionId = Integer.parseInt(id);
-        ArrayList<String> res =  DBHelper.querySession(sessionId);
+        ArrayList<String> res = DBHelper.querySession(sessionId);
         Log.d(TAG, "[test show trip]query session from LocalDB is " + res);
         Session session = null;
 
@@ -421,18 +378,20 @@ public class SessionManager {
 
         Log.d(TAG, "sessionId : "+sessionId);
         Session session = null;
-        String sessionStr =  DBHelper.querySession(sessionId).get(0);
-        Log.d(TAG, "query session from LocalDB is " + sessionStr);
-        session = convertStringToSession(sessionStr);
-        Log.d(TAG, " testgetdata id " + session.getId() + " startTime " + session.getStartTime() + " end time " + session.getEndTime() + " annotation " + session.getAnnotationsSet().toJSONObject().toString());
+        try {
 
+            String sessionStr = DBHelper.querySession(sessionId).get(0);
+            Log.d(TAG, "query session from LocalDB is " + sessionStr);
+            session = convertStringToSession(sessionStr);
+            Log.d(TAG, " testgetdata id " + session.getId() + " startTime " + session.getStartTime() + " end time " + session.getEndTime() + " annotation " + session.getAnnotationsSet().toJSONObject().toString());
+        }catch (IndexOutOfBoundsException e){
+            CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_SESSION, "sessionId : "+sessionId+" no data in DB");
+            CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_SESSION, Utils.getStackTrace(e));
+            getSession(sessionId-1);
+        }
         return session;
     }
 
-    /**
-     *
-     * @return
-     */
     public static int getNumOfSession(){
         int num = 0;
 
@@ -475,7 +434,7 @@ public class SessionManager {
     public static void startNewSession(Session session) {
 
         //InstanceManager add ongoing session for the new activity
-        SessionManager.getInstance().addOngoingSessionid(session.getId());
+//        SessionManager.getInstance().addOngoingSessionid(session.getId());
 
         Log.d(TAG, "startNewSession id " + session.getId() + " startTime " + ScheduleAndSampleManager.getTimeString(session.getStartTime()) + " end time " + ScheduleAndSampleManager.getTimeString(session.getEndTime()) + " annotation " + session.getAnnotationsSet().toJSONObject().toString());
 
@@ -557,19 +516,20 @@ public class SessionManager {
 
 
     /**
-     *Combine secondLast  session and new session
+     * Combine secondLast  session and new session
      */
-    public static void continue2ndLastSession(Session session) {
+    public static void continue2ndLastSession(SharedPreferences sharedPrefs) {
 
         //reset ongoingSession to last session
 //        getOngoingSessionIdList().add(getLastSession().getId());
-        getOngoingSessionIdList().add(getSecondLastSession().getId());
+//        getOngoingSessionIdList().add(getSecondLastSession().getId());
+        sharedPrefs.edit().putInt("ongoingSessionid", getSecondLastSession().getId()).apply();
+
         //update session with end time and long enough flag.
         updateCurSessionEndInfoTo(getSecondLastSession().getId(),0,true);
 
         //TODO set the lastSession which is static to be the flag representing do not show it
         updateCurSession(getLastSession().getId(), Constants.SESSION_IS_HIDED_FLAG);
-
     }
 
     /**
@@ -578,18 +538,12 @@ public class SessionManager {
      */
     public static void endCurSession(Session session) {
 
-        Log.d(TAG, "test show trip: before ending the session the list sizr is " + getOngoingSessionIdList().size());
-
         Log.d(TAG, "test show trip: end cursession Id : " + session.getId());
         Log.d(TAG, "test show trip: end cursession EndTime : " + ScheduleAndSampleManager.getTimeString(session.getEndTime()));
         Log.d(TAG, "test show trip: end cursession isUserPress : " + session.isUserPress());
 
-        Log.d(TAG, "test show trip: before remove the list at 0 is " + getOngoingSessionIdList().get(0));
-
         //remove the ongoing session
-        mOngoingSessionIdList.remove(Integer.valueOf(session.getId()));
-
-        Log.d(TAG, "test show trip: after remove going the list is  " + getOngoingSessionIdList().toString());
+//        mOngoingSessionIdList.remove(Integer.valueOf(session.getId()));
 
         //update session with end time and long enough flag.
         updateCurSessionEndInfoTo(session.getId(),session.getEndTime(),session.isUserPress());

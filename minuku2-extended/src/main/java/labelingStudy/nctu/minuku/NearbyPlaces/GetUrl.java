@@ -37,9 +37,12 @@ public class GetUrl {
         return googlePlaceUrl.toString();
     }
 
-    public static String getSiteNameFromNet(double lat, double lng) {
+    public static String getSiteInformFromNet(double lat, double lng) {
 
-        String jsonInString, name = Constants.UNKNOWN_SITE;
+        String jsonInString, siteName = Constants.UNKNOWN_SITE;
+
+        String siteLat = Constants.INVALID_STRING_VALUE;
+        String siteLng = Constants.INVALID_STRING_VALUE;
 
         try {
             String url = getUrl(lat, lng);
@@ -57,7 +60,15 @@ public class GetUrl {
             JSONArray results = jsonObject.getJSONArray("results");
 
             //default now we choose the second index from the json.(first index is ken(縣名) name.)
-            name = results.getJSONObject(1).getString("name");
+            siteName = results.getJSONObject(1).getString("name");
+            String geometry = results.getJSONObject(1).getString("geometry");
+
+            JSONObject geometryJson = new JSONObject(geometry);
+            String location = geometryJson.getString("location");
+            JSONObject locationJson = new JSONObject(location);
+            siteLat = locationJson.getString("lat");
+            siteLng = locationJson.getString("lng");
+
         }catch (InterruptedException e){
 
         }catch (ExecutionException e){
@@ -66,7 +77,7 @@ public class GetUrl {
 
         }
 
-        return name;
+        return siteName+Constants.DELIMITER+"("+siteLat+","+siteLng+")";
     }
 
     private static class HttpAsyncGetSiteTask extends AsyncTask<String, Void, String> {
