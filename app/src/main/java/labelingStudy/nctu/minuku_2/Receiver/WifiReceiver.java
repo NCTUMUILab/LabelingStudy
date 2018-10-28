@@ -73,7 +73,7 @@ public class WifiReceiver extends BroadcastReceiver {
 
     private SharedPreferences sharedPrefs;
 
-    private int year,month,day,hour,min;
+    private int year,month,day,hour,min,sec;
 
     private long nowTime = -9999;
     private long startTime = -9999;
@@ -119,10 +119,10 @@ public class WifiReceiver extends BroadcastReceiver {
 
         hour = sharedPrefs.getInt("StartHour", mHour);
         min = sharedPrefs.getInt("StartMin",0);
-
+        sec = sharedPrefs.getInt("StartSec",0);
         currentCondition = context.getResources().getString(labelingStudy.nctu.minuku.R.string.current_task);
 
-        Log.d(TAG, "year : "+ year+" month : "+ month+" day : "+ day+" hour : "+ hour+" min : "+ min);
+        Log.d(TAG, "year : "+ year+" month : "+ month+" day : "+ day+" hour : "+ hour+" min : "+ min+" sec : "+sec);
 
         if (Constants.ACTION_CONNECTIVITY_CHANGE.equals(intent.getAction())) {
 
@@ -132,7 +132,8 @@ public class WifiReceiver extends BroadcastReceiver {
                     && activeNetwork.isConnected()
                     ){
 
-                boolean firstTimeToLogCSV_Wifi = sharedPrefs.getBoolean(CSVHelper.CSV_Wifi, true);
+                //TODO deprecated
+                /*boolean firstTimeToLogCSV_Wifi = sharedPrefs.getBoolean(CSVHelper.CSV_Wifi, true);
 
                 if(firstTimeToLogCSV_Wifi) {
                     CSVHelper.storeToCSV(CSVHelper.CSV_Wifi, "describeContents", "getDetailedState", "getExtraInfo",
@@ -148,7 +149,7 @@ public class WifiReceiver extends BroadcastReceiver {
                         String.valueOf(activeNetwork.isConnected()), String.valueOf(activeNetwork.isConnectedOrConnecting()),
                         String.valueOf(activeNetwork.isFailover()), String.valueOf(activeNetwork.isRoaming()));
 
-                CSVHelper.storeToCSV(CSVHelper.CSV_Wifi, activeNetwork.toString());
+                CSVHelper.storeToCSV(CSVHelper.CSV_Wifi, activeNetwork.toString());*/
 
                 uploadData();
             }
@@ -195,6 +196,8 @@ public class WifiReceiver extends BroadcastReceiver {
         try {
 
             CSVHelper.storeToCSV(CSVHelper.CSV_Wifi, "sending dump data endTime : ", dataInJson.getString("endTime"));
+            long endtimeToLog = Long.valueOf(dataInJson.getString("endTime"));
+            CSVHelper.storeToCSV(CSVHelper.CSV_Wifi, "sending dump data endTime String : ", ScheduleAndSampleManager.getTimeString(endtimeToLog));
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
                 lastTimeInServer = new HttpAsyncPostJsonTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
@@ -219,6 +222,8 @@ public class WifiReceiver extends BroadcastReceiver {
             Log.d(TAG, "[show availSite response] check condition : " + dataInJson.getString("endTime").equals(lasttimeInServerJson.getString("endTime")));
 
             CSVHelper.storeToCSV(CSVHelper.CSV_Wifi, "responded dump endTime : ", lasttimeInServerJson.getString("endTime"));
+            long respondedEndtimeToLog = Long.valueOf(lasttimeInServerJson.getString("endTime"));
+            CSVHelper.storeToCSV(CSVHelper.CSV_Wifi, "responded dump endTime String : ", ScheduleAndSampleManager.getTimeString(respondedEndtimeToLog));
 
             if(dataInJson.getString("endTime").equals(lasttimeInServerJson.getString("endTime"))){
 
@@ -336,7 +341,7 @@ public class WifiReceiver extends BroadcastReceiver {
         if(startTime == Constants.INVALID_TIME_VALUE) {
 
             Calendar designatedStartTime = Calendar.getInstance();
-            designatedStartTime.set(year, month, day-1, hour, min);
+            designatedStartTime.set(year, month, day-1, hour, min, sec);
 
             //get the current time in sharp
             startTime = designatedStartTime.getTimeInMillis();
@@ -345,43 +350,6 @@ public class WifiReceiver extends BroadcastReceiver {
         Log.d(TAG, "getDataStartTime startTime : "+ScheduleAndSampleManager.getTimeString(startTime));
 
         return startTime;
-    }
-
-    //TODO deprecated
-    private void setDataStartEndTime(){
-
-        Log.d(TAG, "setDataStartEndTime");
-
-        long lastSentStarttime = sharedPrefs.getLong("lastSentStarttime", Constants.INVALID_TIME_VALUE);
-
-        if (lastSentStarttime == Constants.INVALID_TIME_VALUE) {
-
-            //if it doesn't response the setting with initialize ones
-            //initialize
-            Calendar designatedStartTime = Calendar.getInstance();
-            designatedStartTime.set(year, month, day, hour, min);
-
-            long startstartTime = designatedStartTime.getTimeInMillis();
-            startTime = sharedPrefs.getLong("StartTime", startstartTime); //default
-            Log.d(TAG, "StartTimeString : " + ScheduleAndSampleManager.getTimeString(startTime));
-
-            sharedPrefs.edit().putLong("StartTime", startTime).apply();
-
-            long startendTime = startstartTime + Constants.MILLISECONDS_PER_HOUR;
-            endTime = sharedPrefs.getLong("EndTime", startendTime);
-            Log.d(TAG, "EndTimeString : " + ScheduleAndSampleManager.getTimeString(endTime));
-
-            sharedPrefs.edit().putLong("EndTime", endTime).apply();
-
-        } else {
-
-            //if it do reponse the setting with initialize ones
-            startTime = Long.valueOf(lastSentStarttime);
-            Log.d(TAG, "StartTimeString : " + ScheduleAndSampleManager.getTimeString(startTime));
-
-            endTime = Long.valueOf(lastSentStarttime) + Constants.MILLISECONDS_PER_HOUR;
-            Log.d(TAG, "EndTimeString : " + ScheduleAndSampleManager.getTimeString(endTime));
-        }
     }
 
     private void setNowTime(){
@@ -412,6 +380,8 @@ public class WifiReceiver extends BroadcastReceiver {
             try {
 
                 CSVHelper.storeToCSV(CSVHelper.CSV_Wifi, "sending trip data createdTime : ", data.getString("createdTime"));
+                long createdTimeToLog = Long.valueOf(data.getString("createdTime"));
+                CSVHelper.storeToCSV(CSVHelper.CSV_Wifi, "sending trip data createdTime String : ", ScheduleAndSampleManager.getTimeString(createdTimeToLog));
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
                     lastTimeInServer = new HttpAsyncPostJsonTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
@@ -440,6 +410,8 @@ public class WifiReceiver extends BroadcastReceiver {
                 Log.d(TAG, "[show availSite response] check condition : " + data.getString("createdTime").equals(lasttimeInServerJson.getString("createdTime")));
 
                 CSVHelper.storeToCSV(CSVHelper.CSV_Wifi, "responded trip data createdTime : ", lasttimeInServerJson.getString("createdTime"));
+                long respondedCreatedTimeToLog = Long.valueOf(lasttimeInServerJson.getString("createdTime"));
+                CSVHelper.storeToCSV(CSVHelper.CSV_Wifi, "responded trip data createdTime String : ", ScheduleAndSampleManager.getTimeString(respondedCreatedTimeToLog));
 
                 if(data.getString("createdTime").equals(lasttimeInServerJson.getString("createdTime"))){
 

@@ -24,7 +24,6 @@ public class CSVHelper {
 
     public static CSVWriter csv_writer = null;
 
-    public static final String CSV_UserInteract = "UserInteraction.csv";
     public static final String CSV_CheckService_alive = "CheckService.csv";
 
     public static final String CSV_Wifi = "CheckWifi.csv";

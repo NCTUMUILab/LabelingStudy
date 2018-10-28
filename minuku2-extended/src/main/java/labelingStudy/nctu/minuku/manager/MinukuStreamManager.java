@@ -598,28 +598,32 @@ public class MinukuStreamManager implements StreamManager {
 //                                    if(SessionManager.getOngoingSessionIdList().size() != 0){
                                     if(ongoingSessionid != Constants.INVALID_INT_VALUE){
 
+                                        try {
 //                                        int ongoingSessionid = SessionManager.getOngoingSessionIdList().get(0);
-                                        Session ongoingSession = SessionManager.getSession(ongoingSessionid);
+                                            Session ongoingSession = SessionManager.getSession(ongoingSessionid);
 
-                                        //if the user hasn't pressed the current trip(Session); after ending a trip(session), send a notification to the user
-                                        if (!ongoingSession.isUserPress()) {
+                                            //if the user hasn't pressed the current trip(Session); after ending a trip(session), send a notification to the user
+                                            if (!ongoingSession.isUserPress()) {
 
-                                            String sessionTransportation = getTransportationNameOrSite(sessionJustStart, context);
-                                            sendNotification(context, sessionJustStart.getStartTime(), sessionTransportation);
+                                                String sessionTransportation = getTransportationNameOrSite(sessionJustStart, context);
+                                                sendNotification(context, sessionJustStart.getStartTime(), sessionTransportation);
 
-                                            String afterSendCAR = "After sending CAR";
-                                            CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_SESSION, afterSendCAR);
+                                                String afterSendCAR = "After sending CAR";
+                                                CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_SESSION, afterSendCAR);
 
-                                            Log.d(TAG, "[test triggering] CAR Notification");
-                                        } else {
+                                                Log.d(TAG, "[test triggering] CAR Notification");
+                                            } else {
 
-                                            //recording
-                                            String checkCAR = "the CAR record has been checkpointed by the user";
-                                            CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_SESSION, checkCAR);
+                                                //recording
+                                                String checkCAR = "the CAR record has been checkpointed by the user";
+                                                CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_SESSION, checkCAR);
 
-                                            Log.d(TAG, "[test triggering] CAR check");
+                                                Log.d(TAG, "[test triggering] CAR check");
+                                            }
+                                        }catch (NullPointerException e){
+                                            Log.e(TAG, "NullPointerException", e);
+                                            CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_SESSION, Utils.getStackTrace(e));
                                         }
-
                                         //the ongoing session might be removed because of the empty ongoing one.
                                     }else{
 
