@@ -114,12 +114,23 @@ public class Timeline extends AppCompatActivity {
 
         timelineOrder = sharedPrefs.getString("timelineOrder", "ASC");
 
+        initDateToQuery();
+
         popupPermissionSettingAtFirstTime();
 
         SimpleDateFormat sdf_date = new SimpleDateFormat(Constants.DATE_FORMAT_NOW_DAY);
         dateToQuery = ScheduleAndSampleManager.getTimeString(ScheduleAndSampleManager.getCurrentTimeInMillis(), sdf_date);
         Log.d(TAG, "init dateToQuery : " + dateToQuery);
 
+    }
+
+    private void initDateToQuery(){
+
+        final Calendar c = Calendar.getInstance();
+
+        mYear = c.get(Calendar.YEAR);
+        mMonth = c.get(Calendar.MONTH);
+        mDay = c.get(Calendar.DAY_OF_MONTH);
     }
 
     private void popupPermissionSettingAtFirstTime(){
@@ -226,12 +237,6 @@ public class Timeline extends AppCompatActivity {
 
                 DBHelper.insertActionLogTable(ScheduleAndSampleManager.getCurrentTimeInMillis(), ActionLogVar.VIEW_OPTIONITEM+" - "+ ActionLogVar.ACTION_CLICK+" - "+ActionLogVar.MEANING_SELECTDATE+" - "+TAG);
 
-                final Calendar c = Calendar.getInstance();
-
-                mYear = c.get(Calendar.YEAR);
-                mMonth = c.get(Calendar.MONTH);
-                mDay = c.get(Calendar.DAY_OF_MONTH);
-
                 final DatePickerDialog.OnDateSetListener datePickerListener = new DatePickerDialog.OnDateSetListener() {
 
                     public void onDateSet(DatePicker view, int year,
@@ -273,6 +278,10 @@ public class Timeline extends AppCompatActivity {
                                             datePicker.getYear(),
                                             datePicker.getMonth(),
                                             datePicker.getDayOfMonth());
+
+                                    mYear = datePicker.getYear();
+                                    mMonth = datePicker.getMonth();
+                                    mDay = datePicker.getDayOfMonth();
 
                                     Log.d(TAG, "dateToQuery onClick : " + dateToQuery);
 
@@ -459,23 +468,6 @@ public class Timeline extends AppCompatActivity {
 
             final String startTimeDate = ScheduleAndSampleManager.getTimeString(startTime, sdf_date);
             final String endTimeDate = ScheduleAndSampleManager.getTimeString(endTime, sdf_date);
-
-            //TODO deprecated
-            //if it was pressed by the user show the line
-            /*if(session.isUserPress()) {
-
-                if(timelineOrder.equals(Constants.ASC)) {
-
-                    holder.car_line.setVisibility(View.VISIBLE);
-
-                    holder.car_line_down.setVisibility(View.INVISIBLE);
-                }else{
-
-                    holder.car_line_down.setVisibility(View.VISIBLE);
-
-                    holder.car_line.setVisibility(View.INVISIBLE);
-                }
-            }*/
 
             Log.d(TAG, "[test triggering] timeline session id : "+ session.getId());
             Log.d(TAG, "[test triggering] timeline session isUserPress ? "+session.isUserPress());
@@ -707,21 +699,6 @@ public class Timeline extends AppCompatActivity {
                 holder.cardView.setBackground(sd);
             }
 
-            //TODO deprecated
-            /*String currentWork = getResources().getString(labelingStudy.nctu.minuku.R.string.current_task);
-
-            if(currentWork.equals(getResources().getString(R.string.task_CAR))){
-
-                holder.sessionType.setVisibility(View.VISIBLE);
-
-                String typeNameInCHI = getSessionTypeNameInChinese(session.getType());
-
-                holder.sessionType.setText(typeNameInCHI);
-            }else{
-
-                holder.sessionType.setVisibility(View.GONE);
-            }*/
-
             //set the goal instead of the transportation to the goal textview
             String goal = getGoal(session);
 
@@ -735,7 +712,7 @@ public class Timeline extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
 
-                    DBHelper.insertActionLogTable(ScheduleAndSampleManager.getCurrentTimeInMillis(), ActionLogVar.VIEW_ITEMVIEW+" - "+ ActionLogVar.ACTION_CLICK+" - "+ActionLogVar.MEANING_EACH_RECORD+" - "+TAG);
+                    DBHelper.insertActionLogTable(ScheduleAndSampleManager.getCurrentTimeInMillis(), ActionLogVar.VIEW_ITEMVIEW+" - "+ ActionLogVar.ACTION_CLICK+" - "+ActionLogVar.MEANING_EACH_RECORD + ", sessionid : "+session.getId()+" - "+TAG);
 
                     final LayoutInflater inflater = LayoutInflater.from(mContext);
                     final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);

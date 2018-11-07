@@ -151,7 +151,6 @@ public class AccessibilityStreamGenerator extends AndroidStreamGenerator<Accessi
     public void onStreamRegistration() {
 
         activateAccessibilityService();
-
     }
 
     @Override

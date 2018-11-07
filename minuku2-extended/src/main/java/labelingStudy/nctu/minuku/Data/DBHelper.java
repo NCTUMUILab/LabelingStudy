@@ -906,7 +906,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     //query task table
-    public static ArrayList<String> queryModifiedSessions (){
+    public static ArrayList<String> queryModifiedSessions(){
 
         ArrayList<String> rows = new ArrayList<String>();
 
@@ -1081,6 +1081,26 @@ public class DBHelper extends SQLiteOpenHelper {
         Log.d(TAG, "[test show trip] the sessions are" + " " +rows);
 
         return rows;
+    }
+
+
+    public static void updateSessionTableByCreatedTime(long createdTime, int toBeSent){
+
+        String where = COL_SESSION_CREATED_TIME + " = " + createdTime;
+
+        try{
+            SQLiteDatabase db = DBManager.getInstance().openDatabase();
+            ContentValues values = new ContentValues();
+
+            values.put(COL_SESSION_SENTORNOT_FLAG, toBeSent);
+
+            db.update(SESSION_TABLE_NAME, values, where, null);
+
+            DBManager.getInstance().closeDatabase();
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
     }
 
     //get the number of existing session
