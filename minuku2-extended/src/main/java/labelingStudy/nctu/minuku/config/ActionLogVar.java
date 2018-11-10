@@ -10,6 +10,7 @@ public class ActionLogVar {
     public static final String ACTION_CLICK = "Click";
     public static final String ACTION_TEXT_CHANGED = "Text Changed";
     public static final String ACTION_ITEM_SELECTED = "Item Selected";
+    public static final String ACTION_TRIGGERED = "Triggered";
 
     public static final String VIEW_BUTTON = "Button";
     public static final String VIEW_IMAGE_VIEW_BUTTON = "ImageView";
@@ -20,6 +21,7 @@ public class ActionLogVar {
     public static final String VIEW_OPTIONITEM = "OptionItem";
     public static final String VIEW_ITEMVIEW = "ItemView";
     public static final String VIEW_SPINNER = "Spinner";
+    public static final String VIEW_NOTIFICATION = "notification";
 
     public static final String MEANING_SITENAME_EDITTEXT = "sitenameEditText";
     public static final String MEANING_SITENAME_ADDPLACE = "addplace";
@@ -42,6 +44,7 @@ public class ActionLogVar {
     public static final String MEANING_ANNOTATION_GOAL = "annotation Goal";
     public static final String MEANING_ANNOTATION_SPECIAL_EVENT = "annotation Special Event";
     public static final String MEANING_SHOW_MAP = "show the Map";
+    public static final String MEANING_ESM_NOTIFICATION = "ESM notification";
 
     public static final String MEANING_CHOOSE_TIMELINE = "watchTimeline";
     public static final String MEANING_GET_DEVICEID = "getDeviceId";
@@ -50,6 +53,5 @@ public class ActionLogVar {
     public static final String MEANING_CHANGED_ORDER = "change order";
     public static final String MEANING_SELECTDATE = "selectdate";
     public static final String MEANING_EACH_RECORD = "each record";
-
 
 }
