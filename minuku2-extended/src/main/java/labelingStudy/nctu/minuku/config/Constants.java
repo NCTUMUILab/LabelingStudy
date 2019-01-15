@@ -33,7 +33,7 @@ public class Constants {
 
     public static String currentWork;
 
-    public static int siteRange = 25;
+    public static int siteRange = 50;
 
     public static final String ACTION_CONNECTIVITY_CHANGE = "CONNECTIVITY_CHANGE";
 

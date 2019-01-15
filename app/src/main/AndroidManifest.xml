@@ -79,7 +79,8 @@
         <activity android:name="labelingStudy.nctu.minuku_2.controller.CheckPointActivity" />
         <activity android:name="labelingStudy.nctu.minuku_2.controller.DeviceIdPage" />
         <activity android:name="labelingStudy.nctu.minuku_2.controller.PlaceSelection" />
-        <activity android:name="labelingStudy.nctu.minuku_2.controller.CounterActivity" />
+        <activity android:name="labelingStudy.nctu.minuku_2.controller.CounterActivity"
+            android:launchMode="singleInstance" />
         <activity android:name="labelingStudy.nctu.minuku_2.controller.Timer_move" />
         <activity android:name="labelingStudy.nctu.minuku_2.controller.Timer_site" />
         <activity android:name="labelingStudy.nctu.minuku_2.controller.Timeline">

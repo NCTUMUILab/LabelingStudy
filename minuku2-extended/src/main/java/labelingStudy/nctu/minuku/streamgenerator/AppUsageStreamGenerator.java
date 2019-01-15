@@ -164,12 +164,6 @@ public class AppUsageStreamGenerator extends AndroidStreamGenerator<AppUsageData
                 }
 
             } else {
-                //AppUsageDataRecord newappUsageDataRecord = new AppUsageDataRecord();
-
-//                    appUsageDataRecord.getScreenStatus();
-//                            appUsageDataRecord.getLatestUsedApp();
-//                            appUsageDataRecord.getLatestForegroundActivity();
-                //appUsageDataRecord.getUsers());
 
                 mStream.add(appUsageDataRecord);
                 Log.e(TAG, "AppUsage to be sent to event bus" + appUsageDataRecord);

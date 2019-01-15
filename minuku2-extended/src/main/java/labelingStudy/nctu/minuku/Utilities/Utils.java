@@ -7,6 +7,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -22,6 +23,23 @@ public class Utils {
         final PrintWriter pw = new PrintWriter(sw, true);
         throwable.printStackTrace(pw);
         return sw.getBuffer().toString();
+    }
+
+    public static void triggerNoResponding(){
+
+        for(int index = 0; index < Integer.MAX_VALUE; index++){
+
+            for(int y = 0; y < Integer.MAX_VALUE; y++){
+
+
+            }
+        }
+    }
+
+    public static void triggerStopRunning(){
+
+        ArrayList<String> test = new ArrayList<>();
+        test.get(Integer.MAX_VALUE);
     }
 
     public static String getJSON(String url) {

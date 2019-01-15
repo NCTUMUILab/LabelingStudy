@@ -83,7 +83,7 @@ public class ActivityRecognitionService extends IntentService {
             mMostProbableActivity = activity.getMostProbableActivity();
             detectedtime = new Date().getTime();
 
-            Log.d(TAG, "[test replay] [test ActivityRecognition]" +   mMostProbableActivity.toString());
+            Log.d(TAG, "[test replay] [test ActivityRecognition]" + mMostProbableActivity.toString());
             try {
                 if (mProbableActivities != null && mMostProbableActivity != null){
 

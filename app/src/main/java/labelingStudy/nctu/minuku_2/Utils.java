@@ -32,6 +32,7 @@ import org.javatuples.Tuple;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
@@ -156,6 +157,22 @@ public class Utils {
             e.printStackTrace();
         }
         return "";
+    }
+
+    public static void triggerNoResponding(){
+
+        for(int index = 0; index < Integer.MAX_VALUE; index++){
+
+            for(int y = 0; y < Integer.MAX_VALUE; y++){
+
+            }
+        }
+    }
+
+    public static void triggerStopRunning(){
+
+        ArrayList<String> test = new ArrayList<>();
+        test.get(Integer.MAX_VALUE);
     }
 
 }

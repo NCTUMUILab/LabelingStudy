@@ -15,7 +15,6 @@ import android.util.Log;
 import org.javatuples.Decade;
 import org.javatuples.Ennead;
 import org.javatuples.Octet;
-import org.javatuples.Quartet;
 import org.javatuples.Quintet;
 import org.javatuples.Sextet;
 import org.javatuples.Triplet;
@@ -80,8 +79,8 @@ public class WifiReceiver extends BroadcastReceiver {
 
     private String currentCondition;
 
-    public static final int HTTP_TIMEOUT = 10000; // millisecond
-    public static final int SOCKET_TIMEOUT = 10000; // millisecond
+    public static final int HTTP_TIMEOUT = 10000;
+    public static final int SOCKET_TIMEOUT = 10000;
 
     private static final String serverUrl = "http://18.219.118.106:5000/find_latest_and_insert?collection=";
 
@@ -772,7 +771,7 @@ public class WifiReceiver extends BroadcastReceiver {
                     cursor.moveToNext();
                 }
 
-                data.put("TransportationMode",transportationAndtimestampsJson);
+                data.put("TransportationMode", transportationAndtimestampsJson);
             }
         }catch (JSONException e){
         }catch(NullPointerException e){
@@ -811,7 +810,7 @@ public class WifiReceiver extends BroadcastReceiver {
                     //convert into second
 //                    String timestampInSec = timestamp.substring(0, timestamp.length()-3);
 
-                    //<timestamp, latitude, longitude, accuracy>
+                    //<timestamp, latitude, longitude, accuracy, altitude, speed, bearing, provider, sessionid>
                     Ennead<String, String, String, String, String, String, String, String, String> locationTuple
                             = new Ennead<>(timestamp, latitude, longtitude, accuracy, altitude, speed, bearing, provider, "("+sessionid+")");
 
@@ -848,7 +847,8 @@ public class WifiReceiver extends BroadcastReceiver {
                     String timestamp = cursor.getString(1);
                     String mostProbableActivity = cursor.getString(2);
                     String probableActivities = cursor.getString(3);
-                    String sessionid = cursor.getString(4);
+                    String detectedTime = cursor.getString(4);
+                    String sessionid = cursor.getString(5);
 
                     //split the mostProbableActivity into "type:conf"
                     String[] subMostActivity = mostProbableActivity.split(",");
@@ -893,9 +893,9 @@ public class WifiReceiver extends BroadcastReceiver {
 
                     //Log.d(TAG,"timestamp : "+timestamp+", mostProbableActivity : "+mostProbableActivity+", probableActivities : "+probableActivities);
 
-                    //<timestamps, MostProbableActivity, ProbableActivities>
-                    Quartet<String, String, String, String> arTuple =
-                            new Quartet<>(timestamp, mostProbableActivity, probableActivities, sessionid);
+                    //<timestamps, MostProbableActivity, ProbableActivities, detectedTime, sessionid>
+                    Quintet<String, String, String, String, String> arTuple =
+                            new Quintet<>(timestamp, mostProbableActivity, probableActivities, detectedTime, sessionid);
 
                     String dataInPythonTuple = Utils.toPythonTuple(arTuple);
 
@@ -904,7 +904,7 @@ public class WifiReceiver extends BroadcastReceiver {
                     cursor.moveToNext();
                 }
 
-                data.put("ActivityRecognition",arAndtimestampsJson);
+                data.put("ActivityRecognition", arAndtimestampsJson);
             }
         }catch (JSONException e){
         }catch(NullPointerException e){
@@ -1177,7 +1177,7 @@ public class WifiReceiver extends BroadcastReceiver {
                     String ambient_temperature = cursor.getString(12);
                     String sessionid = cursor.getString(13);
 
-                    //<RELATIVE_HUMIDITY, AMBIENT_TEMPERATURE>
+                    //<RELATIVE_HUMIDITY, AMBIENT_TEMPERATURE, sessionid>
                     Triplet<String, String, String> sensorTuple2 = new Triplet<>(relative_humidity, ambient_temperature, sessionid);
 
                     String dataInPythonTuple = Utils.tupleConcat(sensorTuple1, sensorTuple2);

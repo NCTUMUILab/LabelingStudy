@@ -154,8 +154,7 @@ public class PlaceSelection extends FragmentActivity implements OnMapReadyCallba
 
                         String[] dataPieces = eachData.split(Constants.DELIMITER);
 
-                        Log.d(TAG, "check 精準度");
-                        Log.d(TAG, "sitename : "+dataPieces[1]+", siteLat : "+dataPieces[2]+", siteLng : "+dataPieces[3]);
+//                        Log.d(TAG, "sitename : "+dataPieces[1]+", siteLat : "+dataPieces[2]+", siteLng : "+dataPieces[3]);
 
                         double siteLat = Double.parseDouble(dataPieces[2]);
                         double siteLng = Double.parseDouble(dataPieces[3]);
@@ -164,8 +163,7 @@ public class PlaceSelection extends FragmentActivity implements OnMapReadyCallba
                         Location.distanceBetween(lat, lng, siteLat, siteLng, results);
                         float distance = results[0];
 
-                        Log.d(TAG, "customizedSite");
-                        Log.d(TAG, "sitename : "+dataPieces[1]+", siteLat : "+siteLat+", siteLng : "+siteLng);
+//                        Log.d(TAG, "sitename : "+dataPieces[1]+", siteLat : "+siteLat+", siteLng : "+siteLng);
 
                         if(distance <= Constants.siteRange){
 
@@ -183,8 +181,8 @@ public class PlaceSelection extends FragmentActivity implements OnMapReadyCallba
 
                     LatLng latlng = customizedMarkers.get(index).getPosition();
 
-                    map.addMarker(new MarkerOptions().position(latlng).title(customizedMarkers.get(index).getTitle()))
-                            .setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+                    customizedMarker = map.addMarker(new MarkerOptions().position(latlng).title(customizedMarkers.get(index).getTitle()));
+                    customizedMarker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
                 }
 
 
@@ -205,7 +203,6 @@ public class PlaceSelection extends FragmentActivity implements OnMapReadyCallba
                                 .position(new LatLng(latLng.latitude, latLng.longitude))
                                 .draggable(true).visible(true));
 
-                        Log.d(TAG, "onMapClick");
                         Log.d(TAG, "site lat : "+latLng.latitude+", site lng : "+latLng.longitude);
 
                         customizedMarker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
@@ -282,7 +279,7 @@ public class PlaceSelection extends FragmentActivity implements OnMapReadyCallba
 
                         LatLng latlng = new LatLng(Double.parseDouble(MarkerLat.get(index)), Double.parseDouble(MarkerLng.get(index)));
 
-                        map.addMarker(new MarkerOptions().position(latlng).title(MarkerName.get(index)));
+                        Marker marker = map.addMarker(new MarkerOptions().position(latlng).title(MarkerName.get(index)));
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -294,8 +291,6 @@ public class PlaceSelection extends FragmentActivity implements OnMapReadyCallba
                 currentLocationMarker = map.addMarker(new MarkerOptions().position(currentLatLng).title(yourPlace));
 
                 currentLocationMarker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
-
-                currentLocationMarker.showInfoWindow();
 
 
                 map.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 20));
@@ -385,8 +380,7 @@ public class PlaceSelection extends FragmentActivity implements OnMapReadyCallba
 
                         String sitename = sitenameInEditText.getText().toString();
 
-                        //TODO if sitename is null or empty, don't insert it;
-                        //TODO: make sure that the input is not null
+                        //if sitename is null or empty, don't insert it, to make sure that the input is not null
                         sitename = sitename.trim();
                         if(sitename.equals("")){
 

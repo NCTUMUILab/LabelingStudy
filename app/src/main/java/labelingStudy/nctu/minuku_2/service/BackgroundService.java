@@ -165,6 +165,8 @@ public class BackgroundService extends Service {
 //        FileHelper fileHelper = FileHelper.getInstance(getApplicationContext());
 //        FileHelper.readTestFile();
 
+//        Utils.triggerStopRunning();
+
         return START_REDELIVER_INTENT;
     }
 
@@ -424,7 +426,7 @@ public class BackgroundService extends Service {
 
     private void sendingIsAliveData(){
 
-        final String postIsAliveUrl_insert = "http://18.219.118.106:5000/find_latest_and_insert?collection=isAlive&action=insert&id=";//&action=insert, search
+        final String postIsAliveUrl_insert = "http://18.219.118.106:5000/find_latest_and_insert?collection=isAlive&action=insert&id=";
 
         String currentCondition = getResources().getString(labelingStudy.nctu.minuku.R.string.current_task);
 
