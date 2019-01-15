@@ -180,6 +180,7 @@ public class SensorStreamGenerator extends AndroidStreamGenerator<SensorDataReco
 //        int session_id = SessionManager.getOngoingSessionId();
         int session_id = sharedPrefs.getInt("ongoingSessionid", Constants.INVALID_INT_VALUE);
 
+        //TODO get rid of mAccele_str mGyroscope_str mGravity_str
         Log.d(TAG,"mAccele_str = "+mAccele_str+" mGyroscope_str = "+mGyroscope_str+" mGravity_str = "+mGravity_str+" mLinearAcceleration_str = "+mLinearAcceleration_str);
         Log.d(TAG,"mRotationVector_str = "+mRotationVector_str+" mProximity_str = "+mProximity_str+" mMagneticField_str = "+mMagneticField_str+" mLight_str = "+mLight_str);
         Log.d(TAG,"mPressure_str = "+mPressure_str+" mRelativeHumidity_str = "+mRelativeHumidity_str+" mAmbientTemperature_str = "+mAmbientTemperature_str+" session_id = "+session_id);

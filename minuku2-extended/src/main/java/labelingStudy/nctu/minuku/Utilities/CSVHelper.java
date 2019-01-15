@@ -24,7 +24,6 @@ public class CSVHelper {
 
     public static CSVWriter csv_writer = null;
 
-    public static final String CSV_UserInteract = "UserInteraction.csv";
     public static final String CSV_CheckService_alive = "CheckService.csv";
 
     public static final String CSV_Wifi = "CheckWifi.csv";
@@ -37,7 +36,7 @@ public class CSVHelper {
     public static final String CSV_RUNNABLE_CHECK = "Runnable_check.csv";
     public static final String CSV_WIFI_RECEIVER_CHECK = "Wifi_Receiver_check.csv";
     public static final String CSV_EXAMINE_COMBINE_SESSION = "ExamineCombineSession.csv";
-
+    public static final String CSV_SERVER_DATA_STATE = "ServerDataState.csv";
 
     public static void storeToCSV(String fileName, String... texts){
 

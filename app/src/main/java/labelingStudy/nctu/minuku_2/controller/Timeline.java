@@ -114,12 +114,23 @@ public class Timeline extends AppCompatActivity {
 
         timelineOrder = sharedPrefs.getString("timelineOrder", "ASC");
 
+        initDateToQuery();
+
         popupPermissionSettingAtFirstTime();
 
         SimpleDateFormat sdf_date = new SimpleDateFormat(Constants.DATE_FORMAT_NOW_DAY);
         dateToQuery = ScheduleAndSampleManager.getTimeString(ScheduleAndSampleManager.getCurrentTimeInMillis(), sdf_date);
         Log.d(TAG, "init dateToQuery : " + dateToQuery);
 
+    }
+
+    private void initDateToQuery(){
+
+        final Calendar c = Calendar.getInstance();
+
+        mYear = c.get(Calendar.YEAR);
+        mMonth = c.get(Calendar.MONTH);
+        mDay = c.get(Calendar.DAY_OF_MONTH);
     }
 
     private void popupPermissionSettingAtFirstTime(){
@@ -226,12 +237,6 @@ public class Timeline extends AppCompatActivity {
 
                 DBHelper.insertActionLogTable(ScheduleAndSampleManager.getCurrentTimeInMillis(), ActionLogVar.VIEW_OPTIONITEM+" - "+ ActionLogVar.ACTION_CLICK+" - "+ActionLogVar.MEANING_SELECTDATE+" - "+TAG);
 
-                final Calendar c = Calendar.getInstance();
-
-                mYear = c.get(Calendar.YEAR);
-                mMonth = c.get(Calendar.MONTH);
-                mDay = c.get(Calendar.DAY_OF_MONTH);
-
                 final DatePickerDialog.OnDateSetListener datePickerListener = new DatePickerDialog.OnDateSetListener() {
 
                     public void onDateSet(DatePicker view, int year,
@@ -273,6 +278,10 @@ public class Timeline extends AppCompatActivity {
                                             datePicker.getYear(),
                                             datePicker.getMonth(),
                                             datePicker.getDayOfMonth());
+
+                                    mYear = datePicker.getYear();
+                                    mMonth = datePicker.getMonth();
+                                    mDay = datePicker.getDayOfMonth();
 
                                     Log.d(TAG, "dateToQuery onClick : " + dateToQuery);
 
@@ -375,6 +384,8 @@ public class Timeline extends AppCompatActivity {
 //            public View car_line, car_line_down;
             public View parentView;
 
+            public ViewGroup.LayoutParams generalLayoutParam;
+
             public ViewHolder(View v) {
                 super(v);
 
@@ -390,6 +401,8 @@ public class Timeline extends AppCompatActivity {
 //                car_line = (View) v.findViewById(R.id.CAR_line);
 //                car_line_down = (View) v.findViewById(R.id.CAR_line_down);
                 parentView = v;
+
+                generalLayoutParam = parentView.getLayoutParams();
             }
         }
 
@@ -460,23 +473,6 @@ public class Timeline extends AppCompatActivity {
             final String startTimeDate = ScheduleAndSampleManager.getTimeString(startTime, sdf_date);
             final String endTimeDate = ScheduleAndSampleManager.getTimeString(endTime, sdf_date);
 
-            //TODO deprecated
-            //if it was pressed by the user show the line
-            /*if(session.isUserPress()) {
-
-                if(timelineOrder.equals(Constants.ASC)) {
-
-                    holder.car_line.setVisibility(View.VISIBLE);
-
-                    holder.car_line_down.setVisibility(View.INVISIBLE);
-                }else{
-
-                    holder.car_line_down.setVisibility(View.VISIBLE);
-
-                    holder.car_line.setVisibility(View.INVISIBLE);
-                }
-            }*/
-
             Log.d(TAG, "[test triggering] timeline session id : "+ session.getId());
             Log.d(TAG, "[test triggering] timeline session isUserPress ? "+session.isUserPress());
             Log.d(TAG, "[test triggering] timeline session isModified ? "+session.isModified());
@@ -488,6 +484,10 @@ public class Timeline extends AppCompatActivity {
                 //it will still keep the layout even set to be gone
                 holder.parentView.setLayoutParams(new RecyclerView.LayoutParams(0, 0));
                 return;
+            }else{
+
+                holder.parentView.setVisibility(View.VISIBLE);
+                holder.parentView.setLayoutParams(holder.generalLayoutParam);
             }
 
             //check the annotation first, show the modification from the user
@@ -700,27 +700,11 @@ public class Timeline extends AppCompatActivity {
                 holder.cardView.setBackground(sd);
             }else{
 
-                //TODO if not set the setBackground with no color
                 GradientDrawable sd = new GradientDrawable();
                 int backgroundColor = mContext.getResources().getColor(R.color.custom);
                 sd.setColor(backgroundColor);
                 holder.cardView.setBackground(sd);
             }
-
-            //TODO deprecated
-            /*String currentWork = getResources().getString(labelingStudy.nctu.minuku.R.string.current_task);
-
-            if(currentWork.equals(getResources().getString(R.string.task_CAR))){
-
-                holder.sessionType.setVisibility(View.VISIBLE);
-
-                String typeNameInCHI = getSessionTypeNameInChinese(session.getType());
-
-                holder.sessionType.setText(typeNameInCHI);
-            }else{
-
-                holder.sessionType.setVisibility(View.GONE);
-            }*/
 
             //set the goal instead of the transportation to the goal textview
             String goal = getGoal(session);
@@ -730,12 +714,13 @@ public class Timeline extends AppCompatActivity {
                 holder.goal.setText(goal);
             }
 
+            //TODO "session.getId() in the whole on click actionlog"
             holder.itemView.setOnClickListener(new View.OnClickListener() {
 
                 @Override
                 public void onClick(View view) {
 
-                    DBHelper.insertActionLogTable(ScheduleAndSampleManager.getCurrentTimeInMillis(), ActionLogVar.VIEW_ITEMVIEW+" - "+ ActionLogVar.ACTION_CLICK+" - "+ActionLogVar.MEANING_EACH_RECORD+" - "+TAG);
+                    DBHelper.insertActionLogTable(ScheduleAndSampleManager.getCurrentTimeInMillis(), ActionLogVar.VIEW_ITEMVIEW+" - "+ ActionLogVar.ACTION_CLICK+" - "+ActionLogVar.MEANING_EACH_RECORD + ", sessionid : "+session.getId()+" - "+TAG);
 
                     final LayoutInflater inflater = LayoutInflater.from(mContext);
                     final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
@@ -766,7 +751,7 @@ public class Timeline extends AppCompatActivity {
                         @Override
                         public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
 
-                            DBHelper.insertActionLogTable(ScheduleAndSampleManager.getCurrentTimeInMillis(), ActionLogVar.VIEW_SPINNER+" - "+ ActionLogVar.ACTION_ITEM_SELECTED+" - "+ActionLogVar.MEANING_CHOOSE_MOBILITY+" - "+TAG);
+                            DBHelper.insertActionLogTable(ScheduleAndSampleManager.getCurrentTimeInMillis(), ActionLogVar.VIEW_SPINNER+" - "+ ActionLogVar.ACTION_ITEM_SELECTED+" - "+ActionLogVar.MEANING_CHOOSE_MOBILITY+ ", sessionid : "+session.getId()+" - "+TAG);
 
                             String selectedItem = parent.getSelectedItem().toString();
                             String selectedItemTransportationName = getTransportationFromSelectedItem(selectedItem);
@@ -791,7 +776,7 @@ public class Timeline extends AppCompatActivity {
                                     @Override
                                     public void onClick(View view) {
 
-                                        DBHelper.insertActionLogTable(ScheduleAndSampleManager.getCurrentTimeInMillis(), ActionLogVar.VIEW_BUTTON+" - "+ ActionLogVar.ACTION_CLICK+" - "+ActionLogVar.MEANING_CHOOSE_SITE+" - "+TAG);
+                                        DBHelper.insertActionLogTable(ScheduleAndSampleManager.getCurrentTimeInMillis(), ActionLogVar.VIEW_BUTTON+" - "+ ActionLogVar.ACTION_CLICK+" - "+ActionLogVar.MEANING_CHOOSE_SITE+ ", sessionid : "+session.getId()+" - "+TAG);
 
                                         //try catch the situation that the location hasn't been caught
                                         try {
@@ -838,7 +823,7 @@ public class Timeline extends AppCompatActivity {
                         @Override
                         public void onClick(View v) {
 
-                            DBHelper.insertActionLogTable(ScheduleAndSampleManager.getCurrentTimeInMillis(), ActionLogVar.VIEW_MAP+" - "+ ActionLogVar.ACTION_CLICK+" - "+ActionLogVar.MEANING_SHOW_MAP+" - "+TAG);
+                            DBHelper.insertActionLogTable(ScheduleAndSampleManager.getCurrentTimeInMillis(), ActionLogVar.VIEW_MAP+" - "+ ActionLogVar.ACTION_CLICK+" - "+ActionLogVar.MEANING_SHOW_MAP+ ", sessionid : "+session.getId()+" - "+TAG);
 
                             final LayoutInflater inflater = LayoutInflater.from(Timeline.this);
                             final AlertDialog.Builder builder = new AlertDialog.Builder(Timeline.this);
@@ -864,7 +849,7 @@ public class Timeline extends AppCompatActivity {
                                         @Override
                                         public void onClick(View view) {
 
-                                            DBHelper.insertActionLogTable(ScheduleAndSampleManager.getCurrentTimeInMillis(), ActionLogVar.VIEW_BUTTON+" - "+ ActionLogVar.ACTION_CLICK+" - "+ActionLogVar.MEANING_OK+" - "+TAG);
+                                            DBHelper.insertActionLogTable(ScheduleAndSampleManager.getCurrentTimeInMillis(), ActionLogVar.VIEW_BUTTON+" - "+ ActionLogVar.ACTION_CLICK+" - "+ActionLogVar.MEANING_OK+ ", sessionid : "+session.getId()+" - "+TAG);
 
                                             if(IsSplitLocationChosen) {
 
@@ -921,7 +906,7 @@ public class Timeline extends AppCompatActivity {
                         public void onClick(View view) {
                             Log.d(TAG,"startTime clicked");
 
-                            DBHelper.insertActionLogTable(ScheduleAndSampleManager.getCurrentTimeInMillis(), ActionLogVar.VIEW_BUTTON+" - "+ ActionLogVar.ACTION_CLICK+" - "+ActionLogVar.MEANING_CHOOSE_STARTTIME+" - "+TAG);
+                            DBHelper.insertActionLogTable(ScheduleAndSampleManager.getCurrentTimeInMillis(), ActionLogVar.VIEW_BUTTON+" - "+ ActionLogVar.ACTION_CLICK+" - "+ActionLogVar.MEANING_CHOOSE_STARTTIME+ ", sessionid : "+session.getId()+" - "+TAG);
 
                             final SimpleDateFormat sdf_HHmm = new SimpleDateFormat(Constants.DATE_FORMAT_HOUR_MIN);
                             String startTimeString_HHmm = ScheduleAndSampleManager.getTimeString(startTime, sdf_HHmm);
@@ -973,7 +958,7 @@ public class Timeline extends AppCompatActivity {
 
                             Log.d(TAG,"endTime clicked");
 
-                            DBHelper.insertActionLogTable(ScheduleAndSampleManager.getCurrentTimeInMillis(), ActionLogVar.VIEW_BUTTON+" - "+ ActionLogVar.ACTION_CLICK+" - "+ActionLogVar.MEANING_CHOOSE_ENDTIME+" - "+TAG);
+                            DBHelper.insertActionLogTable(ScheduleAndSampleManager.getCurrentTimeInMillis(), ActionLogVar.VIEW_BUTTON+" - "+ ActionLogVar.ACTION_CLICK+" - "+ActionLogVar.MEANING_CHOOSE_ENDTIME+ ", sessionid : "+session.getId()+" - "+TAG);
 
                             final SimpleDateFormat sdf_HHmm = new SimpleDateFormat(Constants.DATE_FORMAT_HOUR_MIN);
                             String endTimeString_HHmm = ScheduleAndSampleManager.getTimeString(endTime, sdf_HHmm);
@@ -1027,7 +1012,7 @@ public class Timeline extends AppCompatActivity {
                     Dannotation_goal.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            DBHelper.insertActionLogTable(ScheduleAndSampleManager.getCurrentTimeInMillis(), ActionLogVar.VIEW_EDITTEXT+" - "+ ActionLogVar.ACTION_CLICK+" - "+ActionLogVar.MEANING_ANNOTATION_GOAL+" - "+TAG);
+                            DBHelper.insertActionLogTable(ScheduleAndSampleManager.getCurrentTimeInMillis(), ActionLogVar.VIEW_EDITTEXT+" - "+ ActionLogVar.ACTION_CLICK+" - "+ActionLogVar.MEANING_ANNOTATION_GOAL+ ", sessionid : "+session.getId()+" - "+TAG);
                         }
                     });
 
@@ -1039,7 +1024,7 @@ public class Timeline extends AppCompatActivity {
 
                         @Override
                         public void onTextChanged(CharSequence s, int start, int before, int count) {
-                            DBHelper.insertActionLogTable(ScheduleAndSampleManager.getCurrentTimeInMillis(), ActionLogVar.VIEW_EDITTEXT+" - "+ ActionLogVar.ACTION_TEXT_CHANGED+" - "+ActionLogVar.MEANING_ANNOTATION_GOAL+" - "+TAG);
+                            DBHelper.insertActionLogTable(ScheduleAndSampleManager.getCurrentTimeInMillis(), ActionLogVar.VIEW_EDITTEXT+" - "+ ActionLogVar.ACTION_TEXT_CHANGED+" - "+ActionLogVar.MEANING_ANNOTATION_GOAL+ ", sessionid : "+session.getId()+" - "+TAG);
                         }
 
                         @Override
@@ -1052,7 +1037,7 @@ public class Timeline extends AppCompatActivity {
                     Dannotation_specialEvent.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            DBHelper.insertActionLogTable(ScheduleAndSampleManager.getCurrentTimeInMillis(), ActionLogVar.VIEW_EDITTEXT+" - "+ ActionLogVar.ACTION_CLICK+" - "+ActionLogVar.MEANING_ANNOTATION_SPECIAL_EVENT+" - "+TAG);
+                            DBHelper.insertActionLogTable(ScheduleAndSampleManager.getCurrentTimeInMillis(), ActionLogVar.VIEW_EDITTEXT+" - "+ ActionLogVar.ACTION_CLICK+" - "+ActionLogVar.MEANING_ANNOTATION_SPECIAL_EVENT+ ", sessionid : "+session.getId()+" - "+TAG);
                         }
                     });
 
@@ -1064,7 +1049,7 @@ public class Timeline extends AppCompatActivity {
 
                         @Override
                         public void onTextChanged(CharSequence s, int start, int before, int count) {
-                            DBHelper.insertActionLogTable(ScheduleAndSampleManager.getCurrentTimeInMillis(), ActionLogVar.VIEW_EDITTEXT+" - "+ ActionLogVar.ACTION_TEXT_CHANGED+" - "+ActionLogVar.MEANING_ANNOTATION_SPECIAL_EVENT+" - "+TAG);
+                            DBHelper.insertActionLogTable(ScheduleAndSampleManager.getCurrentTimeInMillis(), ActionLogVar.VIEW_EDITTEXT+" - "+ ActionLogVar.ACTION_TEXT_CHANGED+" - "+ActionLogVar.MEANING_ANNOTATION_SPECIAL_EVENT+ ", sessionid : "+session.getId()+" - "+TAG);
                         }
 
                         @Override
@@ -1113,7 +1098,7 @@ public class Timeline extends AppCompatActivity {
                                 @Override
                                 public void onClick(View view) {
 
-                                    DBHelper.insertActionLogTable(ScheduleAndSampleManager.getCurrentTimeInMillis(), ActionLogVar.VIEW_BUTTON+" - "+ ActionLogVar.ACTION_CLICK+" - "+ActionLogVar.MEANING_OK+" - "+TAG);
+                                    DBHelper.insertActionLogTable(ScheduleAndSampleManager.getCurrentTimeInMillis(), ActionLogVar.VIEW_BUTTON+" - "+ ActionLogVar.ACTION_CLICK+" - "+ActionLogVar.MEANING_OK+ ", sessionid : "+session.getId()+" - "+TAG);
 
                                     String selectedActivityString = dSpinner.getSelectedItem().toString();
                                     String goal = Dannotation_goal.getText().toString();

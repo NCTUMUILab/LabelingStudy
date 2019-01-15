@@ -49,6 +49,7 @@ import labelingStudy.nctu.minuku.R;
 import labelingStudy.nctu.minuku.Utilities.CSVHelper;
 import labelingStudy.nctu.minuku.Utilities.ScheduleAndSampleManager;
 import labelingStudy.nctu.minuku.Utilities.Utils;
+import labelingStudy.nctu.minuku.config.ActionLogVar;
 import labelingStudy.nctu.minuku.config.Constants;
 import labelingStudy.nctu.minuku.model.Annotation;
 import labelingStudy.nctu.minuku.model.AnnotationSet;
@@ -595,31 +596,33 @@ public class MinukuStreamManager implements StreamManager {
                                     int ongoingSessionid = sharedPrefs.getInt("ongoingSessionid", Constants.INVALID_INT_VALUE);
 
                                     //detect the user has pressed the current trip(Session) or not.
-//                                    if(SessionManager.getOngoingSessionIdList().size() != 0){
                                     if(ongoingSessionid != Constants.INVALID_INT_VALUE){
 
-//                                        int ongoingSessionid = SessionManager.getOngoingSessionIdList().get(0);
-                                        Session ongoingSession = SessionManager.getSession(ongoingSessionid);
+                                        try {
+                                            Session ongoingSession = SessionManager.getSession(ongoingSessionid);
 
-                                        //if the user hasn't pressed the current trip(Session); after ending a trip(session), send a notification to the user
-                                        if (!ongoingSession.isUserPress()) {
+                                            //if the user hasn't pressed the current trip(Session); after ending a trip(session), send a notification to the user
+                                            if (!ongoingSession.isUserPress()) {
 
-                                            String sessionTransportation = getTransportationNameOrSite(sessionJustStart, context);
-                                            sendNotification(context, sessionJustStart.getStartTime(), sessionTransportation);
+                                                String sessionTransportation = getTransportationNameOrSite(sessionJustStart, context);
+                                                sendNotification(context, sessionJustStart.getStartTime(), sessionTransportation);
 
-                                            String afterSendCAR = "After sending CAR";
-                                            CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_SESSION, afterSendCAR);
+                                                String afterSendCAR = "After sending CAR";
+                                                CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_SESSION, afterSendCAR);
 
-                                            Log.d(TAG, "[test triggering] CAR Notification");
-                                        } else {
+                                                Log.d(TAG, "[test triggering] CAR Notification");
+                                            } else {
 
-                                            //recording
-                                            String checkCAR = "the CAR record has been checkpointed by the user";
-                                            CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_SESSION, checkCAR);
+                                                //recording
+                                                String checkCAR = "the CAR record has been checkpointed by the user";
+                                                CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_SESSION, checkCAR);
 
-                                            Log.d(TAG, "[test triggering] CAR check");
+                                                Log.d(TAG, "[test triggering] CAR check");
+                                            }
+                                        }catch (NullPointerException e){
+                                            Log.e(TAG, "NullPointerException", e);
+                                            CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_SESSION, Utils.getStackTrace(e));
                                         }
-
                                         //the ongoing session might be removed because of the empty ongoing one.
                                     }else{
 
@@ -659,7 +662,6 @@ public class MinukuStreamManager implements StreamManager {
                 sessionTransportation = sessionSites.get(sessionSites.size()-1).getContent();
         }else{
 
-            //TODO convert into Chinese name
             sessionTransportation = getTrafficInChinese(sessionTransportation, context);
         }
 
@@ -667,6 +669,8 @@ public class MinukuStreamManager implements StreamManager {
     }
 
     private void sendNotification(Context context, long startTime, String sessionTransportation){
+
+        DBHelper.insertActionLogTable(ScheduleAndSampleManager.getCurrentTimeInMillis(), ActionLogVar.VIEW_NOTIFICATION+" - "+ ActionLogVar.ACTION_TRIGGERED+" - "+ActionLogVar.MEANING_ESM_NOTIFICATION+" - "+TAG);
 
         NotificationManager mNotificationManager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);

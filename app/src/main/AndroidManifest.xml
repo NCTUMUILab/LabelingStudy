@@ -43,6 +43,7 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
     <uses-permission android:name="com.google.android.providers.gsf.permisson.READ_GSERVICES" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -78,7 +79,8 @@
         <activity android:name="labelingStudy.nctu.minuku_2.controller.CheckPointActivity" />
         <activity android:name="labelingStudy.nctu.minuku_2.controller.DeviceIdPage" />
         <activity android:name="labelingStudy.nctu.minuku_2.controller.PlaceSelection" />
-        <activity android:name="labelingStudy.nctu.minuku_2.controller.CounterActivity" />
+        <activity android:name="labelingStudy.nctu.minuku_2.controller.CounterActivity"
+            android:launchMode="singleInstance" />
         <activity android:name="labelingStudy.nctu.minuku_2.controller.Timer_move" />
         <activity android:name="labelingStudy.nctu.minuku_2.controller.Timer_site" />
         <activity android:name="labelingStudy.nctu.minuku_2.controller.Timeline">

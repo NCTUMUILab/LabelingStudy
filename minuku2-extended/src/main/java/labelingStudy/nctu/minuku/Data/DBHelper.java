@@ -62,6 +62,7 @@ public class DBHelper extends SQLiteOpenHelper {
     //ActivityRecognition
     public static final String MostProbableActivity_col = "MostProbableActivity";
     public static final String ProbableActivities_col = "ProbableActivities";
+    public static final String DetectedTime_col = "DetectedTime";
 
     public static final String trip_col = "Trip";
 
@@ -451,6 +452,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 TIME + " TEXT NOT NULL," +
                 MostProbableActivity_col+" TEXT," +
                 ProbableActivities_col +" TEXT, " +
+                DetectedTime_col + " TEXT, "+
                 COL_SESSION_ID + " TEXT" +
                 ");";
 
@@ -906,7 +908,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     //query task table
-    public static ArrayList<String> queryModifiedSessions (){
+    public static ArrayList<String> queryModifiedSessions(){
 
         ArrayList<String> rows = new ArrayList<String>();
 
@@ -1081,6 +1083,26 @@ public class DBHelper extends SQLiteOpenHelper {
         Log.d(TAG, "[test show trip] the sessions are" + " " +rows);
 
         return rows;
+    }
+
+
+    public static void updateSessionTableByCreatedTime(long createdTime, int toBeSent){
+
+        String where = COL_SESSION_CREATED_TIME + " = " + createdTime;
+
+        try{
+            SQLiteDatabase db = DBManager.getInstance().openDatabase();
+            ContentValues values = new ContentValues();
+
+            values.put(COL_SESSION_SENTORNOT_FLAG, toBeSent);
+
+            db.update(SESSION_TABLE_NAME, values, where, null);
+
+            DBManager.getInstance().closeDatabase();
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
     }
 
     //get the number of existing session
