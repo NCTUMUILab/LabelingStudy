@@ -70,6 +70,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String customsitename_col = "sitename";
     public static final String customsite_latitude_col = "latitude";
     public static final String customsite_longitude_col = "longitude";
+    public static final String customsite_placeid_col = "placeid";
 
     //Convenient site
     public static final String convenientsite_col = "sitename";
@@ -276,7 +277,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 id+" INTEGER PRIMARY KEY NOT NULL, " +
                 customsitename_col+" TEXT, " +
                 customsite_latitude_col+" TEXT, "+
-                customsite_longitude_col +" TEXT " +
+                customsite_longitude_col +" TEXT, " +
+                customsite_placeid_col +" TEXT " +
                 ");";
 
         db.execSQL(cmd);
@@ -290,7 +292,7 @@ public class DBHelper extends SQLiteOpenHelper {
         String cmd = "CREATE TABLE " +
                 actionLog_table + "(" +
                 id+" INTEGER PRIMARY KEY NOT NULL, " +
-                TIME + " TEXT NOT NULL," +
+                TIME + " TEXT NOT NULL, " +
                 action_col+" TEXT, " +
                 userUnlock_col + " TEXT "+
                 ");";
@@ -593,7 +595,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
 
-    public static void insertCustomizedSiteTable(String sitename, LatLng markerLocation){
+    public static void insertCustomizedSiteTable(String sitename, LatLng markerLocation, String placeId){
 
         ContentValues values = new ContentValues();
 
@@ -607,6 +609,7 @@ public class DBHelper extends SQLiteOpenHelper {
             values.put(DBHelper.customsitename_col, sitename);
             values.put(DBHelper.customsite_latitude_col , markerLocation.latitude);
             values.put(DBHelper.customsite_longitude_col , markerLocation.longitude);
+            values.put(DBHelper.customsite_placeid_col, placeId);
 
             db.insert(DBHelper.customsite_table, null, values);
         }
