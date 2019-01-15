@@ -453,6 +453,7 @@ public class MinukuStreamManager implements StreamManager {
 
                                 Annotation annotationForSite = new Annotation();
                                 Annotation annotationForSiteLoc = new Annotation();
+                                Annotation annotationForSitePlaceId = new Annotation();
                                 //add site by getUrl
                                 //get the latest location for searching site
                                 ArrayList<String> locations = DBHelper.queryLastRecord(DBHelper.location_table);
@@ -471,7 +472,7 @@ public class MinukuStreamManager implements StreamManager {
                                     ArrayList<String> customizedSite = DBHelper.queryCustomizedSites();
 
                                     float smallestDist = Float.MAX_VALUE;
-                                    String closestSite = "", closestLat = "", closestLng = "";
+                                    String closestSite = "", closestLat = "", closestLng = "", closestPlaceID = "";
                                     //check the distance between the session's first location and the customizedSite
                                     for(int index = 0; index < customizedSite.size(); index++){
 
@@ -480,7 +481,7 @@ public class MinukuStreamManager implements StreamManager {
                                         String[] dataPieces = eachData.split(Constants.DELIMITER);
 
                                         Log.d(TAG, "check 精準度");
-                                        Log.d(TAG, "sitename : "+dataPieces[1]+", siteLat : "+dataPieces[2]+", siteLng : "+dataPieces[3]);
+                                        Log.d(TAG, "sitename : "+dataPieces[1]+", siteLat : "+dataPieces[2]+", siteLng : "+dataPieces[3]+", sitePlaceid : "+dataPieces[4]);
 
                                         double siteLat = Double.parseDouble(dataPieces[2]);
                                         double siteLng = Double.parseDouble(dataPieces[3]);
@@ -490,7 +491,7 @@ public class MinukuStreamManager implements StreamManager {
                                         float distance = results[0];
 
                                         Log.d(TAG, "customizedSite");
-                                        Log.d(TAG, "sitename : "+dataPieces[1]+", siteLat : "+siteLat+", siteLng : "+siteLng);
+                                        Log.d(TAG, "sitename : "+dataPieces[1]+", siteLat : "+siteLat+", siteLng : "+siteLng+", sitePlaceid : "+dataPieces[4]);
 
                                         if(smallestDist >= distance){
 
@@ -498,6 +499,7 @@ public class MinukuStreamManager implements StreamManager {
                                             closestSite = dataPieces[1];
                                             closestLat = dataPieces[2];
                                             closestLng = dataPieces[3];
+                                            closestPlaceID = dataPieces[4];
                                         }
 
                                     }
@@ -505,7 +507,7 @@ public class MinukuStreamManager implements StreamManager {
                                     //if still no site close enough then check from the net
                                     if(smallestDist <= Constants.siteRange){
 
-                                        siteInform = closestSite+Constants.DELIMITER+"("+closestLat+","+closestLng+")";
+                                        siteInform = closestSite+Constants.DELIMITER+"("+closestLat+","+closestLng+")"+Constants.DELIMITER+closestPlaceID;
                                     }else {
 
                                         siteInform = GetUrl.getSiteInformFromNet(lat, lng);
@@ -513,12 +515,19 @@ public class MinukuStreamManager implements StreamManager {
 
                                     String siteName = siteInform.split(Constants.DELIMITER)[0];
                                     String siteLoc = siteInform.split(Constants.DELIMITER)[1];
+                                    String sitePlaceId = siteInform.split(Constants.DELIMITER)[2];
+
                                     annotationForSite.setContent(siteName);
                                     annotationForSite.addTag(Constants.ANNOTATION_TAG_DETECTED_SITENAME);
                                     session.addAnnotation(annotationForSite);
+
                                     annotationForSiteLoc.setContent(siteLoc);
                                     annotationForSiteLoc.addTag(Constants.ANNOTATION_TAG_DETECTED_SITELOCATION);
                                     session.addAnnotation(annotationForSiteLoc);
+
+                                    annotationForSitePlaceId.setContent(sitePlaceId);
+                                    annotationForSitePlaceId.addTag(Constants.ANNOTATION_TAG_DETECTED_SITE_PLACEID);
+                                    session.addAnnotation(annotationForSitePlaceId);
 
                                     CSVHelper.storeToCSV(CSVHelper.CSV_CHECK_SESSION, " Session detected site name : "+ siteName);
 

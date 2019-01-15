@@ -106,6 +106,7 @@ public class Constants {
     public static final String ANNOTATION_TAG_DETECTED_TRANSPORTATION_ACTIVITY = "detected-transportation";
     public static final String ANNOTATION_TAG_DETECTED_SITENAME = "detected-sitename";
     public static final String ANNOTATION_TAG_DETECTED_SITELOCATION = "detected-sitelocation";
+    public static final String ANNOTATION_TAG_DETECTED_SITE_PLACEID = "detected-site-placeid";
     public static final String ANNOTATION_TAG_Label = "Label";
 
     public static final String ANNOTATION_Label_TRANSPORTATOIN = "Transportation";
