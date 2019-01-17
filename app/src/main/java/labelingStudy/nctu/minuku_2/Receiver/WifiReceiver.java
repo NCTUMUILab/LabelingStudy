@@ -700,6 +700,15 @@ public class WifiReceiver extends BroadcastReceiver {
         annotationSetJson.put(Constants.ANNOTATION_TAG_DETECTED_SITELOCATION, detected_sitelocationInString);
 
 
+        ArrayList<Annotation> detected_sitePlaceId = annotationSet.getAnnotationByTag(Constants.ANNOTATION_TAG_DETECTED_SITE_PLACEID);
+
+        String detected_sitePlaceIdInString = getLatestAnnotation(detected_sitePlaceId);
+
+//        Log.d(TAG, "detected_sitePlaceIdInString : "+detected_sitePlaceIdInString);
+
+        annotationSetJson.put(Constants.ANNOTATION_TAG_DETECTED_SITE_PLACEID, detected_sitePlaceIdInString);
+
+
         ArrayList<Annotation> labels = annotationSet.getAnnotationByTag(Constants.ANNOTATION_TAG_Label);
 
         JSONArray labelsInJSONArray = getLabelsAnnotation(labels);

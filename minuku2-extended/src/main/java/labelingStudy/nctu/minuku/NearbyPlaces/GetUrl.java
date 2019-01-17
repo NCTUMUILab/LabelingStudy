@@ -4,6 +4,8 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.util.Log;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -43,6 +45,7 @@ public class GetUrl {
 
         String siteLat = Constants.INVALID_STRING_VALUE;
         String siteLng = Constants.INVALID_STRING_VALUE;
+        String sitePlaceid = Constants.INVALID_STRING_VALUE;
 
         try {
             String url = getUrl(lat, lng);
@@ -68,6 +71,7 @@ public class GetUrl {
             JSONObject locationJson = new JSONObject(location);
             siteLat = locationJson.getString("lat");
             siteLng = locationJson.getString("lng");
+            sitePlaceid = results.getJSONObject(1).getString("place_id");
 
         }catch (InterruptedException e){
 
@@ -77,7 +81,16 @@ public class GetUrl {
 
         }
 
-        return siteName+Constants.DELIMITER+"("+siteLat+","+siteLng+")";
+        return siteName+Constants.DELIMITER+"("+siteLat+","+siteLng+")"+Constants.DELIMITER+sitePlaceid;
+    }
+
+    public static String getPlaceId(LatLng loc){
+
+        String siteJsonInform = getSiteInformFromNet(loc.latitude, loc.longitude);
+
+        String sitePlaceid = siteJsonInform.split(Constants.DELIMITER)[2];
+
+        return sitePlaceid;
     }
 
     private static class HttpAsyncGetSiteTask extends AsyncTask<String, Void, String> {

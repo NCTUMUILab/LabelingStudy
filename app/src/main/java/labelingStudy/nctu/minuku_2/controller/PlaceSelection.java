@@ -390,12 +390,14 @@ public class PlaceSelection extends FragmentActivity implements OnMapReadyCallba
 
                         marker.setTitle(sitename);
 
-                        markerTitle = marker.getTitle().toString();
+                        markerTitle = marker.getTitle();
                         markerLocation = marker.getPosition();
 
-                        Log.d(TAG, "markerTitle : "+markerTitle+", markerLocation : "+markerLocation);
+                        String markerPlaceId = GetUrl.getPlaceId(markerLocation);
 
-                        DBHelper.insertCustomizedSiteTable(markerTitle, markerLocation);
+                        Log.d(TAG, "markerTitle : "+markerTitle+", markerLocation : "+markerLocation+", markerPlaceId : "+markerPlaceId);
+
+                        DBHelper.insertCustomizedSiteTable(markerTitle, markerLocation, markerPlaceId);
 
                         addToConvenientSiteTable();
 
