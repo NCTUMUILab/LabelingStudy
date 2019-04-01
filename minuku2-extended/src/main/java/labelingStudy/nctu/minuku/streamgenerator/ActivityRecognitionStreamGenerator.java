@@ -29,7 +29,6 @@ import labelingStudy.nctu.minuku.config.Constants;
 import labelingStudy.nctu.minuku.dao.ActivityRecognitionDataRecordDAO;
 import labelingStudy.nctu.minuku.manager.MinukuDAOManager;
 import labelingStudy.nctu.minuku.manager.MinukuStreamManager;
-import labelingStudy.nctu.minuku.manager.SessionManager;
 import labelingStudy.nctu.minuku.model.DataRecord.ActivityRecognitionDataRecord;
 import labelingStudy.nctu.minuku.model.DataRecord.TransportationModeDataRecord;
 import labelingStudy.nctu.minuku.service.ActivityRecognitionService;
@@ -310,7 +309,7 @@ public class ActivityRecognitionStreamGenerator extends AndroidStreamGenerator<A
 
         //add all activities to JSONArray
         for (int i=0; i<sProbableActivities.size(); i++){
-            DetectedActivity detectedActivity =  sProbableActivities.get(i);
+            DetectedActivity detectedActivity = sProbableActivities.get(i);
             String activityAndConfidence = getActivityNameFromType(detectedActivity.getType()) + Constants.ACTIVITY_DELIMITER + detectedActivity.getConfidence();
             activitiesJSON.put(activityAndConfidence);
         }
@@ -405,7 +404,7 @@ public class ActivityRecognitionStreamGenerator extends AndroidStreamGenerator<A
             ActivityRecognitionDataRecord record = mLocalRecordPool.get(i);
 
             //calculate time difference
-            long diff =  getCurrentTimeInMillis() - mLocalRecordPool.get(i).getTimestamp();
+            long diff = getCurrentTimeInMillis() - mLocalRecordPool.get(i).getTimestamp();
 
             //remove outdated records.
             if (diff >= sKeepalive){
@@ -522,5 +521,28 @@ public class ActivityRecognitionStreamGenerator extends AndroidStreamGenerator<A
                 return STRING_DETECTED_ACTIVITY_NA;
         }
         return "NA";
+    }
+
+    public static int zzsu(String activityString) {
+        switch(activityString) {
+            case "IN_VEHICLE":
+                return 0;
+            case "ON_BICYCLE":
+                return 1;
+            case "ON_FOOT":
+                return 2;
+            case "STILL":
+                return 3;
+            case "UNKNOWN":
+                return 4;
+            case "TILTING":
+                return 5;
+            case "WALKING":
+                return 7;
+            case "RUNNING":
+                return 8;
+            default:
+                return -1;
+        }
     }
 }

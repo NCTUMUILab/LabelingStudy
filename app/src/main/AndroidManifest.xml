@@ -59,6 +59,7 @@
         android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true"
         tools:replace="android:theme">
 
         <!-- API KEY FOR PLACES -->
@@ -66,8 +67,11 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDNWjTqYe9J1Nvse0IbVLciBycQGouZtUQ" />
-        <!-- It would -->
 
+        <!-- necessary for android Pie -->
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
 
         <!-- API KEY FOR MAPS -->
         <!--

@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
+import labelingStudy.nctu.minuku.Data.DataHandler;
 import labelingStudy.nctu.minuku.Utilities.CSVHelper;
 import labelingStudy.nctu.minuku.Utilities.ScheduleAndSampleManager;
 import labelingStudy.nctu.minuku.Utilities.Utils;
@@ -856,12 +857,22 @@ public class TransportationModeStreamGenerator extends AndroidStreamGenerator<Tr
 
         ArrayList<ActivityRecognitionDataRecord> windowData = new ArrayList<ActivityRecognitionDataRecord>();
 
+        long windowStartTime = startTime;
+        if(endTime - Constants.KEEPALIVE > windowStartTime){
+
+            windowStartTime = endTime - Constants.KEEPALIVE;
+        }
+
         //TODO: get activity records from the database
-        //windowData = DataHandler.getActivityRecognitionRecordsBetweenTimes(Trip_startTime, Trip_endTime);
+        windowData = DataHandler.getActivityRecognitionRecordsBetweenTimes(windowStartTime, endTime);
+
+        //TODO log the window data content
+        CSVHelper.windowDataCSV(CSVHelper.CSV_AR_DATA, windowData);
 
         ///for testing: get data from the testData
 
-        ArrayList<ActivityRecognitionDataRecord> recordPool = getLocalRecordPool();
+        //TODO to deprecated, if the DataHandler works
+        /*ArrayList<ActivityRecognitionDataRecord> recordPool = getLocalRecordPool();
 
 //        //Log.d(LOG_TAG, " examineTransportation you find " + recordPool.size() + " records in the activity recognition pool");
 
@@ -869,13 +880,13 @@ public class TransportationModeStreamGenerator extends AndroidStreamGenerator<Tr
 
             ActivityRecognitionDataRecord record = (ActivityRecognitionDataRecord) recordPool.get(i);
 
-            //       //Log.d(LOG_TAG, " record.getTimestamp() " + record.getTimestamp() +
-            //             " windwo Trip_startTime " + Trip_startTime + " windwo Trip_endTime " + Trip_endTime);
+//            Log.d(LOG_TAG, " record.getTimestamp() " + record.getTimestamp() +
+//                         " windwo Trip_startTime " + Trip_startTime + " windwo Trip_endTime " + Trip_endTime);
 
 
             if (record.getTimestamp() >= startTime && record.getTimestamp() <= endTime)
                 windowData.add(record);
-        }
+        }*/
 
         return windowData;
     }
@@ -943,7 +954,7 @@ public class TransportationModeStreamGenerator extends AndroidStreamGenerator<Tr
 
         if (windowData.size()!=0) {
             //if the percentage > threshold
-            StoreToCSV(new Date().getTime(), "stop", String.valueOf(percentage), windowData, threshold, windowLength);
+            StoreToCSV(new Date().getTime(), String.valueOf(percentage), "stop", windowData, threshold, windowLength);
 
             if ( threshold >= percentage && inRecentCount <= 2)
 

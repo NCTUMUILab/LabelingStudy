@@ -253,11 +253,22 @@ public class PlaceSelection extends FragmentActivity implements OnMapReadyCallba
                             JSONArray results = jsonObject.getJSONArray("results");
                             for (int i = 0; i < results.length(); i++) {
 
-                                name = results.getJSONObject(i).getString("name");
+                                JSONObject result = results.getJSONObject(i);
+
+                                String placeTypes = result.getString("types");
+                                Log.d(TAG, "placeTypes : "+placeTypes);
+                                Log.d(TAG, "placeTypes is political ? "+(placeTypes.contains("political")));
+                                Log.d(TAG, "place name : "+result.getString("name"));
+                                if(placeTypes.contains("political")){
+
+                                    continue;
+                                }
+
+                                name = result.getString("name");
                                 MarkerName.add(name);
-                                latitude = results.getJSONObject(i).getJSONObject("geometry").getJSONObject("location").getString("lat");
+                                latitude = result.getJSONObject("geometry").getJSONObject("location").getString("lat");
                                 MarkerLat.add(latitude);
-                                longitude = results.getJSONObject(i).getJSONObject("geometry").getJSONObject("location").getString("lng");
+                                longitude = result.getJSONObject("geometry").getJSONObject("location").getString("lng");
                                 MarkerLng.add(longitude);
                                 Log.d(TAG, "name: " + name + "latitude: " + latitude + "longitude: " + longitude);
                             }

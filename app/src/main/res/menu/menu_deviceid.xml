@@ -13,4 +13,10 @@
         android:icon="@android:drawable/ic_menu_save"
         app:showAsAction="never" />
 
+    <item
+        android:id="@+id/action_datasending_network"
+        android:title="設定傳送方式"
+        android:icon="@android:drawable/ic_menu_save"
+        app:showAsAction="never" />
+
 </menu>

@@ -14,6 +14,7 @@ import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -88,6 +89,8 @@ public class Timeline extends AppCompatActivity {
     private String TAG = "Timeline";
     Context mContext;
 
+    public RecyclerView mRecyclerView;
+
     private int mYear, mMonth, mDay;
 
     ArrayList<Session> mSessions;
@@ -115,6 +118,9 @@ public class Timeline extends AppCompatActivity {
         timelineOrder = sharedPrefs.getString("timelineOrder", "ASC");
 
         initDateToQuery();
+
+        mRecyclerView = (RecyclerView) findViewById(R.id.list_view);
+        mRecyclerView.setVisibility(View.VISIBLE);
 
         popupPermissionSettingAtFirstTime();
 
@@ -327,21 +333,43 @@ public class Timeline extends AppCompatActivity {
 
             if(mSessions.size() > 0){
 
+                //** this method is inspired from the link as below
+                //https://stackoverflow.com/questions/52587745/how-to-save-and-restore-scrolling-position-of-the-recyclerview-in-a-fragment-whe
+                Parcelable mListState = null;
+                boolean isInitialState = true;
+                try {
+
+                    //save the previous position not just the position number but the state
+                    mListState = mRecyclerView.getLayoutManager().onSaveInstanceState();
+                    isInitialState = false;
+                }catch (NullPointerException e){
+
+                }
+
                 TimelineAdapter timelineAdapter = new TimelineAdapter(mSessions);
 
-                RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.list_view);
-                mRecyclerView.setVisibility(View.VISIBLE);
-
                 final LinearLayoutManager layoutManager = new LinearLayoutManager(Timeline.this);
-
                 layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-                layoutManager.onSaveInstanceState();
                 mRecyclerView.setLayoutManager(layoutManager);
+
+                //** restore from previous state
+                if(!isInitialState) {
+
+                    mRecyclerView.getLayoutManager().onRestoreInstanceState(mListState);
+                }
+
                 mRecyclerView.setAdapter(timelineAdapter);
 
+                //TODO deprecated
                 //if there have some new availSite, start from the top (reset)
-                int currentposition = sharedPrefs.getInt("currentposition", 0);
-                mRecyclerView.scrollToPosition(currentposition);
+//                int currentposition = sharedPrefs.getInt("currentposition", 0);
+//                Log.d(TAG, "[test timeline position] by initialization");
+//                Log.d(TAG, "[test timeline position] currentposition : "+currentposition);
+//                CSVHelper.storeToCSV(CSVHelper.CSV_POS, "by initialization");
+//                CSVHelper.storeToCSV(CSVHelper.CSV_POS, "currentposition : ", String.valueOf(currentposition));
+
+                //TODO deprecated, if onSaveInstanceState not working
+//                mRecyclerView.scrollToPosition(currentposition);
 
             }else{
 
@@ -365,13 +393,12 @@ public class Timeline extends AppCompatActivity {
         public String detectedSiteName = "";
 
         public TimelineAdapter instance;
-        //split
+
         private LatLng splittingLatlng = new LatLng(-999, -999);
         private long splittingTime = -9999;
         private boolean IsSplitLocationChosen = false;
         private HashMap<Integer, Marker> addedSplitMarker = new HashMap<>();
         private int currentMarkerKey = -1;
-        private String transportationInChinese;
 
         public class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -1177,12 +1204,17 @@ public class Timeline extends AppCompatActivity {
 
                                         DataHandler.updateSession(sessionId, startTimeLabel, endTimeLabel, annotationSet, Constants.SESSION_SHOULD_BE_SENT_FLAG);
 
+                                        //TODO deprecated
+//                                        sharedPrefs.edit().putInt("currentposition", position).apply();
+//                                        Log.d(TAG, "[test timeline position] storing currentposition");
+//                                        Log.d(TAG, "[test timeline position] currentposition : "+position);
+//                                        CSVHelper.storeToCSV(CSVHelper.CSV_POS, "storing currentposition");
+//                                        CSVHelper.storeToCSV(CSVHelper.CSV_POS, "currentposition : ", String.valueOf(position));
+
                                         initTime();
 
                                         //TODO check the mechanism
-                                        notifyItemChanged(position);
-
-                                        sharedPrefs.edit().putInt("currentposition", position).apply();
+//                                        notifyItemChanged(position);
 
                                         dChoosingSite.setVisibility(View.INVISIBLE); // set back to default
 

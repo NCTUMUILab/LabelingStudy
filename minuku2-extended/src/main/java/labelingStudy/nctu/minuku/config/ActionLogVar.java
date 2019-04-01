@@ -29,6 +29,7 @@ public class ActionLogVar {
     public static final String MEANING_MAP = "Map";
     public static final String MEANING_CHECKPOINT = "Checkpoint";
     public static final String MEANING_OK = "OK";
+    public static final String MEANING_NO = "NO";
     public static final String MEANING_CHANGEDMOVE = "ChangedMovement";
     public static final String MEANING_PLAYSTOP = "Play/Stop";
     public static final String MEANING_WALK = "Walk";
@@ -46,6 +47,7 @@ public class ActionLogVar {
     public static final String MEANING_SHOW_MAP = "show the Map";
     public static final String MEANING_ESM_NOTIFICATION = "ESM notification";
 
+    public static final String MEANING_SEND_DATA = "sendData";
     public static final String MEANING_CHOOSE_TIMELINE = "watchTimeline";
     public static final String MEANING_GET_DEVICEID = "getDeviceId";
     public static final String MEANING_POP_UP_PERMISSIONS = "pop up permissions";

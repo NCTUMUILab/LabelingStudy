@@ -84,7 +84,6 @@ public class BackgroundService extends Service {
     private ScheduledExecutorService mScheduledExecutorService;
     ScheduledFuture<?> mScheduledFuture, mScheduledFutureIsAlive;
 
-    private int ongoingNotificationID = 42;
     private String ongoingNotificationText = Constants.RUNNING_APP_DECLARATION;
 
     NotificationManager mNotificationManager;
@@ -96,7 +95,6 @@ public class BackgroundService extends Service {
 
     public BackgroundService() {
         super();
-
     }
 
     @Override
@@ -110,10 +108,19 @@ public class BackgroundService extends Service {
         streamManager = MinukuStreamManager.getInstance();
         mScheduledExecutorService = Executors.newScheduledThreadPool(Constants.MAIN_THREAD_SIZE);
 
-        intentFilter = new IntentFilter();
-        intentFilter.addAction(CONNECTIVITY_ACTION);
-        intentFilter.addAction(Constants.ACTION_CONNECTIVITY_CHANGE);
-        mWifiReceiver = new WifiReceiver();
+        //TODO deprecated
+//        intentFilter = new IntentFilter();
+//        intentFilter.addAction(CONNECTIVITY_ACTION);
+//        intentFilter.addAction(Constants.ACTION_CONNECTIVITY_CHANGE);
+//
+//        CSVHelper.storeToCSV(CSVHelper.CSV_Wifi, "Is wifiReceiver existed ? "+(mWifiReceiver == null));
+//
+//        if(mWifiReceiver == null) {
+//
+//            CSVHelper.storeToCSV(CSVHelper.CSV_Wifi, "wifiReceiver is gone, create a new one.");
+//
+//            mWifiReceiver = new WifiReceiver();
+//        }
     }
 
     @Override
@@ -126,20 +133,22 @@ public class BackgroundService extends Service {
         CSVHelper.storeToCSV(CSVHelper.CSV_ESM, onStart);
         CSVHelper.storeToCSV(CSVHelper.CSV_CAR, onStart);
 
-        mNotificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+        mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
         createNotificationChannel(Constants.ONGOING_CHANNEL_NAME, Constants.ONGOING_CHANNEL_ID, NotificationManager.IMPORTANCE_LOW);
         createNotificationChannel(Constants.SURVEY_CHANNEL_NAME, Constants.SURVEY_CHANNEL_ID, NotificationManager.IMPORTANCE_HIGH);
+        createNotificationChannel(Constants.UPLOAD_CHANNEL_NAME, Constants.UPLOAD_CHANNEL_ID, NotificationManager.IMPORTANCE_HIGH);
 
         //make the WifiReceiver start sending availSite to the server.
-        registerReceiver(mWifiReceiver, intentFilter);
+        //TODO deprecated
+//        registerReceiver(mWifiReceiver, intentFilter);
         registerConnectivityNetworkMonitorForAPI21AndUp();
 
         IntentFilter checkRunnableFilter = new IntentFilter(CHECK_RUNNABLE_ACTION);
         registerReceiver(CheckRunnableReceiver, checkRunnableFilter);
 
         //building the ongoing notification to the foreground
-        startForeground(ongoingNotificationID, getOngoingNotification(ongoingNotificationText));
+        startForeground(Constants.ONGOING_NOTIFICATION_ID, getOngoingNotification(ongoingNotificationText));
 
         if (!isBackgroundServiceRunning) {
 
@@ -164,8 +173,6 @@ public class BackgroundService extends Service {
         // read test file
 //        FileHelper fileHelper = FileHelper.getInstance(getApplicationContext());
 //        FileHelper.readTestFile();
-
-//        Utils.triggerStopRunning();
 
         return START_REDELIVER_INTENT;
     }
@@ -276,7 +283,7 @@ public class BackgroundService extends Service {
         CSVHelper.storeToCSV(CSVHelper.CSV_ESM, onDestroy);
         CSVHelper.storeToCSV(CSVHelper.CSV_CAR, onDestroy);
 
-        mNotificationManager.cancel(ongoingNotificationID);
+        mNotificationManager.cancel(Constants.ONGOING_NOTIFICATION_ID);
 
         sharedPrefs.edit().putInt("CurrentState", TransportationModeStreamGenerator.mCurrentState).apply();
         sharedPrefs.edit().putInt("ConfirmedActivityType", TransportationModeStreamGenerator.mConfirmedActivityType).apply();
@@ -293,7 +300,7 @@ public class BackgroundService extends Service {
     public void onTaskRemoved(Intent intent){
         super.onTaskRemoved(intent);
 
-        mNotificationManager.cancel(ongoingNotificationID);
+        mNotificationManager.cancel(Constants.ONGOING_NOTIFICATION_ID);
 
         isBackgroundServiceRunning = false;
         isBackgroundRunnableRunning = false;
@@ -426,13 +433,14 @@ public class BackgroundService extends Service {
 
     private void sendingIsAliveData(){
 
-        final String postIsAliveUrl_insert = "http://18.219.118.106:5000/find_latest_and_insert?collection=isAlive&action=insert&id=";
+        final String postIsAliveUrl_insert = Constants.SERVER_URL +"isAlive&action=insert&id=";
 
         String currentCondition = getResources().getString(labelingStudy.nctu.minuku.R.string.current_task);
 
         //making isAlive
         JSONObject dataInJson = new JSONObject();
         try {
+
             long currentTime = new Date().getTime();
             String currentTimeString = ScheduleAndSampleManager.getTimeString(currentTime);
 
