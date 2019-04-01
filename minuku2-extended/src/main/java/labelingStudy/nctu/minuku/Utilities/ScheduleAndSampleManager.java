@@ -73,4 +73,42 @@ public class ScheduleAndSampleManager {
         return Integer.parseInt(TimeOfDay.split(":")[1] );
     }
 
+    public static String getCurrentMidNightTimeString() {
+
+        return getTimeString(getCurrentMidNightTimeInMillis());
+    }
+
+    public static long getCurrentMidNightTimeInMillis(){
+        long currentTime = getCurrentTimeInMillis();
+        SimpleDateFormat sdf_now = new SimpleDateFormat(Constants.DATE_FORMAT_NOW_DAY);
+        String currentTimeString = sdf_now.format(currentTime);
+
+        long currentMidNightTime = getTimeInMillis(currentTimeString, sdf_now);
+
+        return currentMidNightTime;
+    }
+
+    public static String getCurrentHourLowerTimeString() {
+
+        return getTimeString(getCurrentHourLowerTimeInMillis());
+    }
+
+    public static long getCurrentHourLowerTimeInMillis(){
+        long currentTime = getCurrentTimeInMillis();
+        SimpleDateFormat sdf_now = new SimpleDateFormat(Constants.DATE_FORMAT_NOW_HOUR);
+        String currentTimeString = sdf_now.format(currentTime);
+
+        long currentHourLowerTime = getTimeInMillis(currentTimeString, sdf_now);
+
+        return currentHourLowerTime;
+    }
+
+    public static long getHourLowerTimeInMillis(long time){
+        SimpleDateFormat sdf_now = new SimpleDateFormat(Constants.DATE_FORMAT_NOW_HOUR);
+        String timeString = sdf_now.format(time);
+
+        long hourLowerTime = getTimeInMillis(timeString, sdf_now);
+
+        return hourLowerTime;
+    }
 }

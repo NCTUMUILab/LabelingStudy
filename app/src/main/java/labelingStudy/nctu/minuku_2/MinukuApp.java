@@ -24,7 +24,6 @@ package labelingStudy.nctu.minuku_2;
 
 import android.content.Context;
 
-//import com.bugfender.sdk.Bugfender;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.ndk.CrashlyticsNdk;
 import com.firebase.client.Config;
@@ -32,7 +31,8 @@ import com.instabug.library.IBGInvocationEvent;
 import com.instabug.library.Instabug;
 
 import io.fabric.sdk.android.Fabric;
-import labelingStudy.nctu.minuku.config.UserPreferences;
+
+//import com.bugfender.sdk.Bugfender;
 
 /**
  * Created by neerajkumar on 7/18/16.
@@ -54,20 +54,13 @@ public class MinukuApp extends android.app.Application {
     public void onCreate() {
         super.onCreate();
         Fabric.with(this, new Crashlytics(), new CrashlyticsNdk());
+        // the firebase one
         Config mConfig = new Config();
         mConfig.setPersistenceEnabled(true);
         long cacheSizeOfHundredMB = 100 * 1024 * 1024;
         mConfig.setPersistenceCacheSizeBytes(cacheSizeOfHundredMB);
         mConfig.setPersistenceEnabled(true);
         mConfig.setAndroidContext(this);
-        /*
-        Firebase.setDefaultConfig(mConfig);
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-        */
-        UserPreferences.getInstance().Initialize(getApplicationContext());
-
-        //Bugfender.init(this, "N7pdXEGbmKhK9k8YtpFPyXORtsAwgZa5", false);
-        //Bugfender.setForceEnabled(true);
 
         new Instabug.Builder(this, "2be6d236d601237a17e9c6314455930a")
                 .setInvocationEvent(IBGInvocationEvent.IBGInvocationEventShake)

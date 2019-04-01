@@ -10,6 +10,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Handler;
 import android.util.Log;
 
 import org.javatuples.Decade;
@@ -60,6 +61,8 @@ import labelingStudy.nctu.minuku.model.Annotation;
 import labelingStudy.nctu.minuku.model.AnnotationSet;
 import labelingStudy.nctu.minuku.model.Session;
 import labelingStudy.nctu.minuku_2.Utils;
+import labelingStudy.nctu.minuku_2.manager.PostManager;
+import labelingStudy.nctu.minuku_2.manager.QueryDataManager;
 
 /**
  * Created by Lawrence on 2017/8/16.
@@ -82,7 +85,8 @@ public class WifiReceiver extends BroadcastReceiver {
     public static final int HTTP_TIMEOUT = 10000;
     public static final int SOCKET_TIMEOUT = 10000;
 
-    private static final String serverUrl = "http://18.219.118.106:5000/find_latest_and_insert?collection=";
+//    private static final String SERVER_URL = "http://18.219.118.106:8080/find_latest_and_insert?collection=";
+    private static final String serverUrl = Constants.SERVER_URL;
 
     private static final String postDumpUrl_insert = serverUrl+"dump&action=insert&id=";
     private static final String postDumpUrl_search = serverUrl+"dump&action=search&id=";
@@ -94,10 +98,17 @@ public class WifiReceiver extends BroadcastReceiver {
 
     private static final String postIsAliveUrl_insert = serverUrl+"isAlive&action=insert&id=";
 
+    private static boolean firstConnect = true;
+    private Handler handler = new Handler();
+
+    private Context context;
+
     @Override
-    public void onReceive(Context context, Intent intent) {
+    public void onReceive(final Context context, Intent intent) {
 
         Log.d(TAG, "onReceive");
+
+        this.context = context;
 
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
@@ -128,15 +139,45 @@ public class WifiReceiver extends BroadcastReceiver {
 
         if (Constants.ACTION_CONNECTIVITY_CHANGE.equals(intent.getAction())) {
 
+            Log.d(TAG, "firstConnect : "+firstConnect);
             if(activeNetwork != null &&
                     activeNetwork.getType() == ConnectivityManager.TYPE_WIFI
                     //assure the situation
                     && activeNetwork.isConnected()
                     ){
 
-//                updateTripState();
+                if(firstConnect) {
 
-                uploadData();
+                    firstConnect = false;
+
+                    Log.d(TAG, "start to wait for 10 min");
+
+                    //wait for 10 seconds then check if it still in Wi-Fi
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            Log.d(TAG, "It's 10 min, check the network");
+
+                            ConnectivityManager tenMinCm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+                            NetworkInfo tenMinNetworkActiveInfo = tenMinCm.getActiveNetworkInfo();
+
+                            Log.d(TAG, "tenMinNetworkActiveInfo != null ? "+(tenMinNetworkActiveInfo != null));
+                            Log.d(TAG, "Is in Wi-Fi ? "+((tenMinNetworkActiveInfo != null) && (tenMinNetworkActiveInfo.getType() == ConnectivityManager.TYPE_WIFI)));
+
+                            if (tenMinNetworkActiveInfo != null &&
+                                    tenMinNetworkActiveInfo.getType() == ConnectivityManager.TYPE_WIFI) {
+
+                                uploadData();
+
+                                //the current iteration is done, set it back to true for preparing next time
+                                firstConnect= true;
+                            }
+                        }
+                    }, 10 * Constants.MILLISECONDS_PER_MINUTE);
+
+                }
+
             }
         }
     }
@@ -178,7 +219,7 @@ public class WifiReceiver extends BroadcastReceiver {
 
         if(!Constants.DEVICE_ID.equals(Constants.INVALID_STRING_VALUE)) {
 
-            setNowTime();
+            /*setNowTime();
 
             startTime = sharedPrefs.getLong("lastSentStarttime", Constants.INVALID_TIME_VALUE);
             endTime = getDataStartTime();
@@ -194,46 +235,185 @@ public class WifiReceiver extends BroadcastReceiver {
             Log.d(TAG, "NowTimeString : " + ScheduleAndSampleManager.getTimeString(nowTime));
             Log.d(TAG, "startTimeString : " + ScheduleAndSampleManager.getTimeString(startTime));
             Log.d(TAG, "endTimeString : " + ScheduleAndSampleManager.getTimeString(endTime));
-            Log.d(TAG, "now > end ? " + (nowTime > endTime));
+            Log.d(TAG, "now > end ? " + (nowTime > endTime));*/
+            //TODO replace the code as above
+            QueryDataManager queryDataManager = new QueryDataManager();
+            queryDataManager.preparedCurrentTimeBoundary(sharedPrefs, context);
 
+            /*
             boolean tryToSendData = true;
 
-            //TODO might cause the infinite loop
             while(nowTime > endTime && tryToSendData) {
 
                 Log.d(TAG,"before send dump data NowTimeString : " + ScheduleAndSampleManager.getTimeString(nowTime));
 
                 Log.d(TAG,"before send dump data EndTimeString : " + ScheduleAndSampleManager.getTimeString(endTime));
 
-                //TODO return the boolean value to check if the network is connected
-                tryToSendData = sendingDumpData(startTime, endTime);
+                //return the boolean value to check if the network is connected
+                tryToSendData = sendingDumpData();
 
                 //update nowTime
                 setNowTime();
 
                 //update endTime
-                long lastEndTime = endTime;
-
-                startTime = sharedPrefs.getLong("lastSentStarttime", Constants.INVALID_TIME_VALUE);
-                endTime = getDataStartTime();
-
-                if(startTime != Constants.INVALID_TIME_VALUE){
-
-                    endTime = startTime + Constants.MILLISECONDS_PER_HOUR;
-                }
-
-                //if the data didn't be sent successfully, don't try to send again
-                if(lastEndTime == endTime){
-
-                    break;
-                }
+//                long lastEndTime = endTime;
+//
+//                startTime = sharedPrefs.getLong("lastSentStarttime", Constants.INVALID_TIME_VALUE);
+//                endTime = getDataStartTime();
+//
+//                if(startTime != Constants.INVALID_TIME_VALUE){
+//
+//                    endTime = startTime + Constants.MILLISECONDS_PER_HOUR;
+//                }
+//
+//                //if the data didn't be sent successfully, don't try to send again
+//                if(lastEndTime == endTime){
+//
+//                    break;
+//                }
 
                 Log.d(TAG, "now > end ? " + (nowTime > endTime));
             }
 
+
             // Trip, isAlive
             sendingTripData(nowTime);
+            */
+            //TODO replace the code as above
+            try {
+
+                sendDumpData(queryDataManager);
+                sendTripData(queryDataManager);
+
+            }catch (JSONException e){
+                Log.e(TAG, "JSONException", e);
+                //no need to pop up the message
+
+            }catch (InterruptedException e){
+                Log.e(TAG, "InterruptedException", e);
+                return;
+            }catch (ExecutionException e){
+                Log.e(TAG, "ExecutionException", e);
+            }
+
         }
+    }
+
+    private void sendTripData(QueryDataManager queryDataManager) throws JSONException, InterruptedException, ExecutionException{
+
+        long boundaryTime = setSentBoundaryTime();
+
+        ArrayList<JSONObject> tripInJson = queryDataManager.queryTripData(boundaryTime);
+
+        for(int index = 0; index < tripInJson.size(); index++){
+
+            JSONObject data = tripInJson.get(index);
+
+            String response = sendData(Constants.SERVER_URL + Constants.COLLECTION_TRIP_ACTION_INSERT + Constants.DEVICE_ID
+                    , data, Constants.COLLECTION_TRIP);
+
+            response = Utils.getRidOfBrackets(response);
+
+            JSONObject responseInJson = new JSONObject(response);
+
+            if(response.equals(Constants.INVALID_STRING_VALUE)){
+
+            } else if (isCertainFieldValueSame(data, responseInJson, QueryDataManager.TRIP_COMPARED_FIELD)) {
+
+                long lastSentStartTime = Long.valueOf(responseInJson.getString(QueryDataManager.TRIP_COMPARED_FIELD));
+                sharedPrefs.edit().putLong("lastSentStarttime", lastSentStartTime).apply();
+
+                String sentSessionId = data.getString("sessionid");
+                DataHandler.updateSession(Integer.valueOf(sentSessionId), Constants.SESSION_IS_ALREADY_SENT_FLAG);
+            }
+        }
+
+    }
+
+    private void sendDumpData(QueryDataManager queryDataManager) throws JSONException, InterruptedException, ExecutionException{
+
+        long boundaryTime = setSentBoundaryTime();
+        long endTime = queryDataManager.getEndTime();
+
+        boolean tryToSendData = true;
+
+        while(boundaryTime > endTime && tryToSendData) {
+
+            Log.d(TAG,"before send dump data BoundaryTimeString : " + ScheduleAndSampleManager.getTimeString(boundaryTime));
+
+            Log.d(TAG,"before send dump data EndTimeString : " + ScheduleAndSampleManager.getTimeString(endTime));
+
+            //return the boolean value to check if the network is connected
+            tryToSendData = sendEachPieceOfDumpData(queryDataManager);
+
+            //update boundaryTime
+            boundaryTime = setSentBoundaryTime();
+
+            Log.d(TAG, "boundary time > end ? " + (boundaryTime > endTime));
+        }
+
+    }
+
+    private long setSentBoundaryTime(){
+
+        long boundaryTime = new Date().getTime() - Constants.MILLISECONDS_PER_DAY;
+
+        return boundaryTime;
+    }
+
+    private boolean sendEachPieceOfDumpData(QueryDataManager queryDataManager) throws JSONException, InterruptedException, ExecutionException{
+
+        JSONObject dumpInJson = queryDataManager.queryDumpData();
+
+        String response = sendData(Constants.SERVER_URL + Constants.COLLECTION_DUMP_ACTION_INSERT + Constants.DEVICE_ID
+                , dumpInJson, Constants.COLLECTION_DUMP);
+
+        JSONObject responseInJson = new JSONObject(response);
+
+        if(response.equals(Constants.INVALID_STRING_VALUE)){
+
+            return false;
+        } else if (isCertainFieldValueSame(dumpInJson, responseInJson, QueryDataManager.DUMP_COMPARED_FIELD)) {
+
+            long lastSentStartTime = Long.valueOf(responseInJson.getString(QueryDataManager.DUMP_COMPARED_FIELD));
+            sharedPrefs.edit().putLong("lastSentStarttime", lastSentStartTime).apply();
+
+            //update startTime, endTime
+            queryDataManager.setStartTime(lastSentStartTime);
+            queryDataManager.setEndTime(lastSentStartTime + Constants.MILLISECONDS_PER_HOUR);
+
+            return true;
+        }
+
+        //default is to not try to send due to it might stuck on the loop
+        return false;
+    }
+
+    private boolean isCertainFieldValueSame(JSONObject dumpInJson, JSONObject responseInJson, String fieldName) throws JSONException{
+
+        return dumpInJson.getString(fieldName).equals(responseInJson.getString(fieldName));
+    }
+
+    private String sendData(String insertUrl, JSONObject dataInJson, String dataType) throws InterruptedException, ExecutionException{
+
+        String response = Constants.INVALID_STRING_VALUE;
+
+        String curr = Utils.getDateCurrentTimeZone(new Date().getTime());
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+            response = new PostManager().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+                    insertUrl + Constants.DEVICE_ID,
+                    dataInJson.toString(),
+                    dataType,
+                    curr).get();
+        else
+            response = new PostManager().execute(
+                    insertUrl + Constants.DEVICE_ID,
+                    dataInJson.toString(),
+                    dataType,
+                    curr).get();
+
+        return response;
     }
 
     private void setNowTime(){
@@ -243,7 +423,7 @@ public class WifiReceiver extends BroadcastReceiver {
 //        nowTime = new Date().getTime(); //TODO for testing
     }
 
-    public boolean sendingDumpData(long startTime, long endTime){
+    public boolean sendingDumpData(){
 
         Log.d(TAG, "sendingDumpData");
 
@@ -274,7 +454,6 @@ public class WifiReceiver extends BroadcastReceiver {
         storeActionLog(dataInJson);
 
 //        Log.d(TAG,"final dump data : "+ dataInJson.toString());
-
 
         String curr = getDateCurrentTimeZone(new Date().getTime());
 
@@ -312,17 +491,17 @@ public class WifiReceiver extends BroadcastReceiver {
             long respondedEndtimeToLog = Long.valueOf(lasttimeInServerJson.getString("endTime"));
             CSVHelper.storeToCSV(CSVHelper.CSV_Wifi, "responded dump endTime String : ", ScheduleAndSampleManager.getTimeString(respondedEndtimeToLog));
 
+            //if sent successfully
             if(dataInJson.getString("endTime").equals(lasttimeInServerJson.getString("endTime"))){
 
                 long lastSentStartTime = Long.valueOf(lasttimeInServerJson.getString("endTime"));
-
                 sharedPrefs.edit().putLong("lastSentStarttime", lastSentStartTime).apply();
 
-                return true;
-            }else{
+                //update startTime, endTime
+                startTime = lastSentStartTime;
+                endTime = startTime + Constants.MILLISECONDS_PER_HOUR;
 
-                //if connected fail, stop trying and wait for the next time
-                return false;
+                return true;
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -377,8 +556,6 @@ public class WifiReceiver extends BroadcastReceiver {
                 Log.d(TAG, "[show availSite response] Trip lastTimeInServer : " + lastTimeInServer);
 
                 lastTimeInServer = lastTimeInServer.replace("[","").replace("]","");
-
-                Log.d(TAG, "[show availSite response] Trip get rid of [ & ], lastTimeInServer : " + lastTimeInServer);
 
                 JSONObject lasttimeInServerJson = new JSONObject(lastTimeInServer);
 

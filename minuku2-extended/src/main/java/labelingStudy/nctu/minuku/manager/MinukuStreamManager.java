@@ -270,7 +270,7 @@ public class MinukuStreamManager implements StreamManager {
 
             String currentWork = context.getResources().getString(R.string.current_task);
 
-            Log.d(TAG,"in setTransportationModeDataRecord, currentWork is "+currentWork);
+            Log.d(TAG,"in setTransportationModeDataRecord, CURRENT_TASK is "+currentWork);
 
             //in PART, the Session is controlled by the user, no need to detect by the app.
             if(!currentWork.equals(context.getResources().getString(R.string.task_PART))) {

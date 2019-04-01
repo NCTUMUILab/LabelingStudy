@@ -31,7 +31,12 @@ public class Constants {
 
     static final Calendar c = Calendar.getInstance();
 
-    public static String currentWork;
+    public static final String appNameString = "labelingStudy.nctu.minuku_2";
+
+    public static String CURRENT_TASK;
+
+    public static final int ONGOING_NOTIFICATION_ID = 42;
+    public static final int UPLOADING_NOTIFICATION_ID = 33;
 
     public static int siteRange = 50;
 
@@ -41,6 +46,8 @@ public class Constants {
     public static final String ONGOING_CHANNEL_ID = "LabelingStudy_id";
     public static final String SURVEY_CHANNEL_NAME = "LS";
     public static final String SURVEY_CHANNEL_ID = "Survey_id";
+    public static final String UPLOAD_CHANNEL_NAME = "LS";
+    public static final String UPLOAD_CHANNEL_ID = "Upload_id";
 
     public static final String CHECK_SERVICE_ACTION = "checkService";
 
@@ -96,6 +103,11 @@ public class Constants {
     public static final int INVALID_INT_VALUE = -1;
     public static final long INVALID_TIME_VALUE = -1;
     public static final String INVALID_STRING_VALUE = "NA";
+    public static final String EMPTY_STRING_VALUE = "";
+
+    public static final String NOTI_TEXT_1 = "(1/1)";
+    public static final String NOTI_TEXT_1_2 = "(1/2)";
+    public static final String NOTI_TEXT_2_2 = "(2/2)";
 
     //sharedPrefs
     public static final String sharedPrefString = "labelingStudy.nctu.minuku_2";
@@ -141,6 +153,9 @@ public class Constants {
     public static final String APP_NAME = "LS";
     public static final String APP_FULL_NAME = "Labeling Study";
     public static final String RUNNING_APP_DECLARATION = "正在執行 "+ APP_FULL_NAME;
+
+    public static final String DOWNLOADING = "正在上傳";
+
     public static final long INTERNAL_LOCATION_UPDATE_FREQUENCY = 1 * 10 * 1000; // 1 * 300 * 1000
     public static final long INTERNAL_LOCATION_LOW_UPDATE_FREQUENCY = 1 * 60 * 1000; // 1 * 300 * 1000
 
@@ -164,12 +179,27 @@ public class Constants {
 
     public static final int TIMER_UPDATE_THREAD_SIZE = 1;
     public static final int MAIN_THREAD_SIZE = 2;
-    public static final int STREAM_UPDATE_FREQUENCY = 10;
+    public static final int STREAM_UPDATE_FREQUENCY = 5;
     public static final int STREAM_UPDATE_DELAY = 0;
 
     public static final int ISALIVE_UPDATE_FREQUENCY = 1 * 60 * 60;
     public static final int ISALIVE_UPDATE_DELAY = 0;
 
     public static final String ACTIVITY_CONFIDENCE_CONNECTOR = ":";
+
+    public static final int KEEPALIVE_MINUTE = 3;
+    public static final long KEEPALIVE = KEEPALIVE_MINUTE * MILLISECONDS_PER_MINUTE;
+
+    public static final String COLLECTION_DUMP = "dump";
+    public static final String COLLECTION_TRIP = "trip";
+
+    public static final String ACTION_INSERT = "insert";
+    public static final String ACTION_SEARCH = "search";
+
+    public static final String PORT = "8080"; //5000, 8080
+    public static final String SERVER_URL = "http://18.219.118.106:"+PORT+"/find_latest_and_insert?collection=";
+    public static final String COLLECTION_DUMP_ACTION_INSERT = COLLECTION_DUMP+"&action="+ACTION_INSERT+"&id=";
+    public static final String COLLECTION_TRIP_ACTION_INSERT = COLLECTION_TRIP+"&action="+ACTION_INSERT+"&id=";
+
 
 }

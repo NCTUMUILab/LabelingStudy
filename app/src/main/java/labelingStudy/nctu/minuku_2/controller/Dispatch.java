@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.multidex.MultiDex;
 
+import labelingStudy.nctu.minuku.config.Config;
 import labelingStudy.nctu.minuku.config.Constants;
 import labelingStudy.nctu.minuku.logger.Log;
 import labelingStudy.nctu.minuku_2.R;
@@ -33,6 +34,8 @@ public class Dispatch extends Activity {
 
         boolean firstStartBackGround = sharedPrefs.getBoolean("firstStartBackGround", true);
 
+        Config.is_all_you_can_eat = sharedPrefs.getBoolean("is_all_you_can_eat", false);
+        Constants.CURRENT_TASK = getResources().getString(R.string.current_task);
 
         if(firstStartBackGround) {
 

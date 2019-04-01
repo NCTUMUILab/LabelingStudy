@@ -23,6 +23,7 @@
 package labelingStudy.nctu.minuku_2;
 
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
@@ -37,6 +38,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
+import labelingStudy.nctu.minuku.config.Constants;
 import labelingStudy.nctu.minuku.streamgenerator.TransportationModeStreamGenerator;
 
 /**
@@ -157,6 +159,26 @@ public class Utils {
             e.printStackTrace();
         }
         return "";
+    }
+
+    public static long getDownloadedTime(Context context){
+
+        long downloadtime = -999;
+        try {
+
+            PackageManager pm = context.getPackageManager();
+            downloadtime = pm.getPackageInfo(Constants.appNameString, 0).firstInstallTime;
+        } catch (PackageManager.NameNotFoundException e) {
+
+            Log.e(TAG, "Exception", e);
+        }
+
+        return downloadtime;
+    }
+
+    public static String getRidOfBrackets(String inputString){
+
+        return inputString.replace("[","").replace("]","");
     }
 
     public static void triggerNoResponding(){

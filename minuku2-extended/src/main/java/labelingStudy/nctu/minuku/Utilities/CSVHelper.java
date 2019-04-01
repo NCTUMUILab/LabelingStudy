@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import labelingStudy.nctu.minuku.config.Constants;
+import labelingStudy.nctu.minuku.model.DataRecord.ActivityRecognitionDataRecord;
 
 /**
  * Created by Lawrence on 2018/3/31.
@@ -26,8 +27,9 @@ public class CSVHelper {
 
     public static final String CSV_CheckService_alive = "CheckService.csv";
 
-    public static final String CSV_Wifi = "CheckWifi.csv";
+    public static final String CSV_POS = "CheckPosition.csv";
 
+    public static final String CSV_Wifi = "CheckWifi.csv";
     public static final String CSV_ESM = "CheckESM.csv";
     public static final String CSV_CAR = "CheckCAR.csv";
     public static final String CSV_CHECK_SESSION = "CheckSession.csv";
@@ -37,6 +39,8 @@ public class CSVHelper {
     public static final String CSV_WIFI_RECEIVER_CHECK = "Wifi_Receiver_check.csv";
     public static final String CSV_EXAMINE_COMBINE_SESSION = "ExamineCombineSession.csv";
     public static final String CSV_SERVER_DATA_STATE = "ServerDataState.csv";
+
+    public static final String CSV_AR_DATA = "ARdata.csv";
 
     public static void storeToCSV(String fileName, String... texts){
 
@@ -79,86 +83,6 @@ public class CSVHelper {
         }/*catch (Exception e){
             //e.printStackTrace();
         }*/
-    }
-
-    public static void userInformStoreToCSV(String fileName, long timestamp, JSONObject userInform){
-
-//        String sFileName = "TransportationState.csv";
-
-        try{
-            File root = new File(Environment.getExternalStorageDirectory() + Constants.PACKAGE_DIRECTORY_PATH);
-            if (!root.exists()) {
-                root.mkdirs();
-            }
-
-            //Log.d(TAG, "root : " + root);
-
-            csv_writer = new CSVWriter(new FileWriter(Environment.getExternalStorageDirectory()+Constants.PACKAGE_DIRECTORY_PATH+fileName,true));
-
-            List<String[]> data = new ArrayList<String[]>();
-
-            String timeString = ScheduleAndSampleManager.getTimeString(timestamp);
-
-            data.add(new String[]{timeString, userInform.toString()});
-
-            csv_writer.writeAll(data);
-
-            csv_writer.close();
-
-        }catch (IOException e){
-            //e.printStackTrace();
-        }/*catch (Exception e){
-            //e.printStackTrace();
-        }*/
-    }
-
-    public static void storeToCSV_IntervalSurveyUpdated(boolean clicked){
-
-        String sFileName = "IntervalSurveyState.csv";
-
-//        Log.d(TAG, "sFileName : " + sFileName);
-
-        try {
-
-            File root = new File(Environment.getExternalStorageDirectory() + Constants.PACKAGE_DIRECTORY_PATH);
-
-//            Log.d(TAG, "root : " + root);
-
-            if (!root.exists()) {
-                root.mkdirs();
-            }
-
-            long clickedTime = ScheduleAndSampleManager.getCurrentTimeInMillis();
-            String clickedTimeString = ScheduleAndSampleManager.getTimeString(clickedTime);
-
-            String clickedString;
-            if(clicked)
-                clickedString = "Yes";
-            else
-                clickedString = "No";
-
-            csv_writer = new CSVWriter(new FileWriter(Environment.getExternalStorageDirectory()+Constants.PACKAGE_DIRECTORY_PATH+sFileName,true));
-
-            List<String[]> data = new ArrayList<String[]>();
-
-            if(clicked)
-                data.add(new String[]{"", "", clickedString, clickedTimeString,""});
-            else
-                data.add(new String[]{"", "", clickedString, "",""});
-
-            csv_writer.writeAll(data);
-
-            csv_writer.close();
-
-        } catch(IOException e) {
-//            e.printStackTrace();
-//            android.util.Log.e(TAG, "exception", e);
-        } catch (IndexOutOfBoundsException e2){
-//            e2.printStackTrace();
-//            android.util.Log.e(TAG, "exception", e2);
-
-        }
-
     }
 
     public static void TransportationState_StoreToCSV(long timestamp, String state, String activitySofar){
@@ -209,6 +133,39 @@ public class CSVHelper {
             List<String[]> data = new ArrayList<String[]>();
 
             data.add(new String[]{dataType, json});
+
+            csv_writer.writeAll(data);
+
+            csv_writer.close();
+
+        }catch (IOException e){
+            //e.printStackTrace();
+        }catch (Exception e){
+            //e.printStackTrace();
+        }
+    }
+
+    public static void windowDataCSV(String sFileName, ArrayList<ActivityRecognitionDataRecord> windowData){
+
+        try{
+
+            File root = new File(Environment.getExternalStorageDirectory() + Constants.PACKAGE_DIRECTORY_PATH);
+            if (!root.exists()) {
+                root.mkdirs();
+            }
+
+            //Log.d(TAG, "root : " + root);
+
+            csv_writer = new CSVWriter(new FileWriter(Environment.getExternalStorageDirectory()+Constants.PACKAGE_DIRECTORY_PATH+sFileName,true));
+
+            List<String[]> data = new ArrayList<String[]>();
+
+            for(ActivityRecognitionDataRecord eachWindowData : windowData){
+
+                data.add(new String[]{eachWindowData.getMostProbableActivity().toString(),
+                        eachWindowData.getProbableActivities().toString(),
+                        String.valueOf(eachWindowData.getDetectedtime()), eachWindowData.getSessionid()});
+            }
 
             csv_writer.writeAll(data);
 

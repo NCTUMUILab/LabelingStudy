@@ -62,16 +62,37 @@ public class GetUrl {
             JSONObject jsonObject = new JSONObject(jsonInString);
             JSONArray results = jsonObject.getJSONArray("results");
 
+            JSONObject result = new JSONObject();
+
+            //don't include the city name
+            for (int i = 0; i < results.length(); i++) {
+
+                result = results.getJSONObject(i);
+
+                String placeTypes = result.get("types").toString();
+                Log.d(TAG, "placeTypes : " + placeTypes);
+
+                if(placeTypes.contains("political")){
+
+                    continue;
+                }else {
+
+                    break;
+                }
+            }
+
             //default now we choose the second index from the json.(first index is ken(縣名) name.)
-            siteName = results.getJSONObject(1).getString("name");
-            String geometry = results.getJSONObject(1).getString("geometry");
+            siteName = result.getString("name");
+            String geometry = result.getString("geometry");
 
             JSONObject geometryJson = new JSONObject(geometry);
             String location = geometryJson.getString("location");
             JSONObject locationJson = new JSONObject(location);
             siteLat = locationJson.getString("lat");
             siteLng = locationJson.getString("lng");
-            sitePlaceid = results.getJSONObject(1).getString("place_id");
+            sitePlaceid = result.getString("place_id");
+
+
 
         }catch (InterruptedException e){
 

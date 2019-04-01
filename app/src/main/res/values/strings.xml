@@ -34,9 +34,13 @@
     <string name="cancel">CANCEL</string>
     <string name="confirm_in_chinese">確認</string>
     <string name="cancel_in_chinese">取消</string>
+    <string name="decide_in_chinese">是</string>
+    <string name="undecide_in_chinese">否</string>
 
     <!--activity constants text-->
     <string name="homepage_switch_activity_button">切換移動方式</string>
+
+    <string name="ask_for_all_you_can_eat">請問您有吃到飽嗎？</string>
 
     <string name="timer_site_add_new_site">新增地點</string>
 
@@ -48,7 +52,15 @@
     <string name="timeline_from_old_to_new">從舊到新</string>
     <string name="timeline_from_new_to_old">從新到舊</string>
 
+    <string name="reminder_data_not_enough">尚未有足夠的資料需上傳</string>
+    <string name="reminder_data_sending_process_is_interrupted">資料傳輸過程被中斷</string>
+    <string name="reminder_data_sent_successfully">資料傳輸成功</string>
+    <string name="reminder_data_send_via_wifi">您的資料將透過wifi上傳</string>
+    <string name="reminder_data_send_not_only_via_wifi">您的資料上傳將不受wifi限制</string>
     <string name="reminder_check_connection">請確認您有連上網路</string>
+    <string name="reminder_check_wifi_connection">請確認您的wifi狀態</string>
+    <string name="reminder_sending_process_get_wrong">上傳失敗 請檢查網路狀態後重試\n 若重試後仍失敗請聯絡研究人員</string>
+
     <string name="reminder_choose_your_site">請選擇地點</string>
     <string name="reminder_enter_site">請輸入地點</string>
     <string name="reminder_enter_site_successfully">成功新增地點</string>

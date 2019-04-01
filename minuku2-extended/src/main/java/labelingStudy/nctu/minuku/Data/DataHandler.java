@@ -3,10 +3,15 @@ package labelingStudy.nctu.minuku.Data;
 import android.content.Context;
 import android.util.Log;
 
+import com.google.android.gms.location.DetectedActivity;
+
 import java.util.ArrayList;
 
+import labelingStudy.nctu.minuku.Utilities.CSVHelper;
 import labelingStudy.nctu.minuku.config.Constants;
 import labelingStudy.nctu.minuku.model.AnnotationSet;
+import labelingStudy.nctu.minuku.model.DataRecord.ActivityRecognitionDataRecord;
+import labelingStudy.nctu.minuku.streamgenerator.ActivityRecognitionStreamGenerator;
 
 /**
  * Created by Lawrence on 2018/3/13.
@@ -55,6 +60,80 @@ public class DataHandler {
         }
 
         return resultList;
+    }
+
+    public static ArrayList<ActivityRecognitionDataRecord> getActivityRecognitionRecordsBetweenTimes(long startTime, long endTime){
+
+        Log.d(TAG, "getActivityRecognitionRecordsBetweenTimes");
+        CSVHelper.storeToCSV(CSVHelper.CSV_AR_DATA, "getActivityRecognitionRecordsBetweenTimes");
+
+        ArrayList<ActivityRecognitionDataRecord> activityRecognitionDataRecords = new ArrayList<>();
+
+        ArrayList<String> datas = DBHelper.queryRecordsBetweenTimes(DBHelper.activityRecognition_table, startTime, endTime);
+
+        for(String data : datas){
+
+            Log.d(TAG, "data : "+data);
+            CSVHelper.storeToCSV(CSVHelper.CSV_AR_DATA, "data : "+data);
+
+            //sMostProbableActivity, sProbableActivities, sLatestDetectionTime, String.valueOf(session_id)
+            String[] subData = data.split(Constants.DELIMITER);
+
+            //split the mostProbableActivity into "type:conf"
+            String mostProbableActivityString = subData[2];
+            Log.d(TAG, "mostProbableActivityString : "+mostProbableActivityString);
+            CSVHelper.storeToCSV(CSVHelper.CSV_AR_DATA, "mostProbableActivityString : "+mostProbableActivityString);
+
+            String[] subMostActivity = mostProbableActivityString.split(",");
+            String type = subMostActivity[0].split("=")[1];
+            String confidence = subMostActivity[1].split("=")[1].replaceAll("]","");
+
+            Log.d(TAG, "typeString : "+type);
+            Log.d(TAG, "type : "+ActivityRecognitionStreamGenerator.zzsu(type)+", typeNum : "+type+", confidence : "+confidence);
+            CSVHelper.storeToCSV(CSVHelper.CSV_AR_DATA, "typeString : "+type);
+            CSVHelper.storeToCSV(CSVHelper.CSV_AR_DATA, "type : "+ActivityRecognitionStreamGenerator.zzsu(type)+", typeNum : "+type+", confidence : "+confidence);
+
+            DetectedActivity mostProbableActivity = new DetectedActivity(ActivityRecognitionStreamGenerator.zzsu(type), Integer.valueOf(confidence));
+
+
+            ArrayList<DetectedActivity> probableActivity = new ArrayList<>();
+            String probableActivitiesString = subData[3];
+            Log.d(TAG, "probableActivities : "+probableActivitiesString);
+            CSVHelper.storeToCSV(CSVHelper.CSV_AR_DATA, "probableActivities : "+probableActivitiesString);
+
+            //[DetectedActivity [type=ON_BICYCLE, confidence=100], DetectedActivity [type=ON_FOOT, confidence=100], DetectedActivity [type=STILL, confidence=100]]
+            String[] subprobableActivities = probableActivitiesString.split("], ");
+
+            for(String eachProbableActivities : subprobableActivities){
+
+                eachProbableActivities = eachProbableActivities.replaceAll("]", "");
+                //[DetectedActivity [type=ON_BICYCLE, confidence=100
+                String eachType = eachProbableActivities.substring(eachProbableActivities.lastIndexOf("type=")+"type=".length(), eachProbableActivities.indexOf(","));
+                Log.d(TAG, "eachType : "+eachType);
+                CSVHelper.storeToCSV(CSVHelper.CSV_AR_DATA, "eachType : "+eachType);
+                CSVHelper.storeToCSV(CSVHelper.CSV_AR_DATA, "eachTypeNum : "+ActivityRecognitionStreamGenerator.zzsu(eachType));
+
+                String eachConf = eachProbableActivities.substring(eachProbableActivities.lastIndexOf("confidence=")+"confidence=".length());
+                Log.d(TAG, "eachConf : "+eachConf);
+                CSVHelper.storeToCSV(CSVHelper.CSV_AR_DATA, "eachConf : "+eachConf);
+
+                DetectedActivity eachActivity = new DetectedActivity(ActivityRecognitionStreamGenerator.zzsu(eachType), Integer.valueOf(eachConf));
+
+                probableActivity.add(eachActivity);
+            }
+
+            long sLatestDetectionTime = Long.valueOf(subData[4]);
+
+            String session_id = subData[5];
+            Log.d(TAG, "sLatestDetectionTime : "+sLatestDetectionTime+", session_id : "+session_id);
+            CSVHelper.storeToCSV(CSVHelper.CSV_AR_DATA, "sLatestDetectionTime : "+sLatestDetectionTime+", session_id : "+session_id);
+
+            ActivityRecognitionDataRecord activityRecognitionDataRecord = new ActivityRecognitionDataRecord(mostProbableActivity, probableActivity, sLatestDetectionTime, session_id);
+
+            activityRecognitionDataRecords.add(activityRecognitionDataRecord);
+        }
+
+        return activityRecognitionDataRecords;
     }
 
     public static long getTimeOfLastSavedRecordInSession(int sessionId, String sourceName) {

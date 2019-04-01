@@ -41,6 +41,19 @@ public class PostManager extends AsyncTask<String, Void, String>{
     public static final int HTTP_TIMEOUT = 10000; // millisecond
     public static final int SOCKET_TIMEOUT = 10000; // millisecond
 
+
+    public PostManager(){}
+
+    @Override
+    protected void onPreExecute() {
+
+    }
+
+    @Override
+    protected void onPostExecute(String result) {
+        Log.d(TAG, "get http post result : " + result);
+    }
+
     @Override
     protected String doInBackground(String... params) {
 
@@ -64,12 +77,7 @@ public class PostManager extends AsyncTask<String, Void, String>{
         return result;
     }
 
-    @Override
-    protected void onPostExecute(String result) {
-        Log.d(TAG, "get http post result : " + result);
-    }
-
-    public String postJSON (String address, String json, String dataType, String lastSyncTime) {
+    public String postJSON(String address, String json, String dataType, String lastSyncTime) {
 
         Log.d(TAG, "[postJSON] testbackend post availSite to " + address);
 
@@ -134,20 +142,24 @@ public class PostManager extends AsyncTask<String, Void, String>{
             Log.d(TAG, "[postJSON] the result is " + result);
 
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+
             Log.d(TAG, "NoSuchAlgorithmException", e);
+            CSVHelper.storeToCSV(CSVHelper.CSV_Wifi, "NoSuchAlgorithmException", Utils.getStackTrace(e));
         } catch (KeyManagementException e) {
             e.printStackTrace();
             Log.d(TAG, "KeyManagementException", e);
+            CSVHelper.storeToCSV(CSVHelper.CSV_Wifi, "KeyManagementException", Utils.getStackTrace(e));
         } catch (ProtocolException e) {
-            e.printStackTrace();
             Log.d(TAG, "ProtocolException", e);
+            CSVHelper.storeToCSV(CSVHelper.CSV_Wifi, "ProtocolException", Utils.getStackTrace(e));
         } catch (MalformedURLException e) {
-            e.printStackTrace();
+
             Log.d(TAG, "MalformedURLException", e);
+            CSVHelper.storeToCSV(CSVHelper.CSV_Wifi, "MalformedURLException", Utils.getStackTrace(e));
         } catch (java.net.SocketTimeoutException e){
 
             Log.d(TAG, "SocketTimeoutException EE", e);
+            CSVHelper.storeToCSV(CSVHelper.CSV_Wifi, "SocketTimeoutException", Utils.getStackTrace(e));
         } catch (IOException e) {
             e.printStackTrace();
 

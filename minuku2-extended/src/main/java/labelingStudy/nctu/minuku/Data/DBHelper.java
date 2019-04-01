@@ -1088,6 +1088,50 @@ public class DBHelper extends SQLiteOpenHelper {
         return rows;
     }
 
+    public static String querySessionsSize(long time24HrAgo){
+
+        Log.d(TAG, "[test show trip] querySessions");
+
+        String rows = "0";
+
+        try{
+
+            SQLiteDatabase db = DBManager.getInstance().openDatabase();
+            String sql = "SELECT count(*)"  +" FROM " + DBHelper.SESSION_TABLE_NAME +
+                    " WHERE " + DBHelper.COL_SESSION_START_TIME + " < " + time24HrAgo +
+                    " AND "+ DBHelper.COL_SESSION_SENTORNOT_FLAG + " <> " + Constants.SESSION_IS_ALREADY_SENT_FLAG +
+                    " order by " + DBHelper.COL_SESSION_START_TIME + " " + "ASC";
+
+            Log.d(TAG, "[queryLastRecordBySession] the query statement is " +sql);
+
+            Cursor cursor = db.rawQuery(sql, null);
+            int columnCount = cursor.getColumnCount();
+//            while(cursor.moveToNext()){
+//                String curRow = "";
+//                for (int i=0; i<columnCount; i++){
+//                    curRow += cursor.getString(i)+ Constants.DELIMITER;
+//                }
+//                rows.add(curRow);
+//            }
+
+            cursor.moveToFirst();
+
+            rows = cursor.getString(0);
+
+            cursor.close();
+
+            DBManager.getInstance().closeDatabase();
+
+        }catch (Exception e){
+
+            Log.e(TAG, "exception", e);
+        }
+
+        Log.d(TAG, "[test show trip] the sessions are" + " " +rows);
+
+        return rows;
+    }
+
 
     public static void updateSessionTableByCreatedTime(long createdTime, int toBeSent){
 
@@ -1329,7 +1373,6 @@ public class DBHelper extends SQLiteOpenHelper {
             cursor.close();
 
             DBManager.getInstance().closeDatabase();
-
 
         }catch (Exception e){
 

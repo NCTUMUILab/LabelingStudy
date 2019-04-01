@@ -5,14 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:weightSum="6"
+    android:weightSum="8"
     tools:context="labelingStudy.nctu.minuku_2.controller.WelcomeActivity">
 
     <TextView
         android:id="@+id/guideline"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1"
+        android:layout_weight="2"
         android:background="@color/cardview_light_background"
         android:drawableBottom="@drawable/head"
         android:paddingLeft="16dp"
@@ -24,34 +24,55 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="5"
-        android:orientation="horizontal"
+        android:layout_weight="6"
+        android:orientation="vertical"
         android:weightSum="2">
 
-        <Button
-            android:id="@+id/chooseMyMobility"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <Button
+                android:id="@+id/chooseMyMobility"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/colorPrimaryDark"
+                android:gravity="center"
+                android:text="選擇移動方式"
+                android:textAlignment="center"
+                android:textColor="@color/cardview_light_background"
+                android:textSize="24sp" />
+
+            <Button
+                android:id="@+id/watchMyTimeline"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/colorPrimaryDark"
+                android:gravity="center"
+                android:text="觀看我的記錄"
+                android:textAlignment="center"
+                android:textColor="@color/cardview_light_background"
+                android:textSize="24sp" />
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/sendData"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@color/colorPrimaryDark"
             android:gravity="center"
-            android:text="選擇移動方式"
+            android:text="傳送資料"
             android:textAlignment="center"
             android:textColor="@color/cardview_light_background"
             android:textSize="24sp" />
-
-        <Button
-            android:id="@+id/watchMyTimeline"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@color/colorPrimaryDark"
-            android:gravity="center"
-            android:text="觀看我的記錄"
-            android:textAlignment="center"
-            android:textColor="@color/cardview_light_background"
-            android:textSize="24sp" />
-
     </LinearLayout>
+
 
 </LinearLayout>

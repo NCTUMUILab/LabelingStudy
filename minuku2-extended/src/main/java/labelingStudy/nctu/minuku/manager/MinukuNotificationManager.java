@@ -23,6 +23,8 @@
 package labelingStudy.nctu.minuku.manager;
 
 import android.app.Notification;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
@@ -30,9 +32,6 @@ import android.os.Build;
 import labelingStudy.nctu.minuku.R;
 import labelingStudy.nctu.minuku.config.Constants;
 
-/**
- * Created by neerajkumar on 8/3/16.
- */
 public class MinukuNotificationManager {
 
     public static int reminderNotificationID = 21;
@@ -57,8 +56,61 @@ public class MinukuNotificationManager {
         return R.drawable.muilab_icon;
     }
 
+    public static Notification.Builder getUploadingNotification(String text, Context context, Class<?> className) {
 
+        Notification.Builder noti = new Notification.Builder(context)
+                .setContentTitle(Constants.APP_FULL_NAME)
+                .setContentText(text)
+                .setAutoCancel(true)
+                .setOnlyAlertOnce(true)
+                .setOngoing(true);
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            return noti
+                    .setSmallIcon(getNotificationIcon(noti))
+                    .setChannelId(Constants.UPLOAD_CHANNEL_ID);
+        } else {
+            return noti
+                    .setSmallIcon(getNotificationIcon(noti))
+                    .setPriority(Notification.PRIORITY_MAX)
+                    ;
+        }
+    }
 
+    public static Notification.Builder getUploadingNotification(Context context, Class<?> className) {
 
+        Notification.Builder noti = new Notification.Builder(context)
+                .setContentTitle(Constants.APP_FULL_NAME)
+                .setContentText(Constants.DOWNLOADING)
+                .setAutoCancel(true)
+                .setOnlyAlertOnce(true)
+                .setOngoing(true);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            return noti
+                    .setSmallIcon(getNotificationIcon(noti))
+                    .setChannelId(Constants.UPLOAD_CHANNEL_ID);
+        } else {
+            return noti
+                    .setSmallIcon(getNotificationIcon(noti))
+                    .setPriority(Notification.PRIORITY_HIGH)
+                    ;
+        }
+    }
+
+    public static void updateNotificationByProgress(int notificationID, int progressMax, int progressNum, Notification.Builder notification, NotificationManager notificationManager){
+
+        notification.setProgress(progressMax, progressNum, false);
+        notificationManager.notify(notificationID, notification.build());
+    }
+
+    public static void startUpdatingNotificationByProgress(int notificationID, int progressMax, Notification.Builder notification, NotificationManager notificationManager){
+
+        updateNotificationByProgress(notificationID, progressMax, 0, notification, notificationManager);
+    }
+
+    public static void finishUpdatingNotificationByProgress(int notificationID, Notification.Builder notification, NotificationManager notificationManager){
+
+        updateNotificationByProgress(notificationID, 0, 0, notification, notificationManager);
+    }
 }

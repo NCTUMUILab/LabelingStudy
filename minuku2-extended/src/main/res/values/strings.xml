@@ -24,7 +24,7 @@
     <string name="app_name">Labeling Study</string>
 
     <!--  current_task: PART ESM CAR  -->
-    <string name="current_task">PART</string>
+    <string name="current_task">ESM</string>
     <string name="task_PART">PART</string>
     <string name="task_ESM">ESM</string>
     <string name="task_CAR">CAR</string>
