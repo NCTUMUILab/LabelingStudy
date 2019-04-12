@@ -272,6 +272,9 @@ public class WelcomeActivity extends AppCompatActivity {
                 message = getResources().getString(R.string.reminder_data_not_enough).toString();
             } else {
 
+                //------
+                //TODO solution: launch the thread in service
+                //TODO thread would be dead if the process is too long. Stop updating notification
                 Thread thread = new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -314,6 +317,10 @@ public class WelcomeActivity extends AppCompatActivity {
                     Log.e(TAG, "InterruptedException", e);
                     message = getResources().getString(R.string.reminder_sending_process_get_wrong);
                 }
+
+                //------
+                //TODO if the thread have to be launched in service, uncomment it back
+//                message = BackgroundService.startSendingDumpAndTripData(queryDataManager, sharedPrefs, WelcomeActivity.this, mNotificationManager);
 
                 setSendingButtonStyle();
             }
@@ -739,6 +746,8 @@ public class WelcomeActivity extends AppCompatActivity {
     private void popupPermissionSettingAtFirstTime(){
 
         firstTimeOrNot = sharedPrefs.getBoolean("firstTimeOrNot", true);
+
+        Log.d(TAG, "firstTimeOrNot : "+firstTimeOrNot);
 
         if(firstTimeOrNot) {
 

@@ -525,4 +525,251 @@ public class BackgroundService extends Service {
         }
     };
 
+    //TODO if the thread have to be launched in service, uncomment it back
+    /*private static void sendTripData(QueryDataManager queryDataManager, SharedPreferences sharedPrefs, final Context context, final NotificationManager mNotificationManager) throws JSONException, InterruptedException, ExecutionException{
+
+        Log.d(TAG, "sendTripData");
+        CSVHelper.storeToCSV(CSVHelper.CSV_Wifi, "sendTripData");
+
+        long boundaryTime = setSentBoundaryTime();
+
+        ArrayList<JSONObject> tripInJson = queryDataManager.queryTripData(boundaryTime);
+
+        Log.d(TAG, "TRIP_NOTI_TEXT : " + Config.TRIP_NOTI_TEXT);
+        CSVHelper.storeToCSV(CSVHelper.CSV_Wifi, "TRIP_NOTI_TEXT : " + Config.TRIP_NOTI_TEXT);
+
+        Notification.Builder uploadingNotification = MinukuNotificationManager.getUploadingNotification(Constants.DOWNLOADING+Config.TRIP_NOTI_TEXT, context, Dispatch.class);
+
+        int progressMax = tripInJson.size();
+        MinukuNotificationManager.startUpdatingNotificationByProgress(Constants.UPLOADING_NOTIFICATION_ID, progressMax, uploadingNotification, mNotificationManager);
+
+        for(int index = 0; index < tripInJson.size(); index++){
+
+            JSONObject data = tripInJson.get(index);
+
+            String response = sendData(Constants.SERVER_URL + Constants.COLLECTION_TRIP_ACTION_INSERT + Constants.DEVICE_ID
+                    , data, Constants.COLLECTION_TRIP);
+
+            Log.d(TAG, "response : " + response);
+
+            response = Utils.getRidOfBrackets(response);
+
+            Log.d(TAG, "response : " + response);
+            CSVHelper.storeToCSV(CSVHelper.CSV_Wifi, "response : " + response);
+
+            JSONObject responseInJson = new JSONObject(response);
+
+            Log.d(TAG, "is "+QueryDataManager.TRIP_COMPARED_FIELD+" Same ? "+isCertainFieldValueSame(data, responseInJson, QueryDataManager.TRIP_COMPARED_FIELD));
+            CSVHelper.storeToCSV(CSVHelper.CSV_Wifi, "is "+QueryDataManager.TRIP_COMPARED_FIELD+" Same ? "+isCertainFieldValueSame(data, responseInJson, QueryDataManager.TRIP_COMPARED_FIELD));
+
+            if(response.equals(Constants.INVALID_STRING_VALUE)){
+
+            } else if (isCertainFieldValueSame(data, responseInJson, QueryDataManager.TRIP_COMPARED_FIELD)) {
+
+                long lastSentStartTime = Long.valueOf(responseInJson.getString(QueryDataManager.TRIP_COMPARED_FIELD));
+                sharedPrefs.edit().putLong("lastSentStarttime", lastSentStartTime).apply();
+
+                String sentSessionId = data.getString("sessionid");
+                DataHandler.updateSession(Integer.valueOf(sentSessionId), Constants.SESSION_IS_ALREADY_SENT_FLAG);
+            }
+
+            MinukuNotificationManager.updateNotificationByProgress(Constants.UPLOADING_NOTIFICATION_ID, progressMax, index, uploadingNotification, mNotificationManager);
+        }
+
+        MinukuNotificationManager.finishUpdatingNotificationByProgress(Constants.UPLOADING_NOTIFICATION_ID, uploadingNotification, mNotificationManager);
+    }
+
+    private static void sendDumpData(QueryDataManager queryDataManager, SharedPreferences sharedPrefs, final Context context, final NotificationManager mNotificationManager) throws JSONException, InterruptedException, ExecutionException{
+
+        Log.d(TAG, "sendDumpData");
+        CSVHelper.storeToCSV(CSVHelper.CSV_Wifi, "sendDumpData");
+
+        long boundaryTime = setSentBoundaryTime();
+        long endTime = queryDataManager.getEndTime();
+
+        boolean tryToSendData = true;
+        CSVHelper.storeToCSV(CSVHelper.CSV_Wifi, "tryToSendData ? " + tryToSendData);
+
+        Log.d(TAG,"before send dump data BoundaryTimeString : " + ScheduleAndSampleManager.getTimeString(boundaryTime));
+        Log.d(TAG,"before send dump data EndTimeString : " + ScheduleAndSampleManager.getTimeString(endTime));
+        Log.d(TAG, "boundary time > end ? " + (boundaryTime > endTime));
+        Log.d(TAG, "DUMP_NOTI_TEXT : " + Config.DUMP_NOTI_TEXT);
+
+        CSVHelper.storeToCSV(CSVHelper.CSV_Wifi, "before send dump data BoundaryTimeString : " + ScheduleAndSampleManager.getTimeString(boundaryTime));
+        CSVHelper.storeToCSV(CSVHelper.CSV_Wifi, "before send dump data EndTimeString : " + ScheduleAndSampleManager.getTimeString(endTime));
+        CSVHelper.storeToCSV(CSVHelper.CSV_Wifi, "boundary time > end ? " + (boundaryTime > endTime));
+        CSVHelper.storeToCSV(CSVHelper.CSV_Wifi, "DUMP_NOTI_TEXT : " + Config.DUMP_NOTI_TEXT);
+
+        Notification.Builder uploadingNotification = MinukuNotificationManager.getUploadingNotification(Constants.DOWNLOADING+Config.DUMP_NOTI_TEXT, context, Dispatch.class);
+
+        int progressMax = 0;
+        if(boundaryTime > endTime) {
+
+            progressMax = getHourDiff(boundaryTime, endTime);
+            MinukuNotificationManager.startUpdatingNotificationByProgress(Constants.UPLOADING_NOTIFICATION_ID, progressMax, uploadingNotification, mNotificationManager);
+        }
+
+        int progressCount = 0;
+        while(boundaryTime > endTime && tryToSendData) {
+
+            //TODO testing the thread canceled issue
+            Thread.sleep(Constants.MILLISECONDS_PER_SECOND);
+
+            //return the boolean value to check if the network is connected
+            tryToSendData = sendEachPieceOfDumpData(queryDataManager, sharedPrefs);
+            CSVHelper.storeToCSV(CSVHelper.CSV_Wifi, "tryToSendData ? " + tryToSendData);
+
+            //update boundaryTime, endTime
+            boundaryTime = setSentBoundaryTime();
+            endTime = queryDataManager.getEndTime();
+
+            Log.d(TAG, "boundary time > end ? " + (boundaryTime > endTime));
+            Log.d(TAG, "boundaryTime : " + ScheduleAndSampleManager.getTimeString(boundaryTime));
+            Log.d(TAG, "endTime : " + ScheduleAndSampleManager.getTimeString(endTime));
+
+            CSVHelper.storeToCSV(CSVHelper.CSV_Wifi, "boundary time > end ? " + (boundaryTime > endTime));
+
+            progressCount++;
+            MinukuNotificationManager.updateNotificationByProgress(Constants.UPLOADING_NOTIFICATION_ID, progressMax, progressCount, uploadingNotification, mNotificationManager);
+        }
+
+        MinukuNotificationManager.finishUpdatingNotificationByProgress(Constants.UPLOADING_NOTIFICATION_ID, uploadingNotification, mNotificationManager);
+    }
+
+    private static int getHourDiff(long boundaryTime, long endTime){
+
+        int hourDiff = Constants.INVALID_INT_VALUE;
+
+        long start = ScheduleAndSampleManager.getHourLowerTimeInMillis(boundaryTime);
+
+        hourDiff = (int) ((start - endTime) / Constants.MILLISECONDS_PER_HOUR);
+
+        return hourDiff;
+    }
+
+    private static long setSentBoundaryTime(){
+
+        Log.d(TAG, "setSentBoundaryTime");
+
+        long boundaryTime = new Date().getTime() - Constants.MILLISECONDS_PER_DAY;
+
+        return boundaryTime;
+    }
+
+    private static boolean sendEachPieceOfDumpData(QueryDataManager queryDataManager, SharedPreferences sharedPrefs) throws JSONException, InterruptedException, ExecutionException{
+
+        JSONObject dumpInJson = queryDataManager.queryDumpData();
+
+        Log.d(TAG, "dumpInJson : "+dumpInJson);
+        Log.d(TAG, "dumpInJson endtime : "+dumpInJson.getString(QueryDataManager.DUMP_COMPARED_FIELD));
+
+        String response = sendData(Constants.SERVER_URL + Constants.COLLECTION_DUMP_ACTION_INSERT + Constants.DEVICE_ID
+                , dumpInJson, Constants.COLLECTION_DUMP);
+
+        Log.d(TAG, "response : "+response);
+        CSVHelper.storeToCSV(CSVHelper.CSV_Wifi, "response : " + response);
+
+        JSONObject responseInJson = new JSONObject(response);
+
+        Log.d(TAG, "is "+QueryDataManager.DUMP_COMPARED_FIELD+" Same ? "+isCertainFieldValueSame(dumpInJson, responseInJson, QueryDataManager.DUMP_COMPARED_FIELD));
+        CSVHelper.storeToCSV(CSVHelper.CSV_Wifi, "is "+QueryDataManager.DUMP_COMPARED_FIELD+" Same ? "+isCertainFieldValueSame(dumpInJson, responseInJson, QueryDataManager.DUMP_COMPARED_FIELD));
+
+        if(response.equals(Constants.INVALID_STRING_VALUE)){
+
+            return false;
+        } else if (isCertainFieldValueSame(dumpInJson, responseInJson, QueryDataManager.DUMP_COMPARED_FIELD)) {
+
+            long lastSentStartTime = Long.valueOf(responseInJson.getString(QueryDataManager.DUMP_COMPARED_FIELD));
+            sharedPrefs.edit().putLong("lastSentStarttime", lastSentStartTime).apply();
+
+            //update startTime, endTime
+            queryDataManager.setStartTime(lastSentStartTime);
+            queryDataManager.setEndTime(lastSentStartTime + Constants.MILLISECONDS_PER_HOUR);
+
+            return true;
+        }
+
+        //default is to not try to send due to it might stuck on the loop
+        return false;
+    }
+
+    private static String sendData(String insertUrl, JSONObject dataInJson, String dataType) throws InterruptedException, ExecutionException{
+
+        String response = Constants.INVALID_STRING_VALUE;
+
+        String curr = Utils.getDateCurrentTimeZone(new Date().getTime());
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+            response = new PostManager().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+                    insertUrl,
+                    dataInJson.toString(),
+                    dataType,
+                    curr).get();
+        else
+            response = new PostManager().execute(
+                    insertUrl,
+                    dataInJson.toString(),
+                    dataType,
+                    curr).get();
+
+        return response;
+    }
+
+    private static boolean isCertainFieldValueSame(JSONObject dumpInJson, JSONObject responseInJson, String fieldName) throws JSONException{
+
+        return dumpInJson.getString(fieldName).equals(responseInJson.getString(fieldName));
+    }
+
+    private static String message = Constants.INVALID_STRING_VALUE;
+
+    public static String startSendingDumpAndTripData(final QueryDataManager queryDataManager, final SharedPreferences sharedPrefs, final Context context, final NotificationManager mNotificationManager){
+
+        //TODO solution: launch the thread in service
+        //TODO thread would be dead if the process is too long. Stop updating notification
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                Notification.Builder uploadingNotification = MinukuNotificationManager.getUploadingNotification(context, Dispatch.class);
+                mNotificationManager.notify(Constants.UPLOADING_NOTIFICATION_ID, uploadingNotification.build());
+
+                try {
+
+                    sendDumpData(queryDataManager, sharedPrefs, context, mNotificationManager);
+                    sendTripData(queryDataManager, sharedPrefs, context, mNotificationManager);
+
+                }catch (JSONException e){
+                    Log.e(TAG, "JSONException", e);
+                    message = context.getResources().getString(R.string.reminder_sending_process_get_wrong);
+                }catch (InterruptedException e){
+                    Log.e(TAG, "InterruptedException", e);
+                    message = context.getResources().getString(R.string.reminder_sending_process_get_wrong);
+                }catch (ExecutionException e){
+                    Log.e(TAG, "ExecutionException", e);
+                    message = context.getResources().getString(R.string.reminder_sending_process_get_wrong);
+                }
+
+                mNotificationManager.cancel(Constants.UPLOADING_NOTIFICATION_ID);
+            }
+        });
+
+        thread.start();
+
+        try{
+
+            //wait for the thread finish
+            thread.join();
+
+            //if no error occur
+            if(!message.equals(context.getResources().getString(R.string.reminder_sending_process_get_wrong).toString()))
+                message = context.getResources().getString(R.string.reminder_data_sent_successfully).toString();
+
+        }catch (InterruptedException e){
+            Log.e(TAG, "InterruptedException", e);
+            message = context.getResources().getString(R.string.reminder_sending_process_get_wrong);
+        }
+
+        return message;
+    }*/
+
 }
