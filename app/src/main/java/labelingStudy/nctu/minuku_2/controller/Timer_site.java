@@ -1,6 +1,8 @@
 package labelingStudy.nctu.minuku_2.controller;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -11,6 +13,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -35,6 +38,7 @@ public class Timer_site extends AppCompatActivity {
 
     private ListView listview;
     public static ArrayList<String> availSite;
+    public ArrayList<String> availSiteId;
 
     private SharedPreferences sharedPrefs;
 
@@ -47,6 +51,7 @@ public class Timer_site extends AppCompatActivity {
         sharedPrefs = getSharedPreferences(Constants.sharedPrefString, Context.MODE_PRIVATE);
 
         availSite = new ArrayList<>();
+        availSiteId = new ArrayList<>();
     }
 
     @Override
@@ -86,18 +91,22 @@ public class Timer_site extends AppCompatActivity {
         listview = (ListView) findViewById(R.id.convenientList);
 
         availSite = new ArrayList<>();
+        availSiteId = new ArrayList<>();
 
         final String ADD_NEW_SITE_NAME = getResources().getString(R.string.timer_site_add_new_site);
         availSite.add(ADD_NEW_SITE_NAME);
 
         //output their custom sites from sqlite
         SQLiteDatabase db = DBManager.getInstance().openDatabase();
-        Cursor cursor = db.rawQuery("SELECT "+ DBHelper.convenientsite_col +" FROM "+ DBHelper.convenientsite_table, null);
+        Cursor cursor = db.rawQuery("SELECT "+DBHelper.id + " ,"  + DBHelper.convenientsite_col +" FROM "+ DBHelper.convenientsite_table, null);
         cursor.moveToFirst();
         while(!cursor.isAfterLast()) {
 
-            Log.e(TAG,"sitename : "+cursor.getString(0));
-            availSite.add(cursor.getString(0));
+            Log.d(TAG,"sitename id : "+cursor.getString(0));
+            Log.d(TAG,"sitename : "+cursor.getString(1));
+
+            availSite.add(cursor.getString(1));
+            availSiteId.add(cursor.getString(0));
             cursor.moveToNext();
         }
 
@@ -139,6 +148,73 @@ public class Timer_site extends AppCompatActivity {
             }
         });
 
+        listview.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+
+                DBHelper.insertActionLogTable(ScheduleAndSampleManager.getCurrentTimeInMillis(), ActionLogVar.VIEW_LIST+" - "+ ActionLogVar.ACTION_LONG_CLICK+" - "+ActionLogVar.MEANING_CONV_SITE_LIST+" - "+TAG);
+
+                if(position != 0) {
+
+                    //ask to delete the current item
+                    AlertDialog.Builder builder = new AlertDialog.Builder(Timer_site.this);
+                    builder.setMessage(R.string.timer_site_delete_site)
+                            .setPositiveButton(R.string.decide_in_chinese, null)
+                            .setNegativeButton(R.string.undecide_in_chinese, null);
+
+                    final AlertDialog mAlertDialog = builder.create();
+                    mAlertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+
+                        @Override
+                        public void onShow(final DialogInterface dialogInterface) {
+                            Button posButton = mAlertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                            posButton.setOnClickListener(new View.OnClickListener() {
+
+                                @Override
+                                public void onClick(View view) {
+
+                                    DBHelper.insertActionLogTable(ScheduleAndSampleManager.getCurrentTimeInMillis(), ActionLogVar.VIEW_BUTTON+" - "+ ActionLogVar.ACTION_CLICK+" - "+ActionLogVar.MEANING_OK+" - "+TAG);
+
+                                    //delete
+                                    String targetSiteId = availSiteId.get(position-1);
+
+                                    Log.d(TAG, "targetSiteId : "+ targetSiteId);
+                                    DBHelper.deleteConvSite(targetSiteId);
+
+                                    dialogInterface.dismiss();
+
+                                    refresh();
+                                }
+                            });
+
+                            Button negaButton = mAlertDialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+                            negaButton.setOnClickListener(new View.OnClickListener() {
+
+                                @Override
+                                public void onClick(View view) {
+
+                                    DBHelper.insertActionLogTable(ScheduleAndSampleManager.getCurrentTimeInMillis(), ActionLogVar.VIEW_BUTTON+" - "+ ActionLogVar.ACTION_CLICK+" - "+ActionLogVar.MEANING_NO+" - "+TAG);
+
+                                    dialogInterface.dismiss();
+                                }
+                            });
+                        }
+                    });
+
+                    mAlertDialog.show();
+                }
+
+                return true;
+            }
+        });
+
+    }
+
+    public void refresh(){
+
+        Intent intent = getIntent();
+        finish();
+        startActivity(intent);
     }
 
 }

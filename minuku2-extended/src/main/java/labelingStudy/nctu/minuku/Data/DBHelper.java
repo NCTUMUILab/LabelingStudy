@@ -721,6 +721,20 @@ public class DBHelper extends SQLiteOpenHelper {
 
     }
 
+    public static void deleteConvSite(String id){
+
+        try {
+
+            SQLiteDatabase db = DBManager.getInstance().openDatabase();
+
+            db.delete(convenientsite_table, DBHelper.id + " = "+ id, null);
+        }catch (Exception e){
+
+        }
+
+        DBManager.getInstance().closeDatabase();
+    }
+
     public static ArrayList<String> queryNextData(String tablename, int id){
 
         ArrayList<String> rows = new ArrayList<String>();
