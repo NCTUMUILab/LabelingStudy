@@ -379,12 +379,9 @@ public class CounterActivity extends AppCompatActivity {
         Date curDate = new Date(System.currentTimeMillis());
         starttime = formatter.format(curDate);
 
-//        ArrayList<Integer> ongoingSessionIdList = SessionManager.getOngoingSessionIdList();
-
         int ongoingSessionid = sharedPrefs.getInt("ongoingSessionid", Constants.INVALID_INT_VALUE);
 
         //if there hasn't a ongoing session, start a new one.
-//        if(ongoingSessionIdList.size() == 0){
         if(ongoingSessionid == Constants.INVALID_INT_VALUE){
 
             //start new Trip
@@ -450,7 +447,7 @@ public class CounterActivity extends AppCompatActivity {
             SessionManager.endCurSession(ongoingSession);
             sharedPrefs.edit().putInt("ongoingSessionid", Constants.INVALID_INT_VALUE).apply();
         } catch (IndexOutOfBoundsException e) {
-
+            e.printStackTrace();
         }
     }
 

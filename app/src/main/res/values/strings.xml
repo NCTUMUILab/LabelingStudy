@@ -22,7 +22,7 @@
 
 <resources>
 
-    <string name="current_task">ESM</string>
+    <string name="current_task">CAR</string>
     <string name="task_PART">PART</string>
     <string name="task_ESM">ESM</string>
     <string name="task_CAR">CAR</string>
@@ -43,6 +43,7 @@
     <string name="ask_for_all_you_can_eat">請問您有吃到飽嗎？</string>
 
     <string name="timer_site_add_new_site">新增地點</string>
+    <string name="timer_site_delete_site">確定要刪掉此定點嗎？</string>
 
     <string name="timer_move_black_text_default">請選擇您的移動方式</string>
 

@@ -8,6 +8,7 @@ public class ActionLogVar {
 
     //actionLogging
     public static final String ACTION_CLICK = "Click";
+    public static final String ACTION_LONG_CLICK = "Long Click";
     public static final String ACTION_TEXT_CHANGED = "Text Changed";
     public static final String ACTION_ITEM_SELECTED = "Item Selected";
     public static final String ACTION_TRIGGERED = "Triggered";
