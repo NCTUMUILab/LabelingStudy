@@ -418,9 +418,6 @@ public class WelcomeActivity extends AppCompatActivity {
 
             } else if (isCertainFieldValueSame(data, responseInJson, QueryDataManager.TRIP_COMPARED_FIELD)) {
 
-                long lastSentStartTime = Long.valueOf(responseInJson.getString(QueryDataManager.TRIP_COMPARED_FIELD));
-                sharedPrefs.edit().putLong("lastSentStarttime", lastSentStartTime).apply();
-
                 String sentSessionId = data.getString("sessionid");
                 DataHandler.updateSession(Integer.valueOf(sentSessionId), Constants.SESSION_IS_ALREADY_SENT_FLAG);
             }
